@@ -1,2 +1,18 @@
-# xiaobaods
-It is public project of back-stage management。combine in table、chart 、carousel and so on.it use vue.js,echart.js,mysql,node,python to appear us an visiable data clearly.
+# myproject
+
+> A Vue.js project
+
+## Build Setup
+
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+```
+
+For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
