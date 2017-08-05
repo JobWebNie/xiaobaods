@@ -7,13 +7,10 @@
   @b cascader {
     display: inline-block;
     position: relative;
-    background-color: #fff;
 
     .el-input,
     .el-input__inner {
       cursor: pointer;
-      background-color: transparent;
-      z-index: var(--index-normal);
     }
 
     .el-input__icon {
@@ -28,12 +25,16 @@
       }
     }
 
+    .el-icon-circle-close {
+      z-index: calc(var(--index-normal) + 1);
+    }
+
     @e label {
       position: absolute;
       left: 0;
       top: 0;
       height: 100%;
-      line-height: 34px;
+      line-height: 36px;
       padding: 0 25px 0 10px;
       color: var(--input-color);
       width: 100%;

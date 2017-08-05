@@ -13,12 +13,6 @@ Vue.use(ElementUI);
 Vue.filter('number-filter', function (value) {
   // 返回处理后的值
   return parseFloat(value * 100).toFixed(2) + '%'
-
-})
-Vue.filter('number-filter2', function (value) {
-  // 返回处理后的值
-  return parseFloat(value).toFixed(2) + '%'
-
 })
 window.Vue = Vue;
 const routes = [{
@@ -39,6 +33,18 @@ const routes = [{
       require(['./components/Proper/detail.vue'], resolve)
     }
   },
+   {
+    path: '/proper/table',
+    component: function (resolve) {
+      require(['./components/Auth/table.vue'], resolve)
+    }
+  },
+   {
+    path: '/proper/gongshi',
+    component: function (resolve) {
+      require(['./components/Auth/gongshi.vue'], resolve)
+    }
+  },
   {
     path: '/word/key_word/',
     component: function (resolve) {
@@ -55,6 +61,12 @@ const routes = [{
     path: '/word/soare_word/',
     component: function (resolve) {
       require(['./components/Word/soare_word.vue'], resolve)
+    }
+  },
+  {
+    path: '/word/compare/',
+    component: function (resolve) {
+      require(['./components/word/compare.vue'], resolve)
     }
   },
   {
@@ -124,7 +136,7 @@ router.beforeEach(({
   var isLogin = Boolean(store.state.user.id)
   if (Auth && !isLogin && path !== '/login/') {
     return next({
-      path: '/login/'
+      path: '/login'
     })
   }
   next()

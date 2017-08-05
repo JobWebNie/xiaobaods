@@ -54,13 +54,15 @@ export interface ComponentOptions<V extends Vue> {
   name?: string;
   extends?: ComponentOptions<Vue> | typeof Vue;
   delimiters?: [string, string];
+  comments?: boolean;
+  inheritAttrs?: boolean;
 }
 
 export interface FunctionalComponentOptions {
+  name?: string;
   props?: string[] | { [key: string]: PropOptions | Constructor | Constructor[] };
   functional: boolean;
-  render(this: never, createElement: CreateElement, context: RenderContext): VNode;
-  name?: string;
+  render(this: never, createElement: CreateElement, context: RenderContext): VNode | void;
 }
 
 export interface RenderContext {
@@ -69,6 +71,7 @@ export interface RenderContext {
   slots(): any;
   data: VNodeData;
   parent: Vue;
+  injections: any
 }
 
 export interface PropOptions {

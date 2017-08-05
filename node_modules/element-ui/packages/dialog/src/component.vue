@@ -10,9 +10,10 @@
           <slot name="title">
             <span class="el-dialog__title">{{title}}</span>
           </slot>
-          <div class="el-dialog__headerbtn">
-            <i v-if="showClose" class="el-dialog__close el-icon el-icon-close" @click='close()'></i>
-          </div>
+          <button type="button" class="el-dialog__headerbtn" aria-label="Close" 
+                  v-if="showClose" @click="handleClose">
+            <i class="el-dialog__close el-icon el-icon-close"></i>
+          </button>
         </div>
         <div class="el-dialog__body" v-if="rendered"><slot></slot></div>
         <div class="el-dialog__footer" v-if="$slots.footer">
@@ -25,11 +26,12 @@
 
 <script>
   import Popup from 'element-ui/src/utils/popup';
+  import emitter from 'element-ui/src/mixins/emitter';
 
   export default {
     name: 'ElDialog',
 
-    mixins: [Popup],
+    mixins: [Popup, emitter],
 
     props: {
       title: {
@@ -80,26 +82,21 @@
       top: {
         type: String,
         default: '15%'
-      }
-    },
-    data() {
-      return {
-        visible: false
-      };
+      },
+      beforeClose: Function
     },
 
     watch: {
-      value(val) {
-        this.visible = val;
-      },
       visible(val) {
-        this.$emit('input', val);
+        this.$emit('update:visible', val);
         if (val) {
           this.$emit('open');
+          this.$el.addEventListener('scroll', this.updatePopper);
           this.$nextTick(() => {
             this.$refs.dialog.scrollTop = 0;
           });
         } else {
+          this.$el.removeEventListener('scroll', this.updatePopper);
           this.$emit('close');
         }
       }
@@ -110,20 +107,36 @@
         return `el-dialog--${ this.size }`;
       },
       style() {
-        return this.size === 'full' ? {} : { 'margin-bottom': '50px', 'top': this.top };
+        return this.size === 'full' ? {} : { 'top': this.top };
       }
     },
 
     methods: {
       handleWrapperClick() {
-        if (this.closeOnClickModal) {
-          this.close();
+        if (!this.closeOnClickModal) return;
+        this.handleClose();
+      },
+      handleClose() {
+        if (typeof this.beforeClose === 'function') {
+          this.beforeClose(this.hide);
+        } else {
+          this.hide();
         }
+      },
+      hide(cancel) {
+        if (cancel !== false) {
+          this.$emit('update:visible', false);
+          this.$emit('visible-change', false);
+        }
+      },
+      updatePopper() {
+        this.broadcast('ElSelectDropdown', 'updatePopper');
+        this.broadcast('ElDropdownMenu', 'updatePopper');
       }
     },
 
     mounted() {
-      if (this.value) {
+      if (this.visible) {
         this.rendered = true;
         this.open();
       }

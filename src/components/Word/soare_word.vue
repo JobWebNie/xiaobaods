@@ -10,55 +10,26 @@
     </el-row>
     <el-row class="navlist" type="flex" justify="space-around" align="middle">
       <el-col :span="12">
-        <el-date-picker v-model="value1" :picker-options="pickerOption1" size='small' v-on:change="inputchange"></el-date-picker>
-        <el-select v-model="value2" size='small' v-on:change="inputchange">
+        <el-date-picker v-model="inputValue.data_time" :picker-options="pickerOption1" size='small' v-on:change="inputchange"></el-date-picker>
+        <el-select v-model="inputValue.data_items" size='small' v-on:change="inputchange">
           <el-option v-for="item in options2" :label="item.label" :value="item.value"></el-option>
         </el-select>
-        <el-cascader v-model="value3" :options="options3" size='small' v-on:change="inputchange"></el-cascader>
-        <!--<el-select v-model="value4" size='small' v-on:change="inputchange"><el-option v-for="item in options4" :label="item.label" :value="item.value"></el-option></el-select>-->
-        <el-select v-model="value5" size='small' v-on:change="inputchange">
+        <el-cascader v-model="inputValue.data_choice" :options="options3" size='small' v-on:change="inputchange"></el-cascader>
+        <el-select v-model="inputValue.time_length" size='small' v-on:change="inputchange">
           <el-option v-for="item in options5" :label="item.label" :value="item.value"></el-option>
         </el-select>
-        <el-input-number v-model="value6" size='small' @change="numchange" :step="5" :min="10"></el-input-number>
+        <el-input-number v-model="inputValue.data_head" size='small' @change="numchange" :step="5" :min="10"></el-input-number>
       </el-col>
       <el-col class="list-right"></el-col>
     </el-row>
-
     <el-row>
       <el-col>
-        <el-table v-loading="loading" :data="Table.tableData_prepag" :height="this.Table.height" style="width: auto">
-          <el-table-column :prop="Table.tableData_title[0]" :label="Table.tableData_title[0]" header-align="center" align="center"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[1]" :label="Table.tableData_title[1]" header-align="center" align="center"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[2]" :label="Table.tableData_title[2]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[3]" :label="Table.tableData_title[3]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[4]" :label="Table.tableData_title[4]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[5]" :label="Table.tableData_title[5]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[6]" :label="Table.tableData_title[6]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[7]" :label="Table.tableData_title[7]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[8]" :label="Table.tableData_title[8]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[9]" :label="Table.tableData_title[9]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[10]" :label="Table.tableData_title[10]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[11]" :label="Table.tableData_title[11]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[12]" :label="Table.tableData_title[12]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[13]" :label="Table.tableData_title[13]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[14]" :label="Table.tableData_title[14]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[15]" :label="Table.tableData_title[15]" header-align="right" align="right"
-            v-if="Table.tableData_title[15]"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[16]" :label="Table.tableData_title[16]" header-align="right" align="right"
-            v-if="Table.tableData_title[16]"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[17]" :label="Table.tableData_title[17]" header-align="right" align="right"
-            v-if="Table.tableData_title[17]"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[18]" :label="Table.tableData_title[18]" header-align="right" align="right"
-            v-if="Table.tableData_title[18]"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[19]" :label="Table.tableData_title[19]" header-align="right" align="right"
-            v-if="Table.tableData_title[19]"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[20]" :label="Table.tableData_title[20]" header-align="right" align="right"
-            v-if="Table.tableData_title[20]"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[21]" :label="Table.tableData_title[21]" header-align="right" align="right"
-            v-if="Table.tableData_title[21]"></el-table-column>
+        <el-table v-loading="loading" :data="Table.tableData_prepag" :height="Table.height" border>
+          <el-table-column v-for="title in Table.tableData_title" :prop="title.name" :render-header="renderHeader" :formatter="contentFormatter"
+            :min-width="title.width" align="center" header-align="center" :resizable="false"></el-table-column>
         </el-table>
         <div style="position:relative; text-align:center;">
-          <el-pagination v-show="Table.overflow" v-bind:size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="Table.PageIndex"
+          <el-pagination v-show="inputValue.data_head>20" v-bind:size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="Table.PageIndex"
             :page-sizes="[15, 20, 50, 100]" :page-size="Table.prePageCount" layout="total, sizes, prev, pager, next, jumper"
             :total="Table.tableData.length">
           </el-pagination>
@@ -71,12 +42,10 @@
   export default {
     data() {
       return {
-        value1: '',
         pickerOption1: {
           disabledDate(time) {
-            var aday = 8.64e7
-            var min = new Date('2016-12-12').getTime() - aday
-            var max = Date.now() - aday;
+            var min = Date.parse('2016-12-11')
+            var max = Date.now() - 8.64e7;
             if (time.getTime() > max || time.getTime() < min) {
               return true;
             } else {
@@ -84,7 +53,6 @@
             }
           }
         },
-        value2: '牛仔裤',
         options2: [{
           label: '类目：牛仔裤',
           value: '牛仔裤'
@@ -95,7 +63,6 @@
           label: '类目：打底裤',
           value: '打底裤'
         }],
-        value3: ["热搜核心词", "排名"],
         options3: [{
           value: '热搜核心词',
           label: '热搜核心词',
@@ -222,7 +189,6 @@
             label: '直通车参考价'
           }]
         }],
-        value5: 7,
         options5: [{
           value: 7,
           label: '显示周期：近7天'
@@ -230,47 +196,104 @@
           value: 14,
           label: '显示周期：近14天'
         }],
-        value6: 10,
+        inputValue:{
+          data_time:'',
+          data_items:'牛仔裤',
+          data_choice:["热搜核心词", "排名"],
+          time_length:7,
+          data_head:10
+        },
         Table: {
           tableData: [],
           tableData_title: [],
           tableData_prepag: [],
           prePageCount: 20,
           PageIndex: 1,
-          height: 840,
-          overflow: null
+          height: 840
         },
         loading: null
       }
     },
     created() {
       //增加时间选框默认选中功能
-      var timeTamp = new Date().getTime() - 24 * 60 * 60 * 1000
-      var lastTime = new Date(timeTamp)
+      this.inputValue.data_time= Date.now() -8.64e7
       this.loading = true
-      this.value1 = lastTime.getFullYear() + '-' + (lastTime.getMonth() + 1) + '-' + lastTime.getDate()
       this.$http.get("keyWord/entry").then((response) => {
         this.objToArr(response.body.data)
       })
     },
     methods: {
-      numchange(value) {
-        this.Table.overflow = false;
-        if (value > 20) {
-          this.Table.overflow = true
+      renderHeader(h, t) { //在不改变json数据的情况下改变header
+        var tf = t.$index < 8
+        var th = t.column.property.slice(-4, -2) + '-' + t.column.property.slice(-2)
+        switch (tf) {
+          case true:
+            return t.column.label = t.column.property;
+            break;
+          case false:
+            return t.column.label = th;
+            break;
         }
-        this.$data.value6 = value
+      },
+      contentFormatter(row, column, cellValue) {
+        let reg = String(cellValue).replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+        if (column.property.slice(0, 2) == "日期") {
+          const fm = this.inputValue.data_choice[1]
+          switch (fm) {
+            case '支付转化率':
+              return cellValue = Math.round(cellValue * 100) + '%';
+              break;
+            case '点击率':
+              return cellValue = Math.round(cellValue * 100) + '%';
+              break;
+            case '相关搜索词数':
+              return cellValue = reg;
+              break;
+            case '搜索人气':
+              return cellValue = reg;
+              break;
+            case '点击人气':
+              return cellValue = reg;
+              break;
+            case '直通车参考价':
+              return cellValue = '￥' + parseFloat(cellValue).toFixed(2);
+              break;
+            default:
+              return cellValue = cellValue;
+              break;
+          }
+        } else {
+          switch (column.property) {
+            case '支付转化率':
+              return cellValue = Math.round(cellValue * 100) + '%';
+              break;
+            case '点击率':
+              return cellValue = Math.round(cellValue * 100) + '%';
+              break;
+            case '相关搜索词数':
+              return cellValue = reg;
+              break;
+            case '搜索人气':
+              return cellValue = reg;
+              break;
+            case '点击人气':
+              return cellValue = reg;
+              break;
+            case '直通车参考价':
+              return cellValue = '￥' + parseFloat(cellValue).toFixed(2);
+              break;
+            default:
+              return cellValue = cellValue;
+              break;
+          }
+        }
+      },
+      numchange(value) {
+        this.$data.inputValue.data_head = value
         this.inputchange()
       },
       inputchange() {
-        var data1 = {
-          "data_time": this.value1,
-          "data_items": this.$data.value2,
-          "data_choice": this.$data.value3,
-          "time_length": this.$data.value5,
-          "data_head": this.$data.value6
-        }
-        var data = JSON.stringify(data1) //格式化数据
+        var data = JSON.stringify(this.inputValue) //格式化数据
         this.loading = true
         this.$http.post("keyWord/entry", {
           data
@@ -281,46 +304,35 @@
         })
       },
       objToArr(obj) {
-        var middle_Table_body = [];
-        var middle_Table_title = [];
+         this.Table.tableData_title=[]
+          this.Table.tableData=[]
         if (obj) {
-          for (let j in obj) {
-            for (let i in obj[j]) {
-              middle_Table_title.push(i)
-            }
-            break;
-          }
           for (var i in obj) {
-            for (let j in obj[i]) {
-              if (obj[i][j] == null) {
-                obj[i][j] = ''
-              } else if (j.slice(0, 2) == "日期") {
-                if (this.value1[1] == "支付转化率" || this.value1[1] == "点击率") {
-                  obj[i][j] = parseFloat(obj[i][j] * 100).toFixed(2) + '%'
-                } else if (this.value1[1] == "相关搜索词数" || this.value1[1] == "搜索人气" || this.value1[1] == "点击人气") {
-                  obj[i][j] = obj[i][j].toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-                } else if (typeof (obj[i][j]) != "string" && this.value1[1] == "直通车参考价") {
-                  obj[i][j] = '￥' + parseFloat(obj[i][j]).toFixed(2)
-                } else {
-                  obj[i][j] = obj[i][j]
-                }
-              } else {
-                if (j == '相关搜索词数' || j == '搜索人气' || j == '点击人气') {
-                  obj[i][j] = obj[i][j].toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-                } else if (j == '支付转化率' || j == '点击率') {
-                  obj[i][j] = parseFloat(obj[i][j] * 100).toFixed(2) + '%'
-                } else if (typeof (obj[i][j]) != "string" && j == '直通车参考价') {
-                  obj[i][j] = '￥' + parseFloat(obj[i][j]).toFixed(2)
-                } else {
-                  obj[i][j] = obj[i][j]
-                }
-              }
-            }
-            middle_Table_body.push(obj[i])
+            this.Table.tableData.push(obj[i])
           }
-          this.Table.tableData_title = middle_Table_title
+          for (var j in this.Table.tableData[0]) {
+            switch (j) {
+              case '相关搜索词数':
+                this.Table.tableData_title.push({
+                  name: j,
+                  width: '80'
+                });
+                break;
+              case '直通车参考价':
+                this.Table.tableData_title.push({
+                  name: j,
+                  width: '80'
+                });
+                break;
+              default:
+                this.Table.tableData_title.push({
+                  name: j,
+                  width: '50'
+                });
+                break;
+            }
+          }
           this.loading = false
-          this.Table.tableData = middle_Table_body
           this.Table.tableData_prepag = this.Table.tableData.slice(0, 20) //每页默认取出20条数据
         }
       },

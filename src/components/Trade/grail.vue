@@ -2,7 +2,7 @@
   <div>
     <el-row class="title" type="flex" justify="space-between" align="middle">
       <el-col class="title-left">
-        <h3>生e经</h3>
+        <h3>趋势分布</h3>
       </el-col>
       <el-col class="title-right">
         <p>属性成交趋势</p>
@@ -10,24 +10,23 @@
     </el-row>
     <el-row class="navlist" type="flex" justify="space-around" align="middle">
       <el-col class="list-left">
-        <el-select v-model="value0" size='mini' v-on:change="InputCategory" placeholder="选择类目">
-          <el-option v-for="item in options0" :label="item.label" :value="item.value"></el-option>
+        <el-select v-model.lazy="value0" size='mini' v-on:change="InputCategory" placeholder="选择类目">
+          <el-option v-for="item in options0" v-once :label="item.label" :value="item.value"></el-option>
         </el-select>
-        <el-select v-model="value1" size='mini' v-on:change="InputAttribute" placeholder="选择属性分类">
+        <el-select v-model.lazy="value1" size='mini' v-on:change="InputAttribute" placeholder="选择属性分类">
           <el-option v-for="item in options1" :label="item.label" :value="item.value"></el-option>
         </el-select>
-        <el-select v-model="value2" size='mini' v-on:change="InputFeature" placeholder="选择属性">
+        <el-select v-model.lazy="value2" size='mini' placeholder="选择属性">
           <el-option v-for="item in options2" :label="item.label" :value="item.value"></el-option>
         </el-select>
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-        <el-select v-model="value3" size='mini' v-on:change="InputFeature" placeholder="选取行业属性">
+        <el-select v-model.lazy="value3" size='mini' v-on:change="InputFeature" placeholder="选取行业属性">
           <el-option v-for="item in options3" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-col>
     </el-row>
-    <el-row  v-loading.fullscreen.lock="loading" v-show="show" style="backgroundColor:#F9FAFC;height:100%;">
-      <el-col style="width:98%;height:780px;margin:1%;backgroundColor:#FFF;">
-        <IEcharts style="width:100%;height:100%;" :option="option" :resizable="true"></IEcharts>
+    <el-row  v-show="show" style="backgroundColor:#F9FAFC;height:100%;">
+      <el-col v-loading="loading" style="width:98%;height:780px;margin:1%;backgroundColor:#FFF;">
+        <IEcharts style="width:100%;height:100%;" :option="option" :resizable="true" @click="onclick"></IEcharts>
       </el-col>
     </el-row>
   </div>
@@ -86,13 +85,8 @@
           label: "高质宝贝数",
           value: "高质宝贝数"
         }],
-        data: {
-          category: '',
-          attribute: '',
-          feature: '',
-          variable: ''
-        },
         option: {
+          color:['#F20030','#FFF200','#2BD4FF'],
           title: {
             text: '类目属性关系图',
             subtext: '数据来自生e经',
@@ -100,11 +94,14 @@
           },
           tooltip: {
             trigger: 'axis',
+            axisPointer:{
+              type:'cross'
+            },
             formatter:function(params){
               var res = params[0].name;
-              res+='<br/>'+params[0].seriesName+':'+params[0].value+'件';
-              res+='<br/>'+params[1].seriesName+':'+params[1].value+'件';
-              res+='<br/>'+params[2].seriesName+':'+(params[2].value*100).toFixed(2)+'%';
+              res+='<br/>'+params[0].seriesName+':'+params[0].value;
+              res+='<br/>'+params[1].seriesName+':'+params[1].value;
+              res+='<br/>'+params[2].seriesName+':'+(params[2].value*100).toFixed(2);
               return res
             }
           },
@@ -118,6 +115,7 @@
             }
           },
           dataZoom: [{
+             type: 'slider',
               show: true,
               realtime: true,
               start: 50,
@@ -178,7 +176,12 @@
           ],
           yAxis: [{
               name: '',
+              nameGap:6,
               type: 'value',
+              nameTextStyle:{
+                fontWeight:'bold',
+                fontSize:14
+              },
               axisLabel: {
                 formatter: function (val) {
                     return (val/10000) + '万';
@@ -188,7 +191,12 @@
             {
               gridIndex: 1,
               name: '',
+              nameGap:6,
               type: 'value',
+               nameTextStyle:{
+                fontWeight:'bold',
+                fontSize:14
+              },
                axisLabel: {
                 formatter: function (val) {
                     return (val/10000) + '万';
@@ -198,7 +206,12 @@
              {
               gridIndex: 2,
               name: '',
+              nameGap:6,
               type: 'value',
+               nameTextStyle:{
+                fontWeight:'bold',
+                fontSize:14
+              },
               axisLabel: {
                 formatter: function (val) {
                     return (val* 100).toFixed(1) + '%'
@@ -208,6 +221,7 @@
           series: [{
               name: '',
               type: 'line',
+              smooth: true,
               symbolSize: 8,
               hoverAnimation: false,
               data: []
@@ -215,6 +229,7 @@
             {
               name: '',
               type: 'line',
+              smooth: true,
               xAxisIndex: 1,
               yAxisIndex: 1,
               symbolSize: 8,
@@ -224,6 +239,7 @@
             {
               name: '',
               type: 'line',
+              smooth: true,
               xAxisIndex: 2,
               yAxisIndex: 2,
               symbolSize: 8,
@@ -236,16 +252,14 @@
     },
     methods: {
       InputCategory() { //类目输入时后两项清空原属性
-        this.value1 = ''
-        this.value2 = ''
-        this.value3 = ''
-        this.options1 = []
-        this.options2 = []
-        this.data.category = this.value0 
-        this.data.attribute = 'list'
-        this.data.feature = ''
-        var data = this.data
         this.loading=true
+        this.options1.splice(0, this.options1.length)
+        this.options2.splice(0, this.options1.length)
+        this.loading=true
+        var data= {
+          category: this.value0,
+          attribute: 'list'
+        }
         this.$http.post('proper/trend', {
           data
         }, {
@@ -261,13 +275,15 @@
         })
       },
       InputAttribute() { //属性输入时前父选项不变,子选项清空
-        this.value2 = ''
-        this.value3 = ''
+    
         this.options2 = []
-        this.data.attribute = this.value1
-        this.data.feature = 'list'
         var data = this.data
         this.loading=true
+        var data= {
+          category: this.value0,
+          attribute: this.value1,
+          feature: 'list'
+        }
         this.$http.post('proper/trend', {
           data
         }, {
@@ -283,10 +299,13 @@
         })
       },
       InputFeature() {
-        this.data.feature = this.value2 
-        this.data.variable = this.value3 
-        var data = this.data
         this.loading=true
+        var data= {
+          category: this.value0,
+          attribute: this.value1,
+          feature: this.value2,
+          variable: this.value3
+        }
         this.$http.post('proper/trend', {
           data
         }, {
@@ -313,12 +332,11 @@
              this.show=true
              this.loading=false     
         })
-
-      }
-
-    }
-  }
-
+      },
+      onclick(event){
+         console.log(event.type=="click")
+          console.log(event.name)
+      }}}
 </script>
 <style>
   .navlist .small {

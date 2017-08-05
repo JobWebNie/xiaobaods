@@ -18,8 +18,9 @@
         v-if="showCheckbox"
         v-model="node.checked"
         :indeterminate="node.indeterminate"
-        @change="handleCheckChange"
-        @click.native.stop="handleUserClick">
+        :disabled="!!node.disabled"
+        @click.native.stop
+        @change="handleCheckChange">
       </el-checkbox>
       <span
         v-if="node.loading"
@@ -27,7 +28,7 @@
       </span>
       <node-content :node="node"></node-content>
     </div>
-    <collapse-transition>
+    <el-collapse-transition>
       <div
         class="el-tree-node__children"
         v-show="expanded">
@@ -39,12 +40,12 @@
           @node-expand="handleChildNodeExpand">
         </el-tree-node>
       </div>
-    </collapse-transition>
+    </el-collapse-transition>
   </div>
 </template>
 
 <script type="text/jsx">
-  import CollapseTransition from 'element-ui/src/transitions/collapse-transition';
+  import ElCollapseTransition from 'element-ui/src/transitions/collapse-transition';
   import ElCheckbox from 'element-ui/packages/checkbox';
   import emitter from 'element-ui/src/mixins/emitter';
 
@@ -66,8 +67,8 @@
     },
 
     components: {
+      ElCollapseTransition,
       ElCheckbox,
-      CollapseTransition,
       NodeContent: {
         props: {
           node: {
@@ -155,16 +156,8 @@
         }
       },
 
-      handleUserClick() {
-        if (this.node.indeterminate) {
-          this.node.setChecked(this.node.checked, !this.tree.checkStrictly);
-        }
-      },
-
       handleCheckChange(ev) {
-        if (!this.node.indeterminate) {
-          this.node.setChecked(ev.target.checked, !this.tree.checkStrictly);
-        }
+        this.node.setChecked(ev.target.checked, !this.tree.checkStrictly);
       },
 
       handleChildNodeExpand(nodeData, node, instance) {

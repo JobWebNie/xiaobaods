@@ -1,7 +1,6 @@
 const db = require('../db')
 const express = require('express')
 const app = express()
-const session = require('express-session')
 const router = express.Router()
 // 用户登录
 router.post("/base/login", (Request, Response) => {
@@ -55,9 +54,8 @@ router.post("/user/register", (Request, Response, next) => {
   })
 })
 // 找回密码
-router.put("/modify/seekPassw", (Request, Response, next) => {
+router.put("/modify/seekPassw", (Request, Response) => {
   var data = Request.body.data
-
   db.pool.query('SELECT * FROM `xiaobaods_users_tables` WHERE `name` = ? and `id`=?', [data.name, data.id], function (err, results, fields) {
     if (err) throw err
     else if (results.length > 0) {
@@ -70,7 +68,20 @@ router.put("/modify/seekPassw", (Request, Response, next) => {
         message: "acountErr"
       })
     }
+  })
+})
 
+router.post('/conversion/parms',(Request, Response)=>{
+     var name = Request.body.name
+  db.pool.query('SELECT * FROM `Tools_conversion` WHERE `category` = ?', [name],function(err,results,fields){
+    if (err) throw err
+    else if (results.length > 0) {
+      Response.send(results[0])
+    } else {
+      Response.send({
+        message: "acountErr"
+      })
+    }
   })
 })
 module.exports = router

@@ -16,6 +16,9 @@
     mixins: [Popper],
 
     created() {
+      this.$on('updatePopper', () => {
+        if (this.showPopper) this.updatePopper();
+      });
       this.$on('visible', val => {
         this.showPopper = val;
       });

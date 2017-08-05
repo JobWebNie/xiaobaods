@@ -14,14 +14,18 @@ let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
-    /* istanbul ignore if */
-    if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
-      mark('vue-perf-init')
-    }
-
     const vm: Component = this
     // a uid
     vm._uid = uid++
+
+    let startTag, endTag
+    /* istanbul ignore if */
+    if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
+      startTag = `vue-perf-init:${vm._uid}`
+      endTag = `vue-perf-end:${vm._uid}`
+      mark(startTag)
+    }
+
     // a flag to avoid this being observed
     vm._isVue = true
     // merge options
@@ -57,8 +61,8 @@ export function initMixin (Vue: Class<Component>) {
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
       vm._name = formatComponentName(vm, false)
-      mark('vue-perf-init-end')
-      measure(`${vm._name} init`, 'vue-perf-init', 'vue-perf-init-end')
+      mark(endTag)
+      measure(`${vm._name} init`, startTag, endTag)
     }
 
     if (vm.$options.el) {
@@ -111,24 +115,27 @@ export function resolveConstructorOptions (Ctor: Class<Component>) {
 function resolveModifiedOptions (Ctor: Class<Component>): ?Object {
   let modified
   const latest = Ctor.options
+  const extended = Ctor.extendOptions
   const sealed = Ctor.sealedOptions
   for (const key in latest) {
     if (latest[key] !== sealed[key]) {
       if (!modified) modified = {}
-      modified[key] = dedupe(latest[key], sealed[key])
+      modified[key] = dedupe(latest[key], extended[key], sealed[key])
     }
   }
   return modified
 }
 
-function dedupe (latest, sealed) {
+function dedupe (latest, extended, sealed) {
   // compare latest and sealed to ensure lifecycle hooks won't be duplicated
   // between merges
   if (Array.isArray(latest)) {
     const res = []
     sealed = Array.isArray(sealed) ? sealed : [sealed]
+    extended = Array.isArray(extended) ? extended : [extended]
     for (let i = 0; i < latest.length; i++) {
-      if (sealed.indexOf(latest[i]) < 0) {
+      // push original options and not sealed options to exclude duplicated options
+      if (extended.indexOf(latest[i]) >= 0 || sealed.indexOf(latest[i]) < 0) {
         res.push(latest[i])
       }
     }

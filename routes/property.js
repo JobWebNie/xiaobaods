@@ -99,7 +99,7 @@ router.post('/pete/shop', (request, response) => {
 })
 router.post('/proper/trend', (request, response) => {
 var query = request.body.data
-  if (query.feature == '' || query.feature == 'list') {
+  if (query.attribute == 'list' ||query.feature == 'list') {
     var string = JSON.stringify(query).replace(/\"/g, "'")
     const spawnSync1 = spawnSync('python', ['xiaobaods_et.py', string])
     var data = JSON.parse(spawnSync1.stdout)

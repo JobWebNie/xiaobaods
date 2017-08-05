@@ -13,7 +13,7 @@ export default {
   mutations: {
     PICTURE_INSERT(state, picture) {
         var data= picture.map(function (item) {
-              var name = '所属店铺'
+              var name = item['所属店铺']
              var url =  item['主图缩略图'].slice(0, -10)
              var detail = item['宝贝链接']
              var count = item['支付子订单数']

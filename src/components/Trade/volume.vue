@@ -2,7 +2,7 @@
   <div>
     <el-row class="title" type="flex" justify="space-between" align="middle">
       <el-col class="title-left">
-        <h3>生e经</h3>
+        <h3>成交分布</h3>
       </el-col>
       <el-col class="title-right">
         <p>属性成交分布</p>
@@ -60,9 +60,7 @@
         activeName: '',
         pickerOption: {
           disabledDate(time) {
-            var min = new Date('2011-04-01')
-            var max = new Date('2017-05-01')
-            if (time > max || time < min) {
+            if (time > Date.parse('2017-05-01') || time < Date.parse('2011-04-01')) {
               return true;
             } else {
               return false;

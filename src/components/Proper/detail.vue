@@ -10,10 +10,12 @@
     </el-row>
     <el-row class="navlist" type="flex" justify="space-around" align="middle">
       <el-col class="list-left">
-        <el-date-picker v-model="value3" :picker-options="pickerOption" @change="inputchange" size='small'></el-date-picker>
-        <el-cascader v-model="value0" :options="options0" size='small' @change="inputchange"></el-cascader>
-        <el-cascader v-model="value1" :options="options1" size='small' @change="inputchange"></el-cascader>
-        <el-select v-model="value2" size='small' @change="inputchange">
+        <el-date-picker v-model="value3" :picker-options="pickerOption"  v-on:change="inputchange" size='small'></el-date-picker>
+        <el-cascader v-model="value0" :options="options0" size='small'  v-on:change="inputchange"></el-cascader>
+          <el-select v-model="value1" size='small'  v-on:change="inputchange">
+          <el-option v-for="item in options1" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+        <el-select v-model="value2" size='small'  v-on:change="inputchange">
           <el-option v-for="item in options2" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-col>
@@ -88,9 +90,8 @@
         value3: '',
         pickerOption: {
           disabledDate(time) {
-            var aday = 8.64e7
-            var min = new Date('2016-11-25').getTime() - aday
-            var max = Date.now() - aday;
+            var min =Date.parse('2016-11-24')
+            var max = Date.now() - 8.64e7;
             if (time.getTime() > max || time.getTime() < min) {
               return true;
             } else {
@@ -233,7 +234,7 @@
             }
           ]
         }],
-        value1: ["热销排名"],
+        value1: "热销排名",
         options1: [{
           value: '热销排名',
           label: '热销排名'
@@ -265,7 +266,7 @@
           PageIndex: 1,
           height: 823
         },
-        loading: null,
+        loading: false,
         restaurants: [],
         value4: '',
         value5: ''
@@ -310,7 +311,7 @@
         })
       },
       objToArr(obj) {
-        this.loading = false
+        
         var middle_Table_body = [];
         var middle_Table_title = [];
         if (obj) {
@@ -320,6 +321,7 @@
           for (let i in obj) {
             middle_Table_body.push(obj[i])
           }
+          this.loading = false
           this.Table.tableData_title = middle_Table_title
           this.Table.tableData = middle_Table_body
           this.Table.tableData_prepag = this.Table.tableData.slice(0, 15)

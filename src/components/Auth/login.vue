@@ -6,9 +6,9 @@
   <img style="position:absolute;width:100%;top:10vh;" src="../../assets/login_background.jpg" alt="">
 <el-row style="margin-top:20vh;">
         <el-col style="position:absolute;right:20vw;" :span="4"><el-card>
-           <b> 密码登陆</b>
-           <br>
-           <br>
+          <div style="padding-bottom:10px;position:relative;">
+           <b> 密码登录</b>
+          </div>
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" v-on:submit.prevent="onLogin">
             <el-form-item prop="name">
                 <el-input v-model="ruleForm.name"></el-input>
@@ -17,12 +17,11 @@
                 <el-input type="password" v-model="ruleForm.password"  @keyup.enter.native="onLogin"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button  @click="onLogin" style="background:#FF4949;border:none;width:100%;color:#FFFFFF;">登陆</el-button>
+                <el-button  @click="onLogin" style="background:#FF4949;border:none;width:100%;color:#FFFFFF;">登录</el-button>
             </el-form-item>
-            <el-form-item>
-              <el-button type="text" @click="onRegister">注册</el-button>
+             <el-button type="text" @click="onRegister">注册</el-button>
               <el-button type="text" @click="seekPassw">找回密码</el-button>
-            </el-form-item>
+              <el-button type="text" style="position:absolute;right:20px;" @click="jumpIntoCompare">无用户登录</el-button>
         </el-form>
     </el-card>
     </el-col>   
@@ -61,10 +60,9 @@
                               this.$message("登陆成功")
                               var user= response.body.data
                              this.USER_SIGNIN(user)    
-                            
-                              setTimeout(()=>{
+                                setTimeout(()=>{
                                    window.router.push({path: '/product/hot_product/'})
-                              },1000)  
+                              },1000)                          
                        }
                         else if(response.body.message=="pasErr"){
                               this.$message("密码错误")
@@ -87,22 +85,13 @@
             },
             seekPassw(){
                  window.router.push({path: '/modify/'})
+            },
+            jumpIntoCompare(){
+                this.USER_SIGNIN({id:'ceshi',name:"xx"})  
+                   setTimeout(()=>{
+                 window.router.push({path: '/word/compare/'})
+                },1000)  
             }
         }
     }
 </script>
-<style scoped>
-.el-row{
-    position:relative;
-}
-.el-card__body{
-    background: #FFFFFF;
-}
-.el-input__inner{
-    border-radius: 0px;
-    border: 1px solid #DDDDDD;
-}
-.el-input__inner:focus{
-     box-shadow:0px 0px 2px blue;
-}
-</style>

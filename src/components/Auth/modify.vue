@@ -7,8 +7,10 @@
         <el-row style="margin-top:20vh;">
             <el-col  :span="4" :push="15">
             <el-card>
+            <div style="padding-bottom:10px;position:relative;">
             <b>邀请码</b>
-             <br><br>
+            <a href="/#/login/" style="position:absolute;right:5px;color:#34c0e3;"><small>去登录</small></a>
+            </div>
              <el-form :model="user">
              <el-form-item>
              <el-input v-model="user.id" placeholder="请输入邀请码！">
@@ -18,8 +20,7 @@
             <el-input v-model="user.name" placeholder="请输入账号！" @keyup.enter.native="modify"></el-input>
             </el-form-item>
             <el-form-item>
-            <el-button style="width:45%;margin-right:5%" @click="modify" type="danger">确定</el-button>
-            <a href="/#/login/"><el-button style="width:45%;" type="danger">返回</el-button></a>
+              <el-button @click="modify" style="background:#FF4949;border:none;width:100%;color:#FFFFFF;">找回密码</el-button>
             </el-form-item>
              </el-form>
              </el-card>

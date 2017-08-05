@@ -8,9 +8,10 @@
     <el-col :span="4"
             :push="15">
             <el-card>
+      <div style="padding-bottom:10px;position:relative;">
         <b>用户注册</b>
-        <br>
-         <br>
+        <a href="/#/login/" style="position:absolute;right:5px;color:#34c0e3;"><small>去登录</small></a>
+      </div>
         <el-form :model="User"
                  :rules="rules2"
                  ref="User"
@@ -32,7 +33,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="danger" style="width:45%;margin-right:5%" @click="submitForm('User')">提交</el-button>
-              <a href="/#/login/"><el-button  type="danger" style="width:45%;">返回</el-button> </a>
+              <a href="/#/login/"><el-button  type="danger" style="width:45%;">去登录</el-button> </a>
           </el-form-item>
         </el-form>
         </el-card>
@@ -141,7 +142,7 @@ if(value === ''){
   }
 }
 </script>
-<style lang="css">
+<style lang="css" scoped>
   .el-row{
     position:relative;
 }
