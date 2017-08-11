@@ -24,9 +24,9 @@
     </el-row>
     <el-row>
       <el-col>
-        <el-table v-loading="loading" :data="Table.tableData_prepag" :height="Table.height" border>
+        <el-table v-loading="loading" :data="Table.tableData_prepag" :height="Table.height">
           <el-table-column v-for="title in Table.tableData_title" :prop="title.name" :render-header="renderHeader" :formatter="contentFormatter"
-            :min-width="title.width" align="center" header-align="center" :resizable="false"></el-table-column>
+            :min-width="title.width" align="center" header-align="center"></el-table-column>
         </el-table>
         <div style="position:relative; text-align:center;">
           <el-pagination v-show="inputValue.data_head>20" v-bind:size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="Table.PageIndex"

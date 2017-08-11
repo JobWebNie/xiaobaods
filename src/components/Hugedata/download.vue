@@ -18,7 +18,7 @@
             </div>
             <div class="clearfix">
               <el-button type="text" class="button" @click="PICTURE_PUT(key)">删除</el-button>
-              <el-button type="text" class="button right" @click="downLoad(item.url)">下载</el-button>
+              <el-button type="text" class="button right" @click="toHref(item.url)">下载</el-button>
             </div>
           </div>
         </el-card>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+ import {download} from '../../assets/js/download'
   import {
     mapGetters,
     mapActions,
@@ -40,18 +41,9 @@
       }
     },
     methods: {
-      ...mapActions(['PICTURE_PUT']),
-      downLoad(src) {//下载某一张图片
-        var $a = document.createElement('a');
-        $a.setAttribute("href", src);
-        $a.setAttribute("download", "");
-        var evObj = document.createEvent('MouseEvents');
-        evObj.initEvent('click', true, false);
-        var ev = new Event('click', {
-          "bubbles": true,
-          "cancelable": false
-        });
-        $a.dispatchEvent(evObj);
+      // ...mapActions(['PICTURE_PUT']),
+      toHref(href) {//下载某一张图片
+       download(href)
       },
       goBack(){
        history.back()

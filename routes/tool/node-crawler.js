@@ -60,7 +60,6 @@ exports.downLoad = function (databse,username) {
             items.map(function (val) {
                 archive.append(fs.createReadStream(val), { name: path.basename(val) })
             })
-
             archive.finalize();
             console.log("打包完成")
             return items

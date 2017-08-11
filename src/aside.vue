@@ -20,8 +20,7 @@
       <el-submenu v-show="midlevel" index="proper">
         <template slot="title">属性洞察</template>
         <el-menu-item index="detail" :route="{path:'/proper/detail'}">属性详情</el-menu-item>
-        <el-menu-item index="gongshi" :route="{path:'/proper/gongshi'}">测试公式</el-menu-item>
-        <el-menu-item index="table" :route="{path:'/proper/table'}">测试表格</el-menu-item>
+        <el-menu-item v-show="highlevel" index="gongshi" :route="{path:'/proper/gongshi'}">测试公式</el-menu-item>
       </el-submenu>
       <el-submenu v-show="midlevel" index="trade">
         <template slot="title">生e经</template>
@@ -39,7 +38,7 @@
   export default {
     data() {
       return {
-        highlevel:true,
+        highlevel:false,
         midlevel:false,
         lowlevel:false
       }
@@ -56,7 +55,7 @@
       var level =this.user.level
       switch(level){
         case 9:
-        this.midlevel=this.lowlevel=true
+       this.highlevel=this.midlevel=this.lowlevel=true
         break;
         case 4:
         this.midlevel=this.lowlevel=true
@@ -65,12 +64,6 @@
         this.lowlevel=true
         break;
       }
-      // if (this.user.level !== null && this.user.level > 4) {
-      //    highlevel=true
-      
-      // } else {
-      //   this.show = false
-      // }
     }
   }
 </script>

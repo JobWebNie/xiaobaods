@@ -13,7 +13,7 @@ router.get('/keyWord/hot', (Request, Response) => {
   var dateArgv = moment(timTep).format('YYYY-MM-DD')
   var data = JSON.parse(spawnSync1.stdout)
   var filename = 'hw-' + dateArgv + '牛仔裤热搜核心词排名7'
-  var fullpath = './static/public/' + filename + '.csv'
+  var fullpath = './dist/static/public/' + filename + '.csv'
   fs.exists(fullpath, function (exists) {
     if (exists) {
       Response.send({
@@ -61,7 +61,7 @@ router.post("/keyWord/hot", (Request, Response) => {
   const spawnSync1 = spawnSync('python', ['xiaobaods_w.py', string])
   var data = JSON.parse(spawnSync1.stdout)
   var filename = 'hw-' + dateArgv + category + choice + variable + time_length
-  var fullpath = './static/public/' + filename + '.csv'
+  var fullpath = './dist/static/public/' + filename + '.csv'
   fs.exists(fullpath, function (exists) {
     if (exists) {
       Response.send({
@@ -102,7 +102,7 @@ router.get('/keyWord/up', (Request, Response) => {
   var dateArgv = moment(timTep).format('YYYY-MM-DD')
   var data = JSON.parse(spawnSync1.stdout)
   var filename = 'uw-' + dateArgv + '牛仔裤飙升核心词排名7'
-  var fullpath = './static/public/' + filename + '.csv'
+  var fullpath = './dist/static/public/' + filename + '.csv'
   fs.exists(fullpath, function (exists) {
     if (exists) {
       Response.send({
@@ -151,7 +151,7 @@ router.post("/keyWord/up", (Request, Response) => {
   const spawnSync1 = spawnSync('python', ['xiaobaods_w.py', string])
   var data = JSON.parse(spawnSync1.stdout)
   var filename = 'uw-' + dateArgv + category + choice + variable + time_length
-  var fullpath = './static/public/' + filename + '.csv'
+  var fullpath = './dist/static/public/' + filename + '.csv'
   fs.exists(fullpath, function (exists) {
     if (exists) {
       Response.send({

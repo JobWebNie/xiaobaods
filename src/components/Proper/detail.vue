@@ -10,72 +10,52 @@
     </el-row>
     <el-row class="navlist" type="flex" justify="space-around" align="middle">
       <el-col class="list-left">
-        <el-date-picker v-model="value3" :picker-options="pickerOption"  v-on:change="inputchange" size='small'></el-date-picker>
-        <el-cascader v-model="value0" :options="options0" size='small'  v-on:change="inputchange"></el-cascader>
-          <el-select v-model="value1" size='small'  v-on:change="inputchange">
+        <el-date-picker v-model=" data.date" :picker-options="pickerOption" v-on:change="inputchange" size='small'></el-date-picker>
+        <el-cascader v-model=" data.category" :options="options0" size='small' v-on:change="inputchange"></el-cascader>
+        <el-select v-model=" data.variable" size='small' v-on:change="inputchange">
           <el-option v-for="item in options1" :label="item.label" :value="item.value"></el-option>
         </el-select>
-        <el-select v-model="value2" size='small'  v-on:change="inputchange">
+        <el-select v-model=" data.length" size='small' v-on:change="inputchange">
           <el-option v-for="item in options2" :label="item.label" :value="item.value"></el-option>
         </el-select>
+         <span class="Embellish"><a @click="excellCsv()">下载</a></span>
+          <span class="Embellish"><a @click.prevent="loadPicture(Table.tableData)">图片</a></span>
       </el-col>
       <el-col class="list-right">
-        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="value5" placeholder="商品筛选"></el-input>
-        <el-autocomplete size='small' v-model.trim="value4" :fetch-suggestions="querySearchAsync" @keyup.enter.native="inputchange"
-          placeholder="店铺筛选"></el-autocomplete>
+     <!-- <span v-if="false">
+        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.titlechoice" placeholder="商品筛选"></el-input>
+        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.storechoice" placeholder="店铺搜索"></el-input>
+        <el-autocomplete size='small' v-model="data.storegroupchoice" :fetch-suggestions="querySearchAsync" @keyup.enter.native="inputchange" placeholder="热门店铺分类"></el-autocomplete>
         <el-button @click="inputchange" type="primary" size='small'>筛选</el-button>
         <el-button size='small' @click="emptyFilter">清空</el-button>
+      </span>-->
       </el-col>
     </el-row>
-
     <el-row>
       <el-col>
         <el-table v-loading="loading" :data="Table.tableData_prepag" style="width: 100%" :height="this.Table.height" @cell-click="showPicture">
           <el-table-column prop="热销排名" label="排名" width="50" header-align="center" align="center"></el-table-column>
-          <el-table-column :label="Table.tableData_title[0]" header-align="center" align="center">
-            <template scope="scope">
-              <a target="_blank" :href="Table.bigPicture" alt=""><img style="height:44px;" :src="scope.row.主图缩略图" alt="">
-            </a></template>
+          <el-table-column :label="Table.tableData_title[0]" header-align="center" align="center" width="80">
+            <template scope="scope"><a target="_blank" :href="Table.bigPicture" alt=""><img style="height:44px;" :src="scope.row.主图缩略图" alt=""></a></template>
           </el-table-column>
           <el-table-column show-overflow-tooltip :label="Table.tableData_title[2]" header-align="center" align="center">
             <template scope="scope"><a target="_blank" :href="scope.row.宝贝链接" alt="">{{scope.row.商品信息}}</a></template>
           </el-table-column>
-          <el-table-column show-overflow-tooltip prop="所属店铺" :label="Table.tableData_title[3]" header-align="center" align="center">
+          <el-table-column show-overflow-tooltip prop="所属店铺" :label="Table.tableData_title[3]" header-align="center" align="center"
+            width="150">
             <template scope="scope"><a target="_blank" :href="scope.row.店铺链接">{{scope.row.所属店铺}}</a></template>
           </el-table-column>
-          <el-table-column :prop="Table.tableData_title[4]" :label="Table.tableData_title[4]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[5]" :label="Table.tableData_title[5]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[6]" :label="Table.tableData_title[6]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[10]" :label="Table.tableData_title[10]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[11]" :label="Table.tableData_title[11]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[12]" :label="Table.tableData_title[12]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[13]" :label="Table.tableData_title[13]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[14]" :label="Table.tableData_title[14]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[15]" :label="Table.tableData_title[15]" header-align="right" align="right"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[16]" :label="Table.tableData_title[16]" header-align="right" align="right"></el-table-column>
-          <el-table-column v-if="Table.tableData_title[17]" :prop="Table.tableData_title[17]" :label="Table.tableData_title[17]" header-align="right"
-            align="right"></el-table-column>
-          <el-table-column v-if="Table.tableData_title[18]" :prop="Table.tableData_title[18]" :label="Table.tableData_title[18]" header-align="right"
-            align="right"></el-table-column>
-          <el-table-column v-if="Table.tableData_title[19]" :prop="Table.tableData_title[19]" :label="Table.tableData_title[19]" header-align="right"
-            align="right"></el-table-column>
-          <el-table-column v-if="Table.tableData_title[20]" :prop="Table.tableData_title[20]" :label="Table.tableData_title[20]" header-align="right"
-            align="right"> </el-table-column>
-          <el-table-column v-if="Table.tableData_title[21]" :prop="Table.tableData_title[21]" :label="Table.tableData_title[21]" header-align="right"
-            align="right"></el-table-column>
-          <el-table-column v-if="Table.tableData_title[22]" :prop="Table.tableData_title[22]" :label="Table.tableData_title[22]" header-align="right"
-            align="right"></el-table-column>
-          <el-table-column v-if="Table.tableData_title[23]" :prop="Table.tableData_title[23]" :label="Table.tableData_title[23]" header-align="right"
-            align="right"></el-table-column>
-          <el-table-column v-if="Table.tableData_title[24]" :prop="Table.tableData_title[24]" :label="Table.tableData_title[24]" header-align="right"
-            align="right"> </el-table-column>
-          <el-table-column header-align="center" align="center" label="操作">
-            <template scope="scope">
-              <a target="_blank" :href="scope.row.查看详情" value='' alt=""> 查看详情</a><br></template>
+          <el-table-column :prop="Table.tableData_title[4]" :label="Table.tableData_title[4]" :formatter="contentFormatter" header-align="right" align="right" width="120"></el-table-column>
+          <el-table-column :prop="Table.tableData_title[5]" :label="Table.tableData_title[5]" :formatter="contentFormatter" header-align="right" align="right" width="120"></el-table-column>
+          <el-table-column :prop="Table.tableData_title[6]" :label="Table.tableData_title[6]" :formatter="contentFormatter" header-align="right" align="right" width="120"></el-table-column>
+          <el-table-column v-for="title in Table.tableData_title" v-if="title.slice(0,2)=='日期'" :prop="title" :render-header="renderHeader"  :formatter="contentFormatter"
+            width="50" header-align="right" align="right"></el-table-column>
+          <el-table-column header-align="center" align="center" label="操作" width="120">
+            <template scope="scope"><a target="_blank" :href="scope.row.查看详情" value='' alt=""> 查看详情</a><br></template>
           </el-table-column>
         </el-table>
         <div style="position:relative; text-align:center;">
-          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="Table.PageIndex" :page-sizes="[15, 20, 50, 100]"
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="Table.PageIndex" :page-sizes="[20, 50, 100]"
             :page-size="Table.prePageCount" layout="total, sizes, prev, pager, next, jumper" :total="Table.tableData.length">
           </el-pagination>
         </div>
@@ -84,13 +64,21 @@
   </div>
 </template>
 <script>
+  import {
+    mapActions
+  } from 'vuex'
+  import {
+    PICTURE_INSERT
+  } from '../../store/picture'
+  import {
+    download
+  } from '../../assets/js/download'
   export default {
     data() {
       return {
-        value3: '',
         pickerOption: {
           disabledDate(time) {
-            var min =Date.parse('2016-11-24')
+            var min = Date.parse('2016-11-24')
             var max = Date.now() - 8.64e7;
             if (time.getTime() > max || time.getTime() < min) {
               return true;
@@ -99,7 +87,6 @@
             }
           }
         },
-        value0: ['牛仔裤', '款式', '铅笔裤'],
         options0: [{
           label: '牛仔裤',
           value: '牛仔裤',
@@ -234,7 +221,6 @@
             }
           ]
         }],
-        value1: "热销排名",
         options1: [{
           value: '热销排名',
           label: '热销排名'
@@ -249,7 +235,6 @@
           value: '支付转化率指数',
           label: '支付转化率指数'
         }],
-        value2: 7,
         options2: [{
           value: 7,
           label: '显示周期：近7天'
@@ -261,57 +246,77 @@
           tableData: [],
           tableData_title: [],
           tableData_prepag: [],
-          prePageCount: 15,
+          prePageCount: 20,
           bigPicture: null,
           PageIndex: 1,
-          height: 823
+          height: 835
         },
-        loading: false,
-        restaurants: [],
-        value4: '',
-        value5: ''
+        data:{
+            date:Date.now()- 8.64e7,
+            length:  7,
+            category: ['牛仔裤', '款式', '铅笔裤'],
+            variable: '热销排名',
+            storegroupchoice: '',
+            storechoice:'',
+            titlechoice: '',
+            table: 'bc_attribute_granularity_sales'
+        },
+        loading: true,
+        // restaurants: [],
+        timeout: null,
+        fullpath: ''
       }
     },
     created() {
-      //增加时间选框默认选中功能
-      var timeTamp = new Date().getTime() - 24 * 60 * 60 * 1000
-      var lastTime = new Date(timeTamp)
-      this.value3 = lastTime.getFullYear() + '-' + (lastTime.getMonth() + 1) + '-' + lastTime.getDate()
       //显示遮罩层加载功能
-      this.loading = true
-      this.$http.get("market/prop").then((response) => {
-        this.objToArr(response.body.data)
-      })
-      this.$http.get("shop/search").then((response) => {
-        for (var i = 0; i < response.body.data.length; i++) {
-          this.restaurants.push(new Object({
-            value: response.body.data[i]
-          }))
-        }
+        this.$http.get("market/prop").then((response) => {
+          this.fullpath = response.body.fullpath
+          this.objToArr(response.body.data)
+          this.loading = false
+        })
+        this.$http.get("shop/search").then((response) => {
+        this.restaurants = response.data.map((item) => {
+          return {
+            value: item
+          }
+        })
       })
     },
     methods: {
+      ...mapActions([PICTURE_INSERT]),
+      excellCsv() {
+        download(this.fullpath)
+      },
+      renderHeader(h, {
+        column,
+        $index
+      }) { //在不改变json数据的情况下改变header
+        var th = column.property.slice(-4, -2) + '-' + column.property.slice(-2)
+        return column.label = th;
+      },
+       contentFormatter(row, column, cellValue) {
+     let reg = String(cellValue).replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+              return cellValue = reg;
+      },
       inputchange() {
         this.loading = true
         var data1 = {
-          "data_time": this.value3,
-          "data_items": this.$data.value0,
-          "data_reorder": this.$data.value1,
-          "choice": this.$data.value4,
-          "titlechoice": this.$data.value5,
-          "data_time_length": this.$data.value2
+          data:this.data.date,
+          length:this.data.length,
+          variable:this.data.variable,
+          category:this.data.category[0],
+          classfication:this.data.category[1],
+          attributes:this.data.category[2],
+          table:this.data.table
         }
-        var data = JSON.stringify(data1) //格式化数据
-        this.$http.post("market/prop", {
-          data
-        }, {
-          emulateJSON: true
-        }).then((response) => {
+        var data = JSON.stringify(data1)
+        this.$http.post("market/prop",{data},{emulateJSON:true}).then((response) => {
+          this.fullpath = response.body.fullpath
           this.objToArr(response.body.data)
+          this.loading = false
         })
       },
       objToArr(obj) {
-        
         var middle_Table_body = [];
         var middle_Table_title = [];
         if (obj) {
@@ -321,10 +326,9 @@
           for (let i in obj) {
             middle_Table_body.push(obj[i])
           }
-          this.loading = false
           this.Table.tableData_title = middle_Table_title
           this.Table.tableData = middle_Table_body
-          this.Table.tableData_prepag = this.Table.tableData.slice(0, 15)
+          this.Table.tableData_prepag = this.Table.tableData.slice(0, 20)
         }
       },
       handleSizeChange(val) {
@@ -344,19 +348,26 @@
       showPicture(row) {
         this.Table.bigPicture = row.主图缩略图.slice(0, -10)
       },
-      querySearchAsync(queryString, cb) {
-        var restaurants = this.restaurants
-        var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-          cb(results);
-        });
-      },
-      emptyFilter() {
-        this.value4 = ''
-        this.value5 = ''
-        this.inputchange()
-      },
+      // querySearchAsync(queryString, cb) {
+      //   var restaurants = this.restaurants
+      //   var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+      //   clearTimeout(this.timeout);
+      //   this.timeout = setTimeout(() => {
+      //     cb(results);
+      //   });
+      // },
+      // emptyFilter() {
+      //   this.data.storegroupchoice = ''
+      //   this.data.storechoice =''
+      //   this.data.titlechoice = ''
+      //   this.inputchange()
+      // },
+      loadPicture(data) {
+        this.PICTURE_INSERT(data) //数据存入store,详情请见
+        window.router.push({
+          path: '/picture/download/'
+        })
+      }
     }
   }
 

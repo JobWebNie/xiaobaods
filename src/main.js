@@ -10,10 +10,6 @@ import App from './App.vue'
 Vue.use(VueRouter);
 Vue.use(VueResouse);
 Vue.use(ElementUI);
-Vue.filter('number-filter', function (value) {
-  // 返回处理后的值
-  return parseFloat(value * 100).toFixed(2) + '%'
-})
 window.Vue = Vue;
 const routes = [{
     path: '/product/hot_product/',
@@ -31,12 +27,6 @@ const routes = [{
     path: '/proper/detail/',
     component: function (resolve) {
       require(['./components/Proper/detail.vue'], resolve)
-    }
-  },
-   {
-    path: '/proper/table',
-    component: function (resolve) {
-      require(['./components/Auth/table.vue'], resolve)
     }
   },
    {
