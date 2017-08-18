@@ -8,7 +8,7 @@ const spawnSync = require('child_process').spawnSync
 
 //市场详情
 router.get("/market/prop", (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_c.py'])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_c.py'],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   var fullpath = './dist/static/public/pd-' + moment(new Date() - 8.64e7).format('YYYY-MM-DD') + '牛仔裤款式铅笔裤热销排名7.csv'
   if (JSON.stringify(data) !== "{}") {
@@ -47,7 +47,7 @@ router.post("/market/prop", (Request, Response) => {
   var query = JSON.parse(Request.body.data)
   query.date = moment(query.date).format('YYYY-MM-DD')
   var string = JSON.stringify(query).replace(/"/g, "'")
-  const spawnSync1 = spawnSync('python', ['xiaobaods_c.py', string])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_c.py', string],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   var fullpath = './dist/static/public/pd-' + query.date.slice(0, 10) + query.category + query.classfication + query.attributes + query.variable + query.length + '.csv'
   if (JSON.stringify(data) !== "{}") {
@@ -84,7 +84,7 @@ router.post("/market/prop", (Request, Response) => {
 })
 //home数据页
 router.get("/component", (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_m.py'])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_m.py'],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   Response.send({
     data: data
@@ -104,14 +104,14 @@ router.post("/target/compare", (Request, Response) => {
     display = 'year'
   }
   var string = "{'category':'" + category + "','display':'" + display + "'}"
-  const spawnSync1 = spawnSync('python', ['xiaobaods_m.py', string])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_m.py', string],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   Response.send({
     data: data
   })
 })
 router.get('/pete/shop', (request, response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_e.py', "{'attribute':'list'}"])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_e.py', "{'attribute':'list'}"],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   response.send({
     message: 'ok',
@@ -128,7 +128,7 @@ router.post('/pete/shop', (request, response) => {
     dateArgv = moment(query.data_time).format('YYYY-MM-DD')
   }
   var string = "{'date':'" + dateArgv + "','category':'" + category + "','attribute':'" + attribute + "','variable':'" + variable + "'}"
-  const spawnSync1 = spawnSync('python', ['xiaobaods_e.py', string])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_e.py', string],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   response.send({
     message: 'ok',
@@ -139,7 +139,7 @@ router.post('/proper/trend', (request, response) => {
   var query = request.body.data
   if (query.attribute == 'list' || query.feature == 'list') {
     var string = JSON.stringify(query).replace(/\"/g, "'")
-    const spawnSync1 = spawnSync('python', ['xiaobaods_et.py', string])
+    const spawnSync1 = spawnSync('python', ['xiaobaods_et.py', string],{cwd:'./python'})
     var data = JSON.parse(spawnSync1.stdout)
     response.send({
       data: data

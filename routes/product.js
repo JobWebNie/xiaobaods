@@ -9,12 +9,12 @@ const spawnSync = require('child_process').spawnSync
 //店铺搜索功能
 
 router.get('/shop/search', (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_storegroup.py'])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_storegroup.py'],{cwd:'./python'})
   var storegroup = JSON.parse(spawnSync1.stdout)
   Response.send(storegroup)
 })
 router.get("/prod/search", (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_a.py', "{'table':'bc_attribute_granularity_visitor'}"])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_a.py', "{'table':'bc_attribute_granularity_visitor'}"],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   var fullpath = './dist/static/public/ps-' + moment(new Date() - 8.64e7).format('YYYY-MM-DD') + '牛仔裤热销排名7.csv'
   if (JSON.stringify(data) !== "{}") {
@@ -53,7 +53,7 @@ router.post("/prod/search", (Request, Response) => {
   var query = JSON.parse(Request.body.data)
   query.date = moment(query.date).format('YYYY-MM-DD')
   var string = JSON.stringify(query).replace(/"/g, "'")
-  const spawnSync1 = spawnSync('python', ['xiaobaods_a.py', string])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_a.py', string],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   var fullpath = './dist/static/public/ps-' + query.date.slice(0, 10) + query.category + query.variable + query.length + '.csv'
   if (JSON.stringify(data) !== "{}") {
@@ -90,8 +90,9 @@ router.post("/prod/search", (Request, Response) => {
 })
 
 router.get("/prod/hot", (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_a.py', "{'table':'bc_attribute_granularity_sales'}"])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_a.py', "{'table':'bc_attribute_granularity_sales'}"],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
+  
   var fullpath = './dist/static/public/ph-' + moment(new Date() - 8.64e7).format('YYYY-MM-DD') + '牛仔裤热销排名7.csv'
   if (JSON.stringify(data) !== "{}") {
      var myData = []
@@ -129,7 +130,7 @@ router.post("/prod/hot", (Request, Response) => {
   var query = JSON.parse(Request.body.data)
   query.date = moment(query.date).format('YYYY-MM-DD')
   var string = JSON.stringify(query).replace(/"/g, "'")
-  const spawnSync1 = spawnSync('python', ['xiaobaods_c.py', string])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_a.py', string],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   var fullpath = './dist/static/public/ph-' + query.date.slice(0, 10) + query.category + query.variable + query.length + '.csv'
   if (JSON.stringify(data) !== "{}") {

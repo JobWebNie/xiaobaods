@@ -8,7 +8,7 @@ const router = express.Router()
 const spawnSync = require('child_process').spawnSync
 // 热词处理
 router.get('/keyWord/hot', (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py'])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py'],{cwd:'./python'})
   var timTep = new Date() - 24 * 60 * 60 * 1000
   var dateArgv = moment(timTep).format('YYYY-MM-DD')
   var data = JSON.parse(spawnSync1.stdout)
@@ -58,7 +58,7 @@ router.post("/keyWord/hot", (Request, Response) => {
     dateArgv = moment(query.data_time).format('YYYY-MM-DD')
   }
   var string = "{'date':'" + dateArgv + "','category':'" + category + "','length':" + time_length + ",'choice':'" + choice + "','variable':'" + variable + "'}"
-  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py', string])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py', string],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   var filename = 'hw-' + dateArgv + category + choice + variable + time_length
   var fullpath = './dist/static/public/' + filename + '.csv'
@@ -97,7 +97,7 @@ router.post("/keyWord/hot", (Request, Response) => {
 })
 // 关键词处理
 router.get('/keyWord/up', (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py', "{'choice':'飙升核心词'}"]) //由于参数不同默认选中飙升
+  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py', "{'choice':'飙升核心词'}"],{cwd:'./python'}) //由于参数不同默认选中飙升
   var timTep = new Date() - 24 * 60 * 60 * 1000
   var dateArgv = moment(timTep).format('YYYY-MM-DD')
   var data = JSON.parse(spawnSync1.stdout)
@@ -148,7 +148,7 @@ router.post("/keyWord/up", (Request, Response) => {
   }
   var string = "{'date':'" + dateArgv + "','category':'" + category + "','length':" + time_length + ",'choice':'" + choice + "','variable':'" + variable + "'}"
 
-  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py', string])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py', string],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   var filename = 'uw-' + dateArgv + category + choice + variable + time_length
   var fullpath = './dist/static/public/' + filename + '.csv'
@@ -187,7 +187,7 @@ router.post("/keyWord/up", (Request, Response) => {
 })
 // 高级词汇处理
 router.get('/keyWord/entry', (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_ws.py'])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_ws.py'],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   Response.send({
     data: data
@@ -207,7 +207,7 @@ router.post("/keyWord/entry", (Request, Response) => {
     dateArgv = moment(query.data_time).format('YYYY-MM-DD')
   }
   var string = "{'date':'" + dateArgv + "','category':'" + category + "','choice':'" + choice + "','variable':'" + variable + "','length':" + time_length + ",'head':" + head + "}"
-  const spawnSync1 = spawnSync('python', ['xiaobaods_ws.py', string])
+  const spawnSync1 = spawnSync('python', ['xiaobaods_ws.py', string],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   Response.send({
     message: '查询成功',

@@ -1,11 +1,7 @@
 <template>
   <div>
-    <el-row style="backgroundColor:#34C0E3;position:fixed;top:0px;z-index:1;height:40px;padding-top:5px;width:91.16%;textAlign:center;">
-      <el-col :span="2">
-       <el-button type="text" @click="goBack" style="color:#FFF;"><big>&lt;&nbsp;</big>返回</el-button>
-      </el-col>
-    </el-row>
-    <el-row  style="top:40px;margin-right:15px;">
+   <div type="text" @click="goBack" style="color:#FFF;"><big>&lt;&nbsp;</big>返回</div>
+    <el-row  style="margin-right:15px;">
       <el-col :span="4" v-for="(item,key) in pictures">
         <el-card :body-style="{ padding: '0px' }">
          <a :href="item.detail">

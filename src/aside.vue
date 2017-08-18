@@ -1,10 +1,12 @@
 <template>
   <div>
     <div class="slide_title">
-      <img src="./assets/BaoTitle.png" alt="">
-      <el-button :plain="true"><span>&nbsp;<i class="el-icon-menu el-icon--left"></i></span>&nbsp;{{user.name}}</el-button>
+      <div class="user_name">
+        <img src="./assets/BaoTitle.png" alt="">
+        <span @click="animation">{{user.name}}<small v-show="userLevel==9" @click="showDatav">大屏数据</small></span>
+      </div>
     </div>
-    <el-menu  v-show="midlevel" :default-active="defaultActive" :router="true" theme="dark">
+    <el-menu v-show="midlevel" :default-active="defaultActive" :router="true" theme="dark">
       <el-submenu index="product">
         <template slot="title">类目趋势</template>
         <el-menu-item index="hot_product" :route="{path:'/product/hot_product/'}">热销商品趋势分析</el-menu-item>
@@ -26,6 +28,8 @@
         <template slot="title">生e经</template>
         <el-menu-item index="volume" :route="{path:'/trade/volume/'}">属性成交量分布</el-menu-item>
         <el-menu-item index="grail" :route="{path:'/trade/grail/'}">属性成交趋势</el-menu-item>
+        <el-menu-item v-show="false" index="freshdata" :route="{path:'/trade/freshdata/'}">实时数据</el-menu-item>
+        <el-menu-item v-show="false" index="course" :route="{path:'/trade/course/'}">lunbo</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
@@ -38,9 +42,10 @@
   export default {
     data() {
       return {
-        highlevel:false,
-        midlevel:false,
-        lowlevel:false
+        userLevel: 4,
+        highlevel: false,
+        midlevel: false,
+        lowlevel: false
       }
     },
     computed: {
@@ -52,47 +57,60 @@
       }
     },
     created() {
-      var level =this.user.level
-      switch(level){
+      var level = this.user.level
+      switch (level) {
         case 9:
-       this.highlevel=this.midlevel=this.lowlevel=true
-        break;
+          this.highlevel = this.midlevel = this.lowlevel = true
+          break;
         case 4:
-        this.midlevel=this.lowlevel=true
-        break;
+          this.midlevel = this.lowlevel = true
+          break;
         default:
-        this.lowlevel=true
-        break;
+          this.lowlevel = true
+          break;
+      }
+    },
+    methods: {
+      animation() {
+        this.userLevel = this.user.level
+      },
+      showDatav() {
+        window.router.push({
+          path: '/datav/'
+        })
+
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+          } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen();
+          } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+          } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+          }
+       
       }
     }
   }
+
 </script>
 <style>
-  .slide_title img,
-  .slide_title button {
+  .user_name img {
     width: 100%;
   }
-  .slide_title .el-button {
-    text-align: left;
-    width: 5vw;
-    padding: 0vw;
-    line-height: 1.5vw;
-    background: #1F2D3D;
-    font-size: 13px;
-    color: #FFF;
-    margin: 1.2vw;
-    border-radius: 0.75vw;
+
+  .user_name {
+    height: 14vh;
+    position: relative;
+    background: #1F343D;
   }
 
-  .slide_title .el-button span {
-    width: 1.5vw;
-    height: 1.5vw;
-    text-align: center;
-    display: inline-block;
-    position: relative;
-    right: 1px;
-    border: 1px solid #fff;
-    border-radius: 0.75vw;
+  .user_name span {
+    position: absolute;
+    color: #FFF;
+    font-weight: bold;
+    bottom: 10%;
+    left: 25%;
   }
 
   .topkeys {

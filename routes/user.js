@@ -84,4 +84,11 @@ router.post('/conversion/parms',(Request, Response)=>{
     }
   })
 })
+
+router.get('/datav/url',(Request, Response)=>{
+db.pool.query('SELECT * FROM Web_Redirection;', function(err,results,fields){
+ if (err) throw err;
+ Response.send(results)
+})
+})
 module.exports = router

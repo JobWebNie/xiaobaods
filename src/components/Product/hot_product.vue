@@ -32,9 +32,9 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col>
-        <el-table class="tablelist" v-loading="loading" :data="Table.tableData_prepag" style="width:100%;position:relative;" :max-height="Table.height"
-          @cell-click="showPicture">
+      <el-col style="height:90vh;overflow:auto;">
+        <el-table class="tablelist" v-loading="loading" :data="Table.tableData_prepag" :max-height="Table.height"
+          @cell-click="showPicture"><!--:max-height="Table.height"-->
           <el-table-column prop="热销排名" label="排名" width="50" header-align="center" align="center"></el-table-column>
           <el-table-column :label="Table.tableData_title[0]" header-align="center" align="center" width="80">
             <template scope="scope">
@@ -61,13 +61,13 @@
               <a target="_blank" :href="scope.row.同款货源" alt="">同款货源</a></template>
           </el-table-column>
         </el-table>
-        <transition name="page">
+           <transition name="page">
           <div v-show='!loading' style="text-align:center;">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="Table.PageIndex" :page-sizes="[20, 50, 100]"
               :page-size="Table.prePageCount" layout="total, sizes, prev, pager, next, jumper" :total="Table.tableData.length"></el-pagination>
           </div>
         </transition>
-      </el-col>
+      </el-col>  
     </el-row>
   </div>
 </template>
@@ -158,13 +158,13 @@
           this.objToArr(response.body.data)
           this.loading = false
         })
-      //  this.$http.get("shop/search").then((response) => {
-      //   this.restaurants = response.data.map((item) => {
-      //     return {
-      //       value: item
-      //     }
-      //   })
-      // })
+       this.$http.get("shop/search").then((response) => {
+        this.restaurants = response.data.map((item) => {
+          return {
+            value: item
+          }
+        })
+      })
     },
     methods: {
       ...mapActions([PICTURE_INSERT]),
@@ -216,10 +216,13 @@
       },
       inputchange() {    //格式化数据
         this.loading=true
+        
         var data = JSON.stringify(this.data)
         this.$http.post("prod/hot", {data},{emulateJSON:true}).then((response) => {
           this.fullpath = response.body.fullpath
+          console.log(response.body.data[0])
           this.objToArr(response.body.data)
+           
           this.loading = false
         })
       },

@@ -59,6 +59,7 @@
                        if(response.body.message=="success"){
                               this.$message("登陆成功")
                               var user= response.body.data
+                        
                              this.USER_SIGNIN(user)    
                                 setTimeout(()=>{
                                    window.router.push({path: '/product/hot_product/'})

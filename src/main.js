@@ -11,7 +11,8 @@ Vue.use(VueRouter);
 Vue.use(VueResouse);
 Vue.use(ElementUI);
 window.Vue = Vue;
-const routes = [{
+const routes = [
+  {
     path: '/product/hot_product/',
     component: function (resolve) {
       require(['./components/Product/hot_product.vue'], resolve)
@@ -72,6 +73,18 @@ const routes = [{
     }
   },
   {
+    path: '/trade/freshdata/',
+    component: function (resolve) {
+      require(['./components/Trade/freshData.vue'], resolve)
+    }
+  },
+  {
+    path: '/trade/course/',
+    component: function (resolve) {
+      require(['./components/Trade/course.vue'], resolve)
+    }
+  },
+  {
     path: '/picture/download/',
     component: function (resolve) {
       require(['./components/Hugedata/download.vue'], resolve)
@@ -105,6 +118,15 @@ const routes = [{
     }
   },
   {
+    path: '/datav/',
+    meta: {
+      Auth: false
+    },
+    component: function (resolve) {
+      require(['./components/Auth/data.vue'], resolve)
+    }
+  },
+  {
     path: '*',
     redirect: '/login/'
   }
@@ -120,16 +142,16 @@ router.beforeEach(({
   meta,
   path
 }, from, next) => {
-  var {
-    Auth = true
-  } = meta
+  var {Auth = true} = meta
   var isLogin = Boolean(store.state.user.id)
-  if (Auth && !isLogin && path !== '/login/') {
+ if (Auth && !isLogin && path !== '/login/') {
     return next({
       path: '/login'
     })
-  }
-  next()
+  }else{
+      next()
+  } 
+  
 })
 
 // window.store = store

@@ -1,19 +1,22 @@
 <template>
   <div id="app">
-    <div v-if="leftSide" class="leftSide">
+    <div v-if="!leftSide" class="leftSide">
       <MyAside></MyAside>
     </div>
-    <div v-bind:class="[leftSide?toggle:full]">
-          <router-view></router-view>  
+    <div v-bind:class="[leftSide?full:toggle]">
+      <router-view></router-view>
     </div>
-    <div id="footer" v-if="!leftSide">
-      <MyFooter></MyFooter>
+    <div id="footer" v-if="leftSide">
+      <MyFooter v-show="!showbig"></MyFooter>
     </div>
   </div>
 </template>
 <script>
   import MyAside from './aside.vue'; //侧边
   import MyFooter from './footer.vue'; //底部
+  import {
+    mapState
+  } from 'vuex'
   export default {
     components: {
       MyAside,
@@ -27,7 +30,12 @@
     },
     computed: {
       leftSide() {
-        return this.$route.meta.Auth == undefined
+        return ['/login/', '/datav/', '/modify/', '/register/'].some((val) => {
+          return val == this.$route.path
+        })
+      },
+      showbig() {
+        return this.$route.path == '/datav/'
       }
     }
   }
@@ -43,7 +51,6 @@
   }
 
   #app {
-    height: 100%;
     width: 100%;
     position: absolute;
     overflow: hidden;
@@ -74,4 +81,5 @@
     bottom: 15px;
     text-align: center;
   }
+
 </style>
