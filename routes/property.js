@@ -148,12 +148,15 @@ router.post('/proper/trend', (request, response) => {
     var string0 = "{'category':'" + query.category + "','attribute':'" + query.attribute + "','variable':'" + query.variable + "','feature':'all'}"
     var string1 = "{'category':'" + query.category + "','attribute':'" + query.attribute + "','variable':'" + query.variable + "','feature':'" + query.feature + "','stats':0}"
     var string2 = "{'category':'" + query.category + "','attribute':'" + query.attribute + "','variable':'" + query.variable + "','feature':'" + query.feature + "','stats':1}"
-    const spawnSync0 = spawnSync('python', ['xiaobaods_et.py', string0])
-    const spawnSync1 = spawnSync('python', ['xiaobaods_et.py', string1])
-    const spawnSync2 = spawnSync('python', ['xiaobaods_et.py', string2])
+    const spawnSync0 = spawnSync('python', ['xiaobaods_et.py', string0],{cwd:'./python'})
+    const spawnSync1 = spawnSync('python', ['xiaobaods_et.py', string1],{cwd:'./python'})
+    const spawnSync2 = spawnSync('python', ['xiaobaods_et.py', string2],{cwd:'./python'})
+
+   
     var data0 = JSON.parse(spawnSync0.stdout)
     var data1 = JSON.parse(spawnSync1.stdout)
     var data2 = JSON.parse(spawnSync2.stdout)
+ 
     response.send({
       data0: data0,
       data1: data1,

@@ -64,7 +64,7 @@
            <transition name="page">
           <div v-show='!loading' style="text-align:center;">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="Table.PageIndex" :page-sizes="[20, 50, 100]"
-              :page-size="Table.prePageCount" layout="total, sizes, prev, pager, next, jumper" :total="Table.tableData.length"></el-pagination>
+              :page-size="Table.prePageCount" layout="total, sizes, prev, pager, next, jumper" :total="Table.total"></el-pagination>
           </div>
         </transition>
       </el-col>  
@@ -133,9 +133,11 @@
           prePageCount: 20,
           PageIndex: 1,
           height: 830,
-          bigPicture: null
+          bigPicture: null,
+          total:null
         },
         data:{
+            fun:'a',
             date:Date.now()- 8.64e7,
             length:  7,
             category: '牛仔裤',
@@ -143,6 +145,8 @@
             storegroupchoice: '',
             storechoice:'',
             titlechoice: '',
+            line_f:0,
+            line_b:20, 
             table: 'bc_attribute_granularity_sales'
         },
         loading: true,
@@ -158,13 +162,13 @@
           this.objToArr(response.body.data)
           this.loading = false
         })
-       this.$http.get("shop/search").then((response) => {
-        this.restaurants = response.data.map((item) => {
-          return {
-            value: item
-          }
-        })
-      })
+      //  this.$http.get("shop/search").then((response) => {
+      //   this.restaurants = response.data.map((item) => {
+      //     return {
+      //       value: item
+      //     }
+      //   })
+      // })
     },
     methods: {
       ...mapActions([PICTURE_INSERT]),
@@ -220,7 +224,6 @@
         var data = JSON.stringify(this.data)
         this.$http.post("prod/hot", {data},{emulateJSON:true}).then((response) => {
           this.fullpath = response.body.fullpath
-          console.log(response.body.data[0])
           this.objToArr(response.body.data)
            
           this.loading = false
@@ -230,30 +233,47 @@
         var middle_Table_body = [];
         var middle_Table_title = [];
         if (obj) {
+          for (let j in obj) {
+               for(let k in obj[j]){
+                 if(k=='total'){
+                   this.Table.total=obj[j][k]
+                 }else{
+                   middle_Table_title.push(k)
+                 }
+            }
+            break;
+          }
           for (let i in obj) {
             middle_Table_body.push(obj[i])
           }
-          for (var j in obj[0]) {
-            middle_Table_title.push(j)
-          }
           this.Table.tableData_title = middle_Table_title
-          this.Table.tableData = middle_Table_body
-          this.Table.tableData_prepag = this.Table.tableData.slice(0, 20)
+          this.Table.tableData_prepag = middle_Table_body
+          console.log(middle_Table_body)
+          // this.Table.tableData_prepag = this.Table.tableData
         }
       },
       handleSizeChange(val) {
         // console.log(`每页 ${val} 条`);
-        var start = (this.Table.PageIndex - 1) * val //数据起始位置
-        var end = this.Table.PageIndex * val //数据末端位置
-        this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
         this.Table.prePageCount = val
+         this.data.line_b=(this.Table.PageIndex - 1) * val
+        this.data.line_f=this.Table.PageIndex * val
+        // console.log(this.data)
+        this.inputchange()
+        // var start = (this.Table.PageIndex - 1) * val //数据起始位置
+        // var end = this.Table.PageIndex * val //数据末端位置
+        // this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
+        // this.Table.prePageCount = val
       },
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
-        var start = this.Table.prePageCount * (val - 1) //数据起始位置
-        var end = (this.Table.prePageCount) * val //数据末端位置
-        this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
         this.Table.PageIndex = val
+        this.data.line_b=this.Table.prePageCount * (val - 1)
+        this.data.line_f=this.Table.prePageCount * val
+        this.inputchange()
+        // var start = this.Table.prePageCount * (val - 1) //数据起始位置
+        // var end = (this.Table.prePageCount) * val //数据末端位置
+        // this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
+        // this.Table.PageIndex = val
       },
       showPicture(row, cell) {
         if (cell.label == "主图缩略图") {
@@ -280,7 +300,9 @@
         this.inputchange()
       },
       loadPicture(data) {
-        this.PICTURE_INSERT(data) //数据存入store,详情请见
+
+  
+        this.PICTURE_INSERT(this.Table.tableData_prepag) //数据存入store,详情请见
         window.router.push({
           path: '/picture/download/'
         })

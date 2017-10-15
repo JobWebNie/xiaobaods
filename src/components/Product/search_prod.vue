@@ -228,11 +228,14 @@
         var middle_Table_body = [];
         var middle_Table_title = [];
         if (obj) {
+         for (let j in obj) {
+               for(let k in obj[j]){
+               middle_Table_title.push(k)
+            }
+            break;
+          }
           for (let i in obj) {
             middle_Table_body.push(obj[i])
-          }
-          for (var j in obj[0]) {
-            middle_Table_title.push(j)
           }
           this.Table.tableData_title = middle_Table_title
           this.Table.tableData = middle_Table_body

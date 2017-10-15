@@ -11,12 +11,10 @@
     <br>
     <el-row type="flex" justify="space-around">
       <el-col :span="9">
-        <el-input type="textarea" placeholder="请输入内容" v-on:change="dispathBlur()" v-model.trim="value" resize="none"></el-input>
+        <el-input class="compare-along" type="textarea" placeholder="请输入内容" v-on:change="dispathBlur()" v-model.trim="value" resize="none"></el-input>
       </el-col>
-      <el-col :span="9" style="border:1px solid #D3DCE6;padding: 5px 7px;font-size:14px;font-family:monospace;line-height:1.5;">
-
+      <el-col :span="9" class="compare-beyond">
         <span v-for="item in myData" v-bind:style="{color:item.style}">{{item.value}}</span>
-
       </el-col>
     </el-row>
   </div>
@@ -35,9 +33,9 @@
         this.myData = []
         var string = this.value
         string.match(this.rule)
-        string.replace(this.rule, 'L$&R').split('R').map((item) => {
-          var _item0 = item.split('L')[0]
-          var _item1 = item.split('L')[1]
+        string.replace(this.rule, '♫$&♀').split('♀').map((item) => {
+          var _item0 = item.split('♫')[0]
+          var _item1 = item.split('♫')[1]
           this.myData.push({
             'style': 'black',
             'value': _item0
@@ -58,6 +56,17 @@
 
   .compare .el-textarea__inner {
     height: 80vh;
+  }
+  .compare-beyond{
+    border:1px solid #D3DCE6;
+    padding: 5px 7px;
+    font-size:14px;
+    font-family:monospace;
+    line-height:1.5;
+    white-space: pre-wrap;
+    word-wrap:break-word;
+    height:80vh;
+    overflow:auto;
   }
 
 </style>

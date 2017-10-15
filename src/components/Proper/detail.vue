@@ -295,8 +295,10 @@
         return column.label = th;
       },
        contentFormatter(row, column, cellValue) {
-     let reg = String(cellValue).replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-              return cellValue = reg;
+         if(cellValue){
+            return String(cellValue).replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+              
+         }
       },
       inputchange() {
         this.loading = true
@@ -313,6 +315,7 @@
         this.$http.post("market/prop",{data},{emulateJSON:true}).then((response) => {
           this.fullpath = response.body.fullpath
           this.objToArr(response.body.data)
+          console.log(response.body.data)
           this.loading = false
         })
       },
@@ -320,8 +323,11 @@
         var middle_Table_body = [];
         var middle_Table_title = [];
         if (obj) {
-          for (let j in obj[0]) {
-            middle_Table_title.push(j)
+           for (let j in obj) {
+               for(let k in obj[j]){
+               middle_Table_title.push(k)
+            }
+            break;
           }
           for (let i in obj) {
             middle_Table_body.push(obj[i])

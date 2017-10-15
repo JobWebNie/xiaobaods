@@ -31,9 +31,15 @@ const routes = [
     }
   },
    {
-    path: '/proper/gongshi',
+    path: '/weekReport/',
     component: function (resolve) {
-      require(['./components/Auth/gongshi.vue'], resolve)
+      require(['./components/document/weekport.vue'], resolve)
+    }
+  },
+  {
+    path: '/testpress',
+    component: function (resolve) {
+      require(['./components/tool/testpress.vue'], resolve)
     }
   },
   {
@@ -55,9 +61,9 @@ const routes = [
     }
   },
   {
-    path: '/word/compare/',
+    path: '/illegalword/',
     component: function (resolve) {
-      require(['./components/word/compare.vue'], resolve)
+      require(['./components/tool/illegalword.vue'], resolve)
     }
   },
   {
@@ -73,21 +79,15 @@ const routes = [
     }
   },
   {
-    path: '/trade/freshdata/',
-    component: function (resolve) {
-      require(['./components/Trade/freshData.vue'], resolve)
-    }
-  },
-  {
-    path: '/trade/course/',
-    component: function (resolve) {
-      require(['./components/Trade/course.vue'], resolve)
-    }
-  },
-  {
     path: '/picture/download/',
     component: function (resolve) {
       require(['./components/Hugedata/download.vue'], resolve)
+    }
+  },
+  {
+    path: '/achive/scroll/',
+    component: function (resolve) {
+      require(['./components/Hugedata/scroll.vue'], resolve)
     }
   },
   {

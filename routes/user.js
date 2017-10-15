@@ -1,6 +1,7 @@
 const db = require('../db')
 const express = require('express')
 const app = express()
+const fs = require('fs')
 const router = express.Router()
 // 用户登录
 router.post("/base/login", (Request, Response) => {
@@ -71,24 +72,10 @@ router.put("/modify/seekPassw", (Request, Response) => {
   })
 })
 
-router.post('/conversion/parms',(Request, Response)=>{
-     var name = Request.body.name
-  db.pool.query('SELECT * FROM `Tools_conversion` WHERE `category` = ?', [name],function(err,results,fields){
-    if (err) throw err
-    else if (results.length > 0) {
-      Response.send(results[0])
-    } else {
-      Response.send({
-        message: "acountErr"
-      })
-    }
+router.get('/datav/url', (Request, Response) => {
+  db.pool.query('SELECT * FROM Web_Redirection;', function (err, results, fields) {
+    if (err) throw err;
+    Response.send(results)
   })
-})
-
-router.get('/datav/url',(Request, Response)=>{
-db.pool.query('SELECT * FROM Web_Redirection;', function(err,results,fields){
- if (err) throw err;
- Response.send(results)
-})
 })
 module.exports = router

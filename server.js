@@ -17,5 +17,6 @@ app.use(require('./routes/user'))
 app.use(require('./routes/keyword'))
 app.use(require('./routes/product'))
 app.use(require('./routes/property'))
+app.use(require('./routes/weekport'))
 
 app.listen(3000,'127.0.0.1', () => console.log('正在运行'))

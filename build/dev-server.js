@@ -67,6 +67,7 @@ app.use(require('../routes/user'))
 app.use(require('../routes/product'))
 app.use(require('../routes/keyword'))
 app.use(require('../routes/property'))
+app.use(require('../routes/weekport'))
 // #
 
 module.exports = app.listen(port, function (err) {

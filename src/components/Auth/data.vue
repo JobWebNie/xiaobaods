@@ -28,7 +28,6 @@
           this.autoPlay()
         }, 60000)
 
-        console.log(this)
           if (document.documentElement.requestFullscreen) {
             document.documentElement.requestFullscreen();
           } else if (document.documentElement.msRequestFullscreen) {
@@ -90,6 +89,4 @@
     width: 100%;
     height: 100%;
   }
-
-
 </style>

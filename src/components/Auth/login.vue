@@ -62,7 +62,7 @@
                         
                              this.USER_SIGNIN(user)    
                                 setTimeout(()=>{
-                                   window.router.push({path: '/product/hot_product/'})
+                                   window.router.push({path: '/weekReport/'})
                               },1000)                          
                        }
                         else if(response.body.message=="pasErr"){
