@@ -21,7 +21,6 @@
       <el-submenu v-show="midlevel" index="proper">
         <template slot="title">属性洞察</template>
         <el-menu-item index="/proper/detail" :route="{path:'/proper/detail'}">属性详情</el-menu-item>
-        <el-menu-item index="/achive/scroll" :route="{path:'/achive/scroll'}">实现滚动</el-menu-item>
       </el-submenu>
       <el-submenu v-show="midlevel" index="trade">
         <template slot="title">生e经</template>

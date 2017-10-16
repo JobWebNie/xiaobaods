@@ -81,13 +81,16 @@ const routes = [
   {
     path: '/picture/download/',
     component: function (resolve) {
-      require(['./components/Hugedata/download.vue'], resolve)
+      require(['./components/screen/download.vue'], resolve)
     }
   },
   {
-    path: '/achive/scroll/',
+    path: '/datav/',
+    meta: {
+      Auth: false
+    },
     component: function (resolve) {
-      require(['./components/Hugedata/scroll.vue'], resolve)
+      require(['./components/screen/data.vue'], resolve)
     }
   },
   {
@@ -115,15 +118,6 @@ const routes = [
     },
     component: function (resolve) {
       require(['./components/Auth/login.vue'], resolve)
-    }
-  },
-  {
-    path: '/datav/',
-    meta: {
-      Auth: false
-    },
-    component: function (resolve) {
-      require(['./components/Auth/data.vue'], resolve)
     }
   },
   {
