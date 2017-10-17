@@ -21,11 +21,11 @@
           <el-option v-for="item in lengthOption" :label="item.label" :value="item.value"></el-option>
         </el-select>
         <span class="Embellish"><a @click="excellCsv()">下载</a></span>
-        <span class="Embellish"><a @click.prevent="loadPicture(Table.tableData)" >图片</a></span>
+        <span class="Embellish"><a @click.prevent="loadPicture()" >图片</a></span>
       </el-col>
       <el-col class="list-right">
-        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.titlechoice" placeholder="商品筛选"></el-input>
-        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.storechoice" placeholder="店铺搜索"></el-input>
+        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.titler" placeholder="商品筛选"></el-input>
+        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.storer" placeholder="店铺搜索"></el-input>
         <el-autocomplete size='small' v-model="data.storegroupchoice" :fetch-suggestions="querySearchAsync" @keyup.enter.native="inputchange" placeholder="热门店铺分类"></el-autocomplete>
         <el-button @click="inputchange" type="primary" size='small'>筛选</el-button>
         <el-button size='small' @click="emptyFilter">清空</el-button>
@@ -127,7 +127,6 @@
             label: '天数：近14天'
         }],
         Table: {
-          tableData: [],
           tableData_title: [],
           tableData_prepag: [],
           prePageCount: 20,
@@ -143,8 +142,8 @@
             category: '牛仔裤',
             variable: '热销排名',
             storegroupchoice: '',
-            storechoice:'',
-            titlechoice: '',
+            storer:'',
+            titler: '',
             line_f:0,
             line_b:20, 
             table: 'bc_attribute_granularity_sales'
@@ -162,13 +161,7 @@
           this.objToArr(response.body.data)
           this.loading = false
         })
-      //  this.$http.get("shop/search").then((response) => {
-      //   this.restaurants = response.data.map((item) => {
-      //     return {
-      //       value: item
-      //     }
-      //   })
-      // })
+  
     },
     methods: {
       ...mapActions([PICTURE_INSERT]),
@@ -248,7 +241,6 @@
           }
           this.Table.tableData_title = middle_Table_title
           this.Table.tableData_prepag = middle_Table_body
-          console.log(middle_Table_body)
           // this.Table.tableData_prepag = this.Table.tableData
         }
       },
@@ -281,12 +273,20 @@
         }
       },
       querySearchAsync(queryString, cb) {
+       this.$http.get("shop/search").then((response) => {
+        this.restaurants = response.data.map((item) => {
+          return {
+            value: item
+          }
+        })
         var restaurants = this.restaurants
         var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
           cb(results);
         });
+      })
+    
       },
       createStateFilter(queryString) {
         return (state) => {
@@ -295,11 +295,11 @@
       },
       emptyFilter() {
         this.data.storegroupchoice = ''
-        this.data.storechoice =''
-        this.data.titlechoice = ''
+        this.data.storer =''
+        this.data.titler = ''
         this.inputchange()
       },
-      loadPicture(data) {
+      loadPicture() {
 
   
         this.PICTURE_INSERT(this.Table.tableData_prepag) //数据存入store,详情请见

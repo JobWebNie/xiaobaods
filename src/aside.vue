@@ -6,17 +6,17 @@
         <span @click="animation">{{user.name}}<small v-show="userLevel==9" @click="showDatav">大屏数据</small></span>
       </div>
     </div>
-    <el-menu v-show="midlevel" :default-active="defaultActive" :router="true" theme="dark" @select="handleSelect">
-      <el-submenu index="product">
+    <el-menu  :default-active="defaultActive" :router="true" theme="dark" @select="handleSelect">
+      <el-submenu  v-show="midlevel" index="product">
         <template slot="title">类目趋势</template>
         <el-menu-item index="/product/hot_product" :route="{path:'/product/hot_product'}">热销商品趋势分析</el-menu-item>
         <el-menu-item index="/product/search_prod" :route="{path:'/product/search_prod'}">流量商品趋势分析</el-menu-item>
       </el-submenu>
-      <el-submenu index="word">
+      <el-submenu v-show="midlevel" index="word">
         <template slot="title">行业热词榜</template>
-        <el-menu-item v-show="midlevel" index="/word/key_word" :route="{path:'/word/key_word'}">热搜核心词</el-menu-item>
-        <el-menu-item v-show="midlevel" index="/word/up_word" :route="{path:'/word/up_word'}">飙升核心词</el-menu-item>
-        <el-menu-item v-show="midlevel" index="/word/soare_word" :route="{path:'/word/soare_word'}" class="topkeys">急速飙升词</el-menu-item>
+        <el-menu-item  index="/word/key_word" :route="{path:'/word/key_word'}">热搜核心词</el-menu-item>
+        <el-menu-item index="/word/up_word" :route="{path:'/word/up_word'}">飙升核心词</el-menu-item>
+        <el-menu-item  index="/word/soare_word" :route="{path:'/word/soare_word'}" class="topkeys">急速飙升词</el-menu-item>
       </el-submenu>
       <el-submenu v-show="midlevel" index="proper">
         <template slot="title">属性洞察</template>
@@ -27,15 +27,16 @@
         <el-menu-item index="/trade/volume" :route="{path:'/trade/volume'}">属性成交量分布</el-menu-item>
         <el-menu-item index="/trade/grail" :route="{path:'/trade/grail'}">属性成交趋势</el-menu-item>
       </el-submenu>
-      <el-submenu index="document">
+      <el-submenu v-show="midlevel" index="document">
         <template slot="title">文件夹</template>
-        <el-menu-item v-show="highlevel" index="/weekReport" :route="{path:'/weekReport'}">周报</el-menu-item>
+        <el-menu-item  index="/weekReport" :route="{path:'/weekReport'}">周报</el-menu-item>
       </el-submenu>
       <el-submenu index="tool">
         <template slot="title">工具箱</template>
-        <el-menu-item v-show="lowlevel" index="/illegalword" :route="{path:'/illegalword'}">标记词</el-menu-item>
-        <el-menu-item v-show="highlevel" index="/testpress" :route="{path:'/testpress'}">测试公式</el-menu-item>
+         <el-menu-item  index="/illegalword" :route="{path:'/illegalword'}">标记词</el-menu-item>
+        <el-menu-item  index="/testpress" :route="{path:'/testpress'}">测试公式</el-menu-item>
       </el-submenu>
+     
     </el-menu>
   </div>
 </template>

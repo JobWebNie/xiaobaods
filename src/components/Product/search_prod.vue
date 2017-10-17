@@ -21,11 +21,11 @@
           <el-option v-for="item in lengthOption" :label="item.label" :value="item.value"></el-option>
         </el-select>
         <span class="Embellish"><a @click="excellCsv()">下载</a></span>
-        <span class="Embellish"><a @click.prevent="loadPicture(Table.tableData)" >图片</a></span>
+        <span class="Embellish"><a @click.prevent="loadPicture()" >图片</a></span>
       </el-col>
       <el-col class="list-right">
-        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.titlechoice" placeholder="商品筛选"></el-input>
-        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.storechoice" placeholder="店铺搜索"></el-input>
+        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.titler" placeholder="商品筛选"></el-input>
+        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.storer" placeholder="店铺搜索"></el-input>
         <el-autocomplete size='small' v-model="data.storegroupchoice" :fetch-suggestions="querySearchAsync" @keyup.enter.native="inputchange" placeholder="热门店铺分类"></el-autocomplete>
         <el-button @click="inputchange" type="primary" size='small'>筛选</el-button>
         <el-button size='small' @click="emptyFilter">清空</el-button>
@@ -64,7 +64,7 @@
         <transition name="page">
           <div v-show='!loading' style="text-align:center;">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="Table.PageIndex" :page-sizes="[20, 50, 100]"
-              :page-size="Table.prePageCount" layout="total, sizes, prev, pager, next, jumper" :total="Table.tableData.length"></el-pagination>
+              :page-size="Table.prePageCount" layout="total, sizes, prev, pager, next, jumper" :total="Table.total"></el-pagination>
           </div>
         </transition>
       </el-col>
@@ -127,22 +127,25 @@
             label: '天数：近14天'
         }],
         Table: {
-          tableData: [],
           tableData_title: [],
           tableData_prepag: [],
           prePageCount: 20,
           PageIndex: 1,
           height: 830,
-          bigPicture: null
+          bigPicture: null,
+          total:null
         },
         data:{
+            fun:'a',
             date:Date.now()- 8.64e7,
             length:  7,
             category: '牛仔裤',
             variable: '热销排名',
             storegroupchoice: '',
-            storechoice:'',
-            titlechoice: '',
+            storer:'',
+            titler: '',
+            line_f:0,
+            line_b:20, 
             table: 'bc_attribute_granularity_visitor'
         },
         loading: true,
@@ -228,9 +231,13 @@
         var middle_Table_body = [];
         var middle_Table_title = [];
         if (obj) {
-         for (let j in obj) {
+           for (let j in obj) {
                for(let k in obj[j]){
-               middle_Table_title.push(k)
+                 if(k=='total'){
+                   this.Table.total=obj[j][k]
+                 }else{
+                   middle_Table_title.push(k)
+                 }
             }
             break;
           }
@@ -238,23 +245,32 @@
             middle_Table_body.push(obj[i])
           }
           this.Table.tableData_title = middle_Table_title
-          this.Table.tableData = middle_Table_body
-          this.Table.tableData_prepag = this.Table.tableData.slice(0, 20)
+          this.Table.tableData_prepag = middle_Table_body
+         
         }
       },
       handleSizeChange(val) {
         // console.log(`每页 ${val} 条`);
-        var start = (this.Table.PageIndex - 1) * val //数据起始位置
-        var end = this.Table.PageIndex * val //数据末端位置
-        this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
         this.Table.prePageCount = val
+         this.data.line_b=(this.Table.PageIndex - 1) * val
+        this.data.line_f=this.Table.PageIndex * val
+        // console.log(this.data)
+        this.inputchange()
+        // var start = (this.Table.PageIndex - 1) * val //数据起始位置
+        // var end = this.Table.PageIndex * val //数据末端位置
+        // this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
+        // this.Table.prePageCount = val
       },
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
-        var start = this.Table.prePageCount * (val - 1) //数据起始位置
-        var end = (this.Table.prePageCount) * val //数据末端位置
-        this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
         this.Table.PageIndex = val
+        this.data.line_b=this.Table.prePageCount * (val - 1)
+        this.data.line_f=this.Table.prePageCount * val
+        this.inputchange()
+        // var start = this.Table.prePageCount * (val - 1) //数据起始位置
+        // var end = (this.Table.prePageCount) * val //数据末端位置
+        // this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
+        // this.Table.PageIndex = val
       },
       showPicture(row, cell) {
         if (cell.label == "主图缩略图") {
@@ -276,12 +292,12 @@
       },
       emptyFilter() {
         this.data.storegroupchoice = ''
-        this.data.storechoice =''
-        this.data.titlechoice = ''
+        this.data.storer =''
+        this.data.titler = ''
         this.inputchange()
       },
-      loadPicture(data) {
-        this.PICTURE_INSERT(data) //数据存入store,详情请见
+      loadPicture() {
+        this.PICTURE_INSERT(this.Table.tableData_prepag) //数据存入store,详情请见
         window.router.push({
           path: '/picture/download/'
         })

@@ -78,4 +78,12 @@ router.get('/datav/url', (Request, Response) => {
     Response.send(results)
   })
 })
+router.get('/SyncUpdate',(Request, Response) => {
+  var question = Request.query
+  console.log(question)
+  db.pool.query('SELECT * FROM Web_Redirection;',function (err, results) {
+    if (err) throw err;
+   console.log(results)
+  })
+})
 module.exports = router

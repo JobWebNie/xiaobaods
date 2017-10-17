@@ -7,9 +7,10 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import App from './App.vue'
 
-Vue.use(VueRouter);
-Vue.use(VueResouse);
-Vue.use(ElementUI);
+Vue.use(VueRouter)
+Vue.use(VueResouse)
+Vue.use(ElementUI)
+
 window.Vue = Vue;
 const routes = [
   {
