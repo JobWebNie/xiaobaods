@@ -20,6 +20,7 @@
     "moment": "^2.18.1",
     "mysql2": "^1.2.0",
     "vue": "^2.4.2",
+    "vue-draggable-resizable": "^1.5.1",
     "vue-echarts-v3": "^1.0.4",
     "vue-resource": "^1.2.0",
     "vue-router": "^2.1.1",

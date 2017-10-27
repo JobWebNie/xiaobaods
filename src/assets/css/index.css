@@ -32,7 +32,7 @@
 
   .navlist .list-right {
     padding: 0.1vw;
-    width: 28vw;
+    width: 22vw;
     border: 1px solid #99A9BF;
     height: 3.7vh;
     text-align: center;
@@ -126,44 +126,7 @@
   /*以下是992px~1200px样式*/
 
   @media screen and (min-width:992px) and (max-width:1200px) {
-    /*以下是title和下拉列表list样式*/
-    /*.navlist,
-    .title {
-      min-width: 800px;
-    }
-    .title {
-      font-size: 1em;
-      padding: 0px 2vw;
-      background: #34C0E3;
-      color: #FFF;
-      height: 4vw;
-    }
-    .title>.title-left {
-      width: 40%;
-    }
-    .title>.title-right {
-      width: 60%;
-      text-align: right;
-    }
-    .navlist {
-      background-color: #E5E9F2;
-    }
-    .navlist .el-input__inner {
-      font-size: 0.8em;
-    }
-    .navlist .list-left {
-      min-width: 550px;
-      max-width: 600px;
-      width: 55%;
-    }
-    .navlist .list-right {
-      width: 45%;
-      border: 1px solid #99A9BF;
-      height: 30px;
-      padding: 0px 2px;
-      max-width: 340px;
-      min-width: 300px;
-    }*/
+ 
     .navlist .el-input {
       min-width: 100px;
       max-width: 110px;

@@ -8,7 +8,7 @@ const spawnSync = require('child_process').spawnSync
 
 //市场详情
 router.get("/market/prop", (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_c.py'],{cwd:'./python'})
+  const spawnSync1 = spawnSync('python', ['xiaobaods.py',"{'fun':'c','table':'bc_attribute_granularity_sales'}"],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   var fullpath = './dist/static/public/pd-' + moment(new Date() - 8.64e7).format('YYYY-MM-DD') + '牛仔裤款式铅笔裤热销排名7.csv'
   if (JSON.stringify(data) !== "{}") {
@@ -47,7 +47,7 @@ router.post("/market/prop", (Request, Response) => {
   var query = JSON.parse(Request.body.data)
   query.date = moment(query.date).format('YYYY-MM-DD')
   var string = JSON.stringify(query).replace(/"/g, "'")
-  const spawnSync1 = spawnSync('python', ['xiaobaods_c.py', string],{cwd:'./python'})
+  const spawnSync1 = spawnSync('python', ['xiaobaods.py', string],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   var fullpath = './dist/static/public/pd-' + query.date.slice(0, 10) + query.category + query.classfication + query.attributes + query.variable + query.length + '.csv'
   if (JSON.stringify(data) !== "{}") {
@@ -77,8 +77,14 @@ router.post("/market/prop", (Request, Response) => {
       if (err) throw err;
     })
     Response.send({
+      code:200,
       fullpath: fullpath,
       data: data
+    })
+  }else{
+    Response.send({
+      code:302,
+      msg:'没有返回内容'
     })
   }
 })

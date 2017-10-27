@@ -3,9 +3,15 @@
     <div class="slide_title">
       <div class="user_name">
         <img src="./assets/BaoTitle.png" alt="">
-        <span @click="animation">{{user.name}}<small v-show="userLevel==9" @click="showDatav">大屏数据</small></span>
+        <div style="height:45px;overflow:hidden;margin:20px 54px;">
+        <div style="height:20px; width:20px;margin-left: 10px;border-radius: 50%;border:2px solid #fff;"
+         @click="showDatav"></div>
+        <div style="height:40px;width:40px;border-radius: 50%; border:2px solid #fff;"></div>
+        </div>
+        <div @click="animation" style="text-align:center;">{{user.name}}</div>
       </div>
     </div>
+    
     <el-menu  :default-active="defaultActive" :router="true" theme="dark" @select="handleSelect">
       <el-submenu  v-show="midlevel" index="product">
         <template slot="title">类目趋势</template>
@@ -83,10 +89,10 @@
         this.userLevel = this.user.level
       },
       showDatav() {
-        window.router.push({
+        if(this.user.level==9){
+          window.router.push({
           path: '/datav/'
-        })
-
+          })
         if (document.documentElement.requestFullscreen) {
           document.documentElement.requestFullscreen();
         } else if (document.documentElement.msRequestFullscreen) {
@@ -96,7 +102,9 @@
         } else if (document.documentElement.webkitRequestFullscreen) {
           document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
         }
-
+        }else{
+          this.$message('你看不到我')
+        }
       },
       handleSelect(value) {
         this.MENUURL_INSERT(value)
@@ -107,22 +115,14 @@
 
 </script>
 <style>
-  .user_name img {
-    width: 100%;
-  }
+
 
   .user_name {
-    height: 14vh;
-    position: relative;
+    height: 200px;
     background: #1F343D;
   }
-
-  .user_name span {
-    position: absolute;
-    color: #FFF;
-    font-weight: bold;
-    bottom: 10%;
-    left: 25%;
+  .user_name img {
+    width: 100%;
   }
 
   .topkeys {

@@ -93,8 +93,14 @@ router.post("/prod/search", (Request, Response) => {
       if (err) throw err;
     })
     Response.send({
+      code:200,
       fullpath: fullpath,
       data: data
+    })
+  }else{
+    Response.send({
+      code:302,
+      msg:'没有返回内容'
     })
   }
 })
@@ -102,6 +108,7 @@ router.post("/prod/search", (Request, Response) => {
 router.get("/prod/hot", (Request, Response) => { 
   const spawnSync1 = spawnSync('python', ['xiaobaods.py', "{'fun':'a',table':'bc_attribute_granularity_sales'}"],{cwd:'./python'})  
   var data = JSON.parse(spawnSync1.stdout)
+
 var fullpath = './dist/static/public/ph-' + moment(new Date() - 8.64e7).format('YYYY-MM-DD') + '牛仔裤热销排名7.csv'
 if (JSON.stringify(data) !== "{}") {
    var myData = []
@@ -177,8 +184,14 @@ router.post("/prod/hot", (Request, Response) => {
       if (err) throw err;
     })
     Response.send({
+      code:200,
       fullpath: fullpath,
       data: data
+    })
+  }else{
+    Response.send({
+      code:302,
+      msg:'没有返回内容'
     })
   }
 })

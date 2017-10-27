@@ -21,7 +21,8 @@
          <span class="Embellish"><a @click="excellCsv()">下载</a></span>
           <span class="Embellish"><a @click.prevent="loadPicture(Table.tableData)">图片</a></span>
       </el-col>
-      <el-col class="list-right">
+      <el-col class="list-right" style="width:40%;text-align:right;">
+      <el-tag v-for="tag in dynamicTags" :key="tag" :closable="true" @close="handleClose(tag)">{{tag}}</el-tag>
      <!-- <span v-if="false">
         <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.titlechoice" placeholder="商品筛选"></el-input>
         <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.storechoice" placeholder="店铺搜索"></el-input>
@@ -29,6 +30,7 @@
         <el-button @click="inputchange" type="primary" size='small'>筛选</el-button>
         <el-button size='small' @click="emptyFilter">清空</el-button>
       </span>-->
+      <el-button @click="dialogFormVisible = true" type="primary" size='small'>筛选</el-button>
       </el-col>
     </el-row>
     <el-row>
@@ -56,11 +58,65 @@
         </el-table>
         <div style="position:relative; text-align:center;">
           <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="Table.PageIndex" :page-sizes="[20, 50, 100]"
-            :page-size="Table.prePageCount" layout="total, sizes, prev, pager, next, jumper" :total="Table.tableData.length">
+            :page-size="Table.prePageCount" layout="total, sizes, prev, pager, next, jumper" :total="Table.total">
           </el-pagination>
         </div>
       </el-col>
     </el-row>
+      <el-dialog size="mini" title="商品筛选" :visible.sync="dialogFormVisible">
+      <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="商品信息" prop="titler" :rules=" [{message: '请输入活动名称',trigger: 'blur'}]">
+          <el-input v-model="ruleForm.titler" placeholder="请输入商品筛选词"></el-input>
+        </el-form-item>
+        <el-form-item label="所属店铺" prop="storer" :rules="[{message: '请选择活动区域',trigger: 'change'}]">
+          <el-input v-model="ruleForm.storer" placeholder="请输入店铺名称"></el-input>
+        </el-form-item>
+        <el-form-item label="支付订单数">
+          <el-col :span="4">
+            <el-form-item prop="v1m" :rules="[{type: 'number',message: '订单数必须为数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v1m" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="text-align:center">—</el-col>
+          <el-col :span="4">
+            <el-form-item prop="v1l" :rules="[{ type: 'number',message: '订单数必须为数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v1l" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="交易增长幅度">
+          <el-col :span="4">
+            <el-form-item prop="v2m" :rules="[{type: 'number',message: '交易增长必须为数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v2m" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="text-align:center">%—</el-col>
+          <el-col :span="4">
+            <el-form-item prop="v2l" :rules="[{ type: 'number',message: '交易增长必须为数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v2l" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>%
+        </el-form-item>
+        <el-form-item label="转化率指数">
+          <el-col :span="4">
+            <el-form-item prop="v3m" :rules="[{type: 'number',message: '转化率指数必须为数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v3m" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="text-align:center">—</el-col>
+          <el-col :span="4">
+            <el-form-item prop="v3l" :rules="[{ type: 'number',message: '转化率指数必须为数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v3l" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')"> 筛选商品</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -76,6 +132,18 @@
   export default {
     data() {
       return {
+         dynamicTags: [],
+        dialogFormVisible: false,
+        ruleForm: {
+          titler: '',
+          storer: '',
+          v1l: 0,
+          v1m: 0,
+          v2m: 0,
+          v2l: 0,
+          v3m: 0,
+          v3l: 0
+        },
         pickerOption: {
           disabledDate(time) {
             var min = Date.parse('2016-11-24')
@@ -243,7 +311,6 @@
           label: '显示周期：近14天'
         }],
         Table: {
-          tableData: [],
           tableData_title: [],
           tableData_prepag: [],
           prePageCount: 20,
@@ -252,13 +319,14 @@
           height: 835
         },
         data:{
+           fun: 'c',
             date:Date.now()- 8.64e7,
             length:  7,
             category: ['牛仔裤', '款式', '铅笔裤'],
             variable: '热销排名',
             storegroupchoice: '',
-            storechoice:'',
-            titlechoice: '',
+            line_f: 0,
+            line_b: 20,
             table: 'bc_attribute_granularity_sales'
         },
         loading: true,
@@ -274,13 +342,6 @@
           this.objToArr(response.body.data)
           this.loading = false
         })
-        this.$http.get("shop/search").then((response) => {
-        this.restaurants = response.data.map((item) => {
-          return {
-            value: item
-          }
-        })
-      })
     },
     methods: {
       ...mapActions([PICTURE_INSERT]),
@@ -301,9 +362,9 @@
          }
       },
       inputchange() {
-        this.loading = true
-        var data1 = {
-          data:this.data.date,
+         this.loading = true
+            var data1 = {
+          date:this.data.date,
           length:this.data.length,
           variable:this.data.variable,
           category:this.data.category[0],
@@ -311,11 +372,15 @@
           attributes:this.data.category[2],
           table:this.data.table
         }
-        var data = JSON.stringify(data1)
+        var compile = Object.assign({}, data1, this.ruleForm)
+        compile.titler = compile.titler.replace(/\s+/g, '|') //实现空格匹配多个
+        compile.storer = compile.storer.replace(/\s+/g, '|')
+        compile.v2l = compile.v2l / 100
+        compile.v2m = compile.v2m / 100
+        var data = JSON.stringify(compile)
         this.$http.post("market/prop",{data},{emulateJSON:true}).then((response) => {
           this.fullpath = response.body.fullpath
           this.objToArr(response.body.data)
-          console.log(response.body.data)
           this.loading = false
         })
       },
@@ -323,9 +388,13 @@
         var middle_Table_body = [];
         var middle_Table_title = [];
         if (obj) {
-           for (let j in obj) {
-               for(let k in obj[j]){
-               middle_Table_title.push(k)
+          for (let j in obj) {
+            for (let k in obj[j]) {
+              if (k == 'total') {
+                this.Table.total = obj[j][k]
+              } else {
+                middle_Table_title.push(k)
+              }
             }
             break;
           }
@@ -333,46 +402,83 @@
             middle_Table_body.push(obj[i])
           }
           this.Table.tableData_title = middle_Table_title
-          this.Table.tableData = middle_Table_body
-          this.Table.tableData_prepag = this.Table.tableData.slice(0, 20)
+          this.Table.tableData_prepag = middle_Table_body
+
         }
       },
       handleSizeChange(val) {
         // console.log(`每页 ${val} 条`);
-        var start = (this.Table.PageIndex - 1) * val //数据起始位置
-        var end = this.Table.PageIndex * val //数据末端位置
-        this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
         this.Table.prePageCount = val
+        this.data.line_b = (this.Table.PageIndex - 1) * val
+        this.data.line_f = this.Table.PageIndex * val
+        this.inputchange()
       },
       handleCurrentChange(val) {
         // console.log(`当前页: ${val}`);
-        var start = this.Table.prePageCount * (val - 1) //数据起始位置
-        var end = (this.Table.prePageCount) * val //数据末端位置
-        this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
         this.Table.PageIndex = val
+        this.data.line_b = this.Table.prePageCount * (val - 1)
+        this.data.line_f = this.Table.prePageCount * val
+        this.inputchange()
+
       },
       showPicture(row) {
-        this.Table.bigPicture = row.主图缩略图.slice(0, -10)
+        if (cell.label == "主图缩略图") {
+          this.Table.bigPicture = row.主图缩略图.slice(0, -10)
+        }
       },
-      // querySearchAsync(queryString, cb) {
-      //   var restaurants = this.restaurants
-      //   var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
-      //   clearTimeout(this.timeout);
-      //   this.timeout = setTimeout(() => {
-      //     cb(results);
-      //   });
-      // },
-      // emptyFilter() {
-      //   this.data.storegroupchoice = ''
-      //   this.data.storechoice =''
-      //   this.data.titlechoice = ''
-      //   this.inputchange()
-      // },
       loadPicture(data) {
         this.PICTURE_INSERT(data) //数据存入store,详情请见
         window.router.push({
           path: '/picture/download/'
         })
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.dynamicTags = []
+        this.inputchange()
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          this.dynamicTags = []
+          if (valid) {
+            for (var ite in this.ruleForm) {
+              var _this = this
+              var idhas = this.dynamicTags.some(function (item) {
+                if (item.split('：')[1] == _this.ruleForm[ite]) {
+                  return true
+                }
+              })
+              if (!idhas && this.ruleForm[ite] != '' && this.ruleForm[ite] != null) {
+                if (ite == 'titler') {
+                  this.dynamicTags.push('商品信息：' + this.ruleForm[ite])
+                } else if (ite == 'storer') {
+                  this.dynamicTags.push('所属店铺：' + this.ruleForm[ite])
+                } else if (ite == 'v1m') {
+                  this.dynamicTags.push('订单多于：' + this.ruleForm[ite])
+                } else if (ite == 'v1l') {
+                  this.dynamicTags.push('订单少于：' + this.ruleForm[ite])
+                } else if (ite == 'v2m') {
+                  this.dynamicTags.push('增长率高于：' + this.ruleForm[ite])
+                } else if (ite == 'v2l') {
+                  this.dynamicTags.push('增长率低于：' + this.ruleForm[ite])
+                } else if (ite == 'v3m') {
+                  this.dynamicTags.push('转化高于：' + this.ruleForm[ite])
+                } else {
+                  this.dynamicTags.push('转化低于：' + this.ruleForm[ite])
+                }
+              }
+            }
+            this.inputchange()
+            this.dialogFormVisible = false
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      handleClose(tag) {
+        
+        this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
       }
     }
   }

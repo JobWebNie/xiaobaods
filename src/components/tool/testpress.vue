@@ -11,22 +11,30 @@
         <el-radio label="牛仔裤">牛仔裤</el-radio>
         <el-radio label="打底裤">打底裤</el-radio>
       </el-radio-group>
-      <br><b> 输入</b>
+      <br>
+      <b> 输入</b>
       <el-input v-model="input" placeholder="请输入内容"></el-input>
-      <div><b>结果：</b>{{result}}</div>
+      <div>
+        <b>结果：</b>{{result}}</div>
+      <el-row>
+   
+      </el-row>
     </el-col>
+
   </div>
 </template>
 <script>
   export default {
     data() {
       return {
+        
         slename: '牛仔裤',
         input: 0,
         result: null,
         m: null,
         n: null,
-        b: null
+        b: null,
+        
       }
     },
     watch: {
@@ -38,13 +46,8 @@
       this.changename()
     },
     methods: {
-      SyncUpdate(){
-        var question="anything" 
-        this.$http.get('SyncUpdate',{params:{q:question}}).then((response)=>{
-          console.log(response)
-        })
-      },
       changename() {
+        
         this.$http.post('conversion/parms', {
           name: this.slename
         }, {
@@ -56,30 +59,8 @@
           this.result = this.m * this.input + this.n * this.input * this.input + this.b
         })
       }
-     
+
     }
   }
 
 </script>
-<style>
-  .el-tag+.el-tag {
-    margin-left: 10px;
-  }
-
-  .button-new-tag {
-    margin-left: 10px;
-    height: 32px;
-    line-height: 30px;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .input-new-tag {
-    width: 90px;
-    margin-left: 10px;
-    vertical-align: bottom;
-  }
-
-</style>
-
-
