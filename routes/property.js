@@ -8,7 +8,7 @@ const spawnSync = require('child_process').spawnSync
 
 //市场详情
 router.get("/market/prop", (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods.py',"{'fun':'c','table':'bc_attribute_granularity_sales'}"],{cwd:'./python'})
+  const spawnSync1 = spawnSync('python', ['xiaobaods.py',"{'fun':'c','table':'bc_category_granularity'}"],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
   var fullpath = './dist/static/public/pd-' + moment(new Date() - 8.64e7).format('YYYY-MM-DD') + '牛仔裤款式铅笔裤热销排名7.csv'
   if (JSON.stringify(data) !== "{}") {

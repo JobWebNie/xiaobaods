@@ -9,7 +9,7 @@
       </el-col>
     </el-row>
     <el-row class="navlist" type="flex" justify="space-around" align="middle">
-      <el-col :span="12">
+      <el-col class="list-left">
         <el-date-picker v-model="inputValue.data_time" :picker-options="pickerOption1" size='small' v-on:change="inputchange"></el-date-picker>
         <el-select v-model="inputValue.data_items" size='small' v-on:change="inputchange">
           <el-option v-for="item in options2" :label="item.label" :value="item.value"></el-option>

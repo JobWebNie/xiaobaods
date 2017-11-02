@@ -1,7 +1,7 @@
 var mysql = require('mysql2');
 
 var user = {
-    host: '',
+    host: '47.94.172.95',
     port: 3306,
     user: 'program_w',
     password:'KQPp5wrZJG33fwFs',

@@ -83,17 +83,17 @@ def xiaobaods_a(SQL_msg="", line_b=0, line_f=20, date="", category="牛仔裤", len
         sql_select_re += " AND CT.`商品信息` REGEXP('" + titler + "')"
     if storer:
         sql_select_re += " AND CT.`所属店铺` REGEXP('" + storer + "')"
-    if v1l > 0:
+    if v1l != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[4] + "<=" + str(v1l)
-    if v1m > 0:
+    if v1m != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[4] + ">=" + str(v1m)
-    if v2l > 0:
+    if v2l != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[5] + "<=" + str(v2l)
-    if v2m > 0:
+    if v2m != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[5] + ">=" + str(v2m)
-    if v3l > 0:
+    if v3l != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[6] + "<=" + str(v3l)
-    if v3m > 0:
+    if v3m != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[6] + ">=" + str(v3m)
     sql_select_b = "FROM " + table + " AS CT LEFT JOIN " + table + " AS ST ON CT.`宝贝链接` = ST.`宝贝链接` " \
                                                                    "WHERE CT.`日期` = " + str(date).replace("-", "") \
@@ -151,7 +151,7 @@ def xiaobaods_a(SQL_msg="", line_b=0, line_f=20, date="", category="牛仔裤", len
 
 def xiaobaods_c(SQL_msg="", line_b=0, line_f=20, date="", category="牛仔裤", classification="款式", attributes="铅笔裤",
                 length=7, SQL="xiaobaods",
-                table="bc_attribute_granularity_sales", variable="热销排名", fillna="", debug=0, path="", keyword="日期：",
+                table="bc_category_granularity", variable="热销排名", fillna="", debug=0, path="", keyword="日期：",
                 rankl=0, rankm=0, titler="", storer="", v1l=0, v1m=0, v2l=0, v2m=0, v3l=0, v3m=0):
     '''
     # 2017-10-18 All rewrite
@@ -215,17 +215,17 @@ def xiaobaods_c(SQL_msg="", line_b=0, line_f=20, date="", category="牛仔裤", cla
         sql_select_re += " AND CT.`商品信息` REGEXP('" + titler + "')"
     if storer:
         sql_select_re += " AND CT.`所属店铺` REGEXP('" + storer + "')"
-    if v1l > 0:
+    if v1l != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[4] + "<=" + str(v1l)
-    if v1m > 0:
+    if v1m != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[4] + ">=" + str(v1m)
-    if v2l > 0:
+    if v2l != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[5] + "<=" + str(v2l)
-    if v2m > 0:
+    if v2m != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[5] + ">=" + str(v2m)
-    if v3l > 0:
+    if v3l != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[6] + "<=" + str(v3l)
-    if v3m > 0:
+    if v3m != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[6] + ">=" + str(v3m)
     sql_select_b = "FROM " + table + " AS CT LEFT JOIN " + table + " AS ST ON CT.`宝贝链接` = ST.`宝贝链接` " \
                                                                    "WHERE CT.`日期` = " + str(date).replace("-", "") \
@@ -287,7 +287,7 @@ def xiaobaods_c(SQL_msg="", line_b=0, line_f=20, date="", category="牛仔裤", cla
 
 def xiaobaods_w(SQL_msg="", line_b=0, line_f=20, date="", category="牛仔裤", length=7,SQL="xiaobaods",choice="热搜核心词",
                 variable="排名", fillna="", debug=0, path="", keyword="日期：", rankl=0, rankm=0, titler="",
-                v1l=0, v1m=0, v2l=0, v2m=0, v3l=0, v3m=0, v4l=0, v4m=0, v5l=0, v5m=0):
+                v1l=0, v1m=0, v2l=0, v2m=0, v3l=0, v3m=0, v4l=0, v4m=0, v5l=0, v5m=0, v6l=0, v6m=0):
     '''
     # 2017-10-19 All rewrite
     '''
@@ -346,26 +346,30 @@ def xiaobaods_w(SQL_msg="", line_b=0, line_f=20, date="", category="牛仔裤", len
         sql_select_re += " AND CT.`排名`<=" + str(rankm)
     if titler:
         sql_select_re += " AND CT.`搜索词` REGEXP('" + titler + "')"
-    if v1l > 0:
+    if v1l != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[2] + "<=" + str(v1l)
-    if v1m > 0:
+    if v1m != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[2] + ">=" + str(v1m)
-    if v2l > 0:
+    if v2l != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[3] + "<=" + str(v2l)
-    if v2m > 0:
+    if v2m != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[3] + ">=" + str(v2m)
-    if v3l > 0:
+    if v3l != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[4] + "<=" + str(v3l)
-    if v3m > 0:
+    if v3m != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[4] + ">=" + str(v3m)
-    if v4l > 0:
+    if v4l != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[5] + "<=" + str(v4l)
-    if v4m > 0:
+    if v4m != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[5] + ">=" + str(v4m)
-    if v5l > 0:
+    if v5l != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[6] + "<=" + str(v5l)
-    if v5m > 0:
+    if v5m != 0:
         sql_select_re += " AND " + sql_select_f.split(",")[6] + ">=" + str(v5m)
+    if v6l != 0:
+        sql_select_re += " AND " + sql_select_f.split(",")[7] + "<=" + str(v6l)
+    if v6m != 0:
+        sql_select_re += " AND " + sql_select_f.split(",")[7] + ">=" + str(v6m)
     sql_select_b = "FROM " + choice_list[choice]["table"] + " AS CT LEFT JOIN " + choice_list[choice]["table"] + \
                    " AS ST ON CT.搜索词 = ST.搜索词 WHERE CT.`日期` = "+str(date).replace("-", "")+" AND CT.类目 = '" + \
                    category + "' AND CT.字段='"+choice + "' AND ST.字段='" + choice + "' AND ST.日期 >= " + \

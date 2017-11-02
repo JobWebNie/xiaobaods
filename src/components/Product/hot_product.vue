@@ -26,7 +26,7 @@
         </span>
       </el-col>
 
-      <el-col class="list-right" style="width:40%;text-align:right;">
+      <el-col class="list-right">
         <el-tag v-for="tag in dynamicTags" :key="tag" :closable="true" @close="handleClose(tag)">{{tag}}</el-tag>
 
         <!-- <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.titler" placeholder="商品筛选"></el-input>

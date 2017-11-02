@@ -32,10 +32,10 @@
 
   .navlist .list-right {
     padding: 0.1vw;
-    width: 22vw;
+    width:35vw;
     border: 1px solid #99A9BF;
     height: 3.7vh;
-    text-align: center;
+    text-align:right;
   }
 
   a {

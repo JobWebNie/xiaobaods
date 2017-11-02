@@ -18,19 +18,23 @@
         <el-select v-model=" data.length" size='small' v-on:change="inputchange">
           <el-option v-for="item in options2" :label="item.label" :value="item.value"></el-option>
         </el-select>
-         <span class="Embellish"><a @click="excellCsv()">下载</a></span>
-          <span class="Embellish"><a @click.prevent="loadPicture(Table.tableData)">图片</a></span>
+        <span class="Embellish">
+          <a @click="excellCsv()">下载</a>
+        </span>
+        <span class="Embellish">
+          <a @click.prevent="loadPicture(Table.tableData)">图片</a>
+        </span>
       </el-col>
       <el-col class="list-right" style="width:40%;text-align:right;">
-      <el-tag v-for="tag in dynamicTags" :key="tag" :closable="true" @close="handleClose(tag)">{{tag}}</el-tag>
-     <!-- <span v-if="false">
+        <el-tag v-for="tag in dynamicTags" :key="tag" :closable="true" @close="handleClose(tag)">{{tag}}</el-tag>
+        <!-- <span v-if="false">
         <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.titlechoice" placeholder="商品筛选"></el-input>
         <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.storechoice" placeholder="店铺搜索"></el-input>
         <el-autocomplete size='small' v-model="data.storegroupchoice" :fetch-suggestions="querySearchAsync" @keyup.enter.native="inputchange" placeholder="热门店铺分类"></el-autocomplete>
         <el-button @click="inputchange" type="primary" size='small'>筛选</el-button>
         <el-button size='small' @click="emptyFilter">清空</el-button>
       </span>-->
-      <el-button @click="dialogFormVisible = true" type="primary" size='small'>筛选</el-button>
+        <el-button @click="dialogFormVisible = true" type="primary" size='small'>筛选</el-button>
       </el-col>
     </el-row>
     <el-row>
@@ -38,22 +42,36 @@
         <el-table v-loading="loading" :data="Table.tableData_prepag" style="width: 100%" :height="this.Table.height" @cell-click="showPicture">
           <el-table-column prop="热销排名" label="排名" width="50" header-align="center" align="center"></el-table-column>
           <el-table-column :label="Table.tableData_title[0]" header-align="center" align="center" width="80">
-            <template scope="scope"><a target="_blank" :href="Table.bigPicture" alt=""><img style="height:44px;" :src="scope.row.主图缩略图" alt=""></a></template>
+            <template scope="scope">
+              <a target="_blank" :href="Table.bigPicture" alt="">
+                <img style="height:44px;" :src="scope.row.主图缩略图" alt="">
+              </a>
+            </template>
           </el-table-column>
           <el-table-column show-overflow-tooltip :label="Table.tableData_title[2]" header-align="center" align="center">
-            <template scope="scope"><a target="_blank" :href="scope.row.宝贝链接" alt="">{{scope.row.商品信息}}</a></template>
+            <template scope="scope">
+              <a target="_blank" :href="scope.row.宝贝链接" alt="">{{scope.row.商品信息}}</a>
+            </template>
           </el-table-column>
           <el-table-column show-overflow-tooltip prop="所属店铺" :label="Table.tableData_title[3]" header-align="center" align="center"
             width="150">
-            <template scope="scope"><a target="_blank" :href="scope.row.店铺链接">{{scope.row.所属店铺}}</a></template>
+            <template scope="scope">
+              <a target="_blank" :href="scope.row.店铺链接">{{scope.row.所属店铺}}</a>
+            </template>
           </el-table-column>
-          <el-table-column :prop="Table.tableData_title[4]" :label="Table.tableData_title[4]" :formatter="contentFormatter" header-align="right" align="right" width="120"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[5]" :label="Table.tableData_title[5]" :formatter="contentFormatter" header-align="right" align="right" width="120"></el-table-column>
-          <el-table-column :prop="Table.tableData_title[6]" :label="Table.tableData_title[6]" :formatter="contentFormatter" header-align="right" align="right" width="120"></el-table-column>
-          <el-table-column v-for="title in Table.tableData_title" v-if="title.slice(0,2)=='日期'" :prop="title" :render-header="renderHeader"  :formatter="contentFormatter"
-            width="50" header-align="right" align="right"></el-table-column>
+          <el-table-column :prop="Table.tableData_title[4]" :label="Table.tableData_title[4]" :formatter="contentFormatter" header-align="right"
+            align="right" width="120"></el-table-column>
+          <el-table-column :prop="Table.tableData_title[5]" :label="Table.tableData_title[5]" :formatter="contentFormatter" header-align="right"
+            align="right" width="120"></el-table-column>
+          <el-table-column :prop="Table.tableData_title[6]" :label="Table.tableData_title[6]" :formatter="contentFormatter" header-align="right"
+            align="right" width="120"></el-table-column>
+          <el-table-column v-for="title in Table.tableData_title" v-if="title.slice(0,2)=='日期'" :prop="title" :render-header="renderHeader"
+            :formatter="contentFormatter" width="50" header-align="right" align="right"></el-table-column>
           <el-table-column header-align="center" align="center" label="操作" width="120">
-            <template scope="scope"><a target="_blank" :href="scope.row.查看详情" value='' alt=""> 查看详情</a><br></template>
+            <template scope="scope">
+              <a target="_blank" :href="scope.row.查看详情" value='' alt=""> 查看详情</a>
+              <br>
+            </template>
           </el-table-column>
         </el-table>
         <div style="position:relative; text-align:center;">
@@ -63,7 +81,7 @@
         </div>
       </el-col>
     </el-row>
-      <el-dialog size="mini" title="商品筛选" :visible.sync="dialogFormVisible">
+    <el-dialog size="mini" title="商品筛选" :visible.sync="dialogFormVisible">
       <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="商品信息" prop="titler" :rules=" [{message: '请输入活动名称',trigger: 'blur'}]">
           <el-input v-model="ruleForm.titler" placeholder="请输入商品筛选词"></el-input>
@@ -84,18 +102,18 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="交易增长幅度">
+        <el-form-item label="支付件数">
           <el-col :span="4">
-            <el-form-item prop="v2m" :rules="[{type: 'number',message: '交易增长必须为数字值',trigger: 'change'}]">
+            <el-form-item prop="v2m" :rules="[{type: 'number',message: '支付件数为数字值',trigger: 'change'}]">
               <el-input v-model.number="ruleForm.v2m" auto-complete="off"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="2" style="text-align:center">%—</el-col>
+          <el-col :span="2" style="text-align:center">—</el-col>
           <el-col :span="4">
-            <el-form-item prop="v2l" :rules="[{ type: 'number',message: '交易增长必须为数字值',trigger: 'change'}]">
+            <el-form-item prop="v2l" :rules="[{ type: 'number',message: '支付件数为数字值',trigger: 'change'}]">
               <el-input v-model.number="ruleForm.v2l" auto-complete="off"></el-input>
             </el-form-item>
-          </el-col>%
+          </el-col>
         </el-form-item>
         <el-form-item label="转化率指数">
           <el-col :span="4">
@@ -132,7 +150,7 @@
   export default {
     data() {
       return {
-         dynamicTags: [],
+        dynamicTags: [],
         dialogFormVisible: false,
         ruleForm: {
           titler: '',
@@ -318,16 +336,16 @@
           PageIndex: 1,
           height: 835
         },
-        data:{
-           fun: 'c',
-            date:Date.now()- 8.64e7,
-            length:  7,
-            category: ['牛仔裤', '款式', '铅笔裤'],
-            variable: '热销排名',
-            storegroupchoice: '',
-            line_f: 0,
-            line_b: 20,
-            table: 'bc_attribute_granularity_sales'
+        data: {
+          fun: 'c',
+          date: Date.now() - 8.64e7,
+          length: 7,
+          category: ['牛仔裤', '款式', '铅笔裤'],
+          variable: '热销排名',
+          storegroupchoice: '',
+          line_f: 0,
+          line_b: 20,
+          table: 'bc_category_granularity'
         },
         loading: true,
         // restaurants: [],
@@ -337,11 +355,11 @@
     },
     created() {
       //显示遮罩层加载功能
-        this.$http.get("market/prop").then((response) => {
-          this.fullpath = response.body.fullpath
-          this.objToArr(response.body.data)
-          this.loading = false
-        })
+      this.$http.get("market/prop").then((response) => {
+        this.fullpath = response.body.fullpath
+        this.objToArr(response.body.data)
+        this.loading = false
+      })
     },
     methods: {
       ...mapActions([PICTURE_INSERT]),
@@ -355,30 +373,35 @@
         var th = column.property.slice(-4, -2) + '-' + column.property.slice(-2)
         return column.label = th;
       },
-       contentFormatter(row, column, cellValue) {
-         if(cellValue){
-            return String(cellValue).replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-              
-         }
+      contentFormatter(row, column, cellValue) {
+        if (cellValue) {
+          return String(cellValue).replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
+
+        }
       },
       inputchange() {
-         this.loading = true
-            var data1 = {
-          date:this.data.date,
-          length:this.data.length,
-          variable:this.data.variable,
-          category:this.data.category[0],
-          classfication:this.data.category[1],
-          attributes:this.data.category[2],
-          table:this.data.table
+        this.loading = true
+        var data1 = {
+          fun: 'c',
+          line_f: this.data.line_f,
+          line_b: this.data.line_b,
+          date: this.data.date,
+          length: this.data.length,
+          variable: this.data.variable,
+          category: this.data.category[0],
+          classfication: this.data.category[1],
+          attributes: this.data.category[2],
+          table: this.data.table
         }
         var compile = Object.assign({}, data1, this.ruleForm)
         compile.titler = compile.titler.replace(/\s+/g, '|') //实现空格匹配多个
         compile.storer = compile.storer.replace(/\s+/g, '|')
-        compile.v2l = compile.v2l / 100
-        compile.v2m = compile.v2m / 100
         var data = JSON.stringify(compile)
-        this.$http.post("market/prop",{data},{emulateJSON:true}).then((response) => {
+        this.$http.post("market/prop", {
+          data
+        }, {
+          emulateJSON: true
+        }).then((response) => {
           this.fullpath = response.body.fullpath
           this.objToArr(response.body.data)
           this.loading = false
@@ -477,7 +500,7 @@
         });
       },
       handleClose(tag) {
-        
+
         this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
       }
     }

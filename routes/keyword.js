@@ -8,182 +8,125 @@ const router = express.Router()
 const spawnSync = require('child_process').spawnSync
 // 热词处理
 router.get('/keyWord/hot', (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py'],{cwd:'./python'})
-  var timTep = new Date() - 24 * 60 * 60 * 1000
-  var dateArgv = moment(timTep).format('YYYY-MM-DD')
+  var fullpath = './dist/static/public/hw-' + moment(new Date() - 8.64e7).format('YYYY-MM-DD') + '牛仔裤热搜核心词排名7.csv'
+  const spawnSync1 = spawnSync('python', ['xiaobaods.py', "{'fun':'w'}"], {cwd: './python'})
   var data = JSON.parse(spawnSync1.stdout)
-  var filename = 'hw-' + dateArgv + '牛仔裤热搜核心词排名7'
-  var fullpath = './dist/static/public/' + filename + '.csv'
-  fs.exists(fullpath, function (exists) {
-    if (exists) {
-      Response.send({
-        data: data,
-        filename: filename
-      })
-    } else {
-      if (JSON.stringify(data) == "{}") {
-        Response.send({
-          message: '类目无店铺'
-        })
-      } else {
-        Response.send({
-          message: '查询成功',
-          filename: filename,
-          data: data
-        })
-        var myData = []
-        for (var i in data) {
-          myData.push(data[i])
-        }
-        var csv = json2csv({
-          data: myData,
-          quotes: ""
-        });
-        var strgbk = iconv.encode(csv, 'gbk')
-        fs.writeFile(fullpath, strgbk, function (err) {
-          if (err) throw err;
-        });
-      }
+  
+  if (JSON.stringify(data) !== "{}") {
+    var myData = []
+    for (let i in data) {
+      myData.push(data[i])
     }
-  })
+    fs.writeFile(fullpath, iconv.encode(json2csv({
+      data: myData,
+      quotes: ""
+    }), 'gbk'), function (err) {
+      if (err) throw err;
+    })
+    Response.send({
+      code:200,
+      fullpath: fullpath,
+      data: data
+    })
+  }else{
+    Response.send({
+      code:302,
+      msg:'没有返回内容'
+    })
+  }
 })
 router.post("/keyWord/hot", (Request, Response) => {
   var query = JSON.parse(Request.body.data)
-  var dateArgv = ''
-  var time_length = query.data_time_length ? query.data_time_length : ''
-  var category = query.data_items ? query.data_items : ''
-  var choice = query.data_reorder[0] ? query.data_reorder[0] : ''
-  var variable = query.data_reorder[1] ? query.data_reorder[1] : ''
-  if (query.data_time !== null && query.data_time !== undefined && query.data_time !== '') {
-    dateArgv = moment(query.data_time).format('YYYY-MM-DD')
-  }
-  var string = "{'date':'" + dateArgv + "','category':'" + category + "','length':" + time_length + ",'choice':'" + choice + "','variable':'" + variable + "'}"
-  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py', string],{cwd:'./python'})
-  var data = JSON.parse(spawnSync1.stdout)
-  var filename = 'hw-' + dateArgv + category + choice + variable + time_length
-  var fullpath = './dist/static/public/' + filename + '.csv'
-  fs.exists(fullpath, function (exists) {
-    if (exists) {
-      Response.send({
-        data: data,
-        filename: filename
-      })
-    } else {
-      if (JSON.stringify(data) == "{}") {
-        Response.send({
-          message: '类目无店铺'
-        })
-      } else {
-        Response.send({
-          message: '查询成功',
-          filename: filename,
-          data: data
-        })
-        var myData = []
-        for (var i in data) {
-          myData.push(data[i])
-        }
-        var csv = json2csv({
-          data: myData,
-          quotes: ""
-        });
-        var strgbk = iconv.encode(csv, 'gbk')
-        fs.writeFile(fullpath, strgbk, function (err) {
-          if (err) throw err;
-        });
-      }
-    }
+  query.date = moment(query.date).format('YYYY-MM-DD')
+  var string = JSON.stringify(query).replace(/"/g, "'")
+  const spawnSync1 = spawnSync('python', ['xiaobaods.py', string], {
+    cwd: './python'
   })
+  var data = JSON.parse(spawnSync1.stdout)
+  var fullpath = './dist/static/public/hw-' + query.date.slice(0, 10) + query.category + query.variable + query.length + '.csv'
+  if (JSON.stringify(data) !== "{}") {
+    var myData = []
+    for (let i in data) {
+      myData.push(data[i])
+    }
+    fs.writeFile(fullpath, iconv.encode(json2csv({
+      data: myData,
+      quotes: ""
+    }), 'gbk'), function (err) {
+      if (err) throw err;
+    })
+    Response.send({
+      code:200,
+      fullpath: fullpath,
+      data: data
+    })
+  }else{
+    Response.send({
+      code:302,
+      msg:'没有返回内容'
+    })
+  }
 })
 // 关键词处理
 router.get('/keyWord/up', (Request, Response) => {
-  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py', "{'choice':'飙升核心词'}"],{cwd:'./python'}) //由于参数不同默认选中飙升
-  var timTep = new Date() - 24 * 60 * 60 * 1000
-  var dateArgv = moment(timTep).format('YYYY-MM-DD')
+  var fullpath = './dist/static/public/hw-' + moment(new Date() - 8.64e7).format('YYYY-MM-DD') + '牛仔裤热搜核心词排名7.csv'
+  const spawnSync1 = spawnSync('python', ['xiaobaods.py', "{'fun':'w','choice':'飙升核心词'}"], {cwd: './python'})
   var data = JSON.parse(spawnSync1.stdout)
-  var filename = 'uw-' + dateArgv + '牛仔裤飙升核心词排名7'
-  var fullpath = './dist/static/public/' + filename + '.csv'
-  fs.exists(fullpath, function (exists) {
-    if (exists) {
-      Response.send({
-        data: data,
-        filename: filename
-      })
-    } else {
-      if (JSON.stringify(data) == "{}") {
-        Response.send({
-          message: '类目无店铺'
-        })
-      } else {
-        Response.send({
-          message: '查询成功',
-          filename: filename,
-          data: data
-        })
-        var myData = []
-        for (var i in data) {
-          myData.push(data[i])
-        }
-        var csv = json2csv({
-          data: myData,
-          quotes: ""
-        });
-        var strgbk = iconv.encode(csv, 'gbk')
-        fs.writeFile(fullpath, strgbk, function (err) {
-          if (err) throw err;
-        });
-      }
+  if (JSON.stringify(data) !== "{}") {
+    var myData = []
+    for (let i in data) {
+      myData.push(data[i])
     }
-  })
+    fs.writeFile(fullpath, iconv.encode(json2csv({
+      data: myData,
+      quotes: ""
+    }), 'gbk'), function (err) {
+      if (err) throw err;
+    })
+    Response.send({
+      code:200,
+      fullpath: fullpath,
+      data: data
+    })
+  }else{
+    Response.send({
+      code:302,
+      msg:'没有返回内容'
+    })
+  }
 })
 router.post("/keyWord/up", (Request, Response) => {
   var query = JSON.parse(Request.body.data)
-  var dateArgv = ''
-  var time_length = query.data_time_length ? query.data_time_length : ''
-  var category = query.data_items ? query.data_items : ''
-  var choice = query.data_reorder[0] ? query.data_reorder[0] : ''
-  var variable = query.data_reorder[1] ? query.data_reorder[1] : ''
-  if (query.data_time !== null && query.data_time !== undefined && query.data_time !== '') {
-    dateArgv = moment(query.data_time).format('YYYY-MM-DD')
-  }
-  var string = "{'date':'" + dateArgv + "','category':'" + category + "','length':" + time_length + ",'choice':'" + choice + "','variable':'" + variable + "'}"
-
-  const spawnSync1 = spawnSync('python', ['xiaobaods_w.py', string],{cwd:'./python'})
-  var data = JSON.parse(spawnSync1.stdout)
-  var filename = 'uw-' + dateArgv + category + choice + variable + time_length
-  var fullpath = './dist/static/public/' + filename + '.csv'
-  fs.exists(fullpath, function (exists) {
-    if (exists) {
-      Response.send({
-        data: data,
-        filename: filename
-      })
-    } else {
-      if (JSON.stringify(data) == "{}") {
-        Response.send({
-          message: '类目无店铺'
-        })
-      } else {
-        Response.send({
-          message: '查询成功',
-          filename: filename,
-          data: data
-        })
-        var myData = []
-        for (var i in data) {
-          myData.push(data[i])
-        }
-        var csv = json2csv({
-          data: myData,
-          quotes: ""
-        });
-        var strgbk = iconv.encode(csv, 'gbk')
-        fs.writeFile(fullpath, strgbk, function (err) {
-          if (err) throw err;
-        });
-      }
-    }
+  query.date = moment(query.date).format('YYYY-MM-DD')
+  var string = JSON.stringify(query).replace(/"/g, "'")
+  const spawnSync1 = spawnSync('python', ['xiaobaods.py', string], {
+    cwd: './python'
   })
+
+  var data = JSON.parse(spawnSync1.stdout)
+  var fullpath = './dist/static/public/uw-' + query.date.slice(0, 10) + query.category + query.variable + query.length + '.csv'
+  if (JSON.stringify(data) !== "{}") {
+    var myData = []
+    for (let i in data) {
+      myData.push(data[i])
+    }
+    fs.writeFile(fullpath, iconv.encode(json2csv({
+      data: myData,
+      quotes: ""
+    }), 'gbk'), function (err) {
+      if (err) throw err;
+    })
+    Response.send({
+      code:200,
+      fullpath: fullpath,
+      data: data
+    })
+  }else{
+    Response.send({
+      code:302,
+      msg:'没有返回内容'
+    })
+  }
 })
 // 高级词汇处理
 router.get('/keyWord/entry', (Request, Response) => {

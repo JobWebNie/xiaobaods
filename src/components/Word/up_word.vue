@@ -10,41 +10,138 @@
     </el-row>
     <el-row class="navlist" type="flex" justify="space-around" align="middle">
       <el-col class="list-left">
-        <el-date-picker v-model="inputValue.data_time" :picker-options="pickerOption" size='small' v-on:change="inputchange"></el-date-picker>
-        <el-select v-model="inputValue.data_items" size='small' v-on:change="inputchange">
+        <el-date-picker v-model="data.date" :picker-options="pickerOption" size='small' v-on:change="inputchange"></el-date-picker>
+        <el-select v-model="data.category" size='small' v-on:change="inputchange">
           <el-option v-for="item in options0" :label="item.label" :value="item.value"></el-option>
         </el-select>
-        <el-cascader v-model="inputValue.data_reorder" :options="options1" size='small' v-on:change="inputchange"></el-cascader>
-        <el-select v-model="inputValue.data_time_length" size='small' v-on:change="inputchange">
+        <el-cascader v-model="data.data_reorder" :options="options1" size='small' v-on:change="inputchange"></el-cascader>
+        <el-select v-model="data.length" size='small' v-on:change="inputchange">
           <el-option v-for="item in options4" :label="item.label" :value="item.value"></el-option>
         </el-select>
-        <span class="Embellish"><a :href='filename'>下载</a></span></el-col>
-      <el-col class="list-right"></el-col>
+        <span class="Embellish">
+          <a :href='fullpath'>下载</a>
+        </span>
+      </el-col>
+      <el-col class="list-right">
+        <el-tag v-for="tag in dynamicTags" :key="tag" :closable="true" @close="handleClose(tag)">{{tag}}</el-tag>
+        <el-button @click="dialogFormVisible = true" type="primary" size='small'>筛选</el-button>
+      </el-col>
     </el-row>
-
     <el-row>
       <el-col>
-        <el-table class="tablelist" v-loading="loading" :data="Table.tableData_prepag" style="width: 100%" :height="this.Table.height">
-         <el-table-column v-for="title in Table.tableData_title" :prop="title" :render-header="renderHeader" :formatter="contentFormatter"
-          align="center" header-align="center"></el-table-column>
+        <el-table class="tablelist" v-loading="loading" :data="Table.tableData_prepag" :height="this.Table.height">
+          <el-table-column v-for="title in Table.tableData_title" v-if="title.name!=='total'" :prop="title.name" :render-header="renderHeader"
+            :formatter="contentFormatter" align="center" header-align="center" :min-width="title.width"></el-table-column>
         </el-table>
         <div style="position:relative; text-align:center;">
           <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="Table.PageIndex" :page-sizes="[15, 20, 50, 100]"
-            :page-size="Table.prePageCount" layout="total, sizes, prev, pager, next, jumper" :total="Table.tableData.length">
+            :page-size="Table.prePageCount" layout="total, sizes, prev, pager, next, jumper" :total="Table.total">
           </el-pagination>
         </div>
       </el-col>
     </el-row>
+    <el-dialog size="mini" title="飙升核心词" :visible.sync="dialogFormVisible">
+      <el-form :model="ruleForm" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="搜索词" prop="titler" :rules=" [{message: '请输入搜索词',trigger: 'blur'}]">
+          <el-input v-model="ruleForm.titler" placeholder="请输入搜索词"></el-input>
+        </el-form-item>
+        <el-form-item label="相关搜索词数">
+          <el-col :span="4">
+            <el-form-item prop="v1m" :rules="[{type: 'number',message: '搜索词数为数值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v1m" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="text-align:center">—</el-col>
+          <el-col :span="4">
+            <el-form-item prop="v1l" :rules="[{ type: 'number',message: '搜索词数为数值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v1l" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="搜索人气">
+          <el-col :span="4">
+            <el-form-item prop="v2m" :rules="[{type: 'number',message: '搜索人气填写数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v2m" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="text-align:center">—</el-col>
+          <el-col :span="4">
+            <el-form-item prop="v2l" :rules="[{ type: 'number',message: '搜索人气填写数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v2l" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="词搜索增幅">
+          <el-col :span="4">
+            <el-form-item prop="v3m" :rules="[{type: 'number',message: '词搜索增幅填写数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v3m" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="text-align:center">%—</el-col>
+          <el-col :span="4">
+            <el-form-item prop="v3l" :rules="[{ type: 'number',message: '词搜索增幅填写数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v3l" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>%
+        </el-form-item>
+
+        <el-form-item label="点击人气">
+          <el-col :span="4">
+            <el-form-item prop="v4m" :rules="[{type: 'number',message: '点击人气填写数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v4m" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="text-align:center">—</el-col>
+          <el-col :span="4">
+            <el-form-item prop="v4l" :rules="[{ type: 'number',message: '点击人气填写数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v4l" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="支付转化率">
+          <el-col :span="4">
+            <el-form-item prop="v5m" :rules="[{type: 'number',message: '转化率指数必须为数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v5m" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2" style="text-align:center">%—</el-col>
+          <el-col :span="4">
+            <el-form-item prop="v5l" :rules="[{ type: 'number',message: '转化率指数必须为数字值',trigger: 'change'}]">
+              <el-input v-model.number="ruleForm.v5l" auto-complete="off"></el-input>
+            </el-form-item>
+          </el-col>%
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')"> 筛选商品</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
   export default {
     data() {
       return {
-        ff:3,
+        dynamicTags: [],
+        dialogFormVisible: false,
+        ruleForm: {
+          titler: '',
+          v1l: 0,
+          v1m: 0,
+          v2m: 0,
+          v2l: 0,
+          v3m: 0,
+          v3l: 0,
+          v4m: 0,
+          v4l: 0,
+          v5m: 0,
+          v5l: 0
+        },
         pickerOption: {
           disabledDate(time) {
-            var min =Date.parse('2016-12-11')
+            var min = Date.parse('2016-12-11')
             var max = Date.now() - 8.64e7;
             if (time.getTime() > max || time.getTime() < min) {
               return true;
@@ -196,31 +293,34 @@
           value: 14,
           label: '显示周期：近14天'
         }],
-        inputValue:{
-          data_time: null,
-          data_items: '牛仔裤',
-          data_reorder:  ["飙升核心词", "排名"],
-          data_time_length: 7
+        data: {
+          fun: 'w',
+          line_f: 0,
+          line_b: 20,
+          date: Date.now() - 8.64e7,
+          category: '牛仔裤',
+          data_reorder: ["飙升核心词", "排名"],
+          length: 7
         },
         Table: {
-          tableData: [],
+          total: null,
           tableData_title: [],
           tableData_prepag: [],
           prePageCount: 20,
           PageIndex: 1,
           height: 840
         },
-        filename: '',
+        fullpath: '',
         loading: false
       }
     },
     created() {
       //增加时间选框默认选中功能
-      this.inputValue.data_time= Date.now() -8.64e7
       this.loading = true
       this.$http.get("keyWord/up").then((response) => {
-      this.filename = './static/public/' + response.body.filename + '.csv'
-      this.objToArr(response.body.data)
+        this.fullpath = response.body.fullpath
+        this.objToArr(response.body.data)
+        this.loading = false
       })
     },
     methods: {
@@ -238,9 +338,9 @@
       },
       contentFormatter(row, column, cellValue) {
         let reg = String(cellValue).replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
-        let percent= Math.round(cellValue * 100) + '%'
+        let percent = Math.round(cellValue * 100) + '%'
         if (column.property.slice(0, 2) == "日期") {
-          const fm = this.inputValue.data_reorder[1]
+          const fm = this.data.data_reorder[1]
           switch (fm) {
             case '支付转化率':
               return cellValue = percent;
@@ -296,50 +396,95 @@
           }
         }
       },
-    inputchange() {
-        var data = JSON.stringify(this.inputValue) //格式化数据
+      inputchange() {
+        var compile = Object.assign({}, this.data, this.ruleForm)
+        compile.choice = compile.data_reorder[0]
+        compile.variable = compile.data_reorder[1]
+        compile.v3m = compile.v3m / 100
+        compile.v3l = compile.v3l / 100
+        compile.v5m = compile.v5m / 100
+        compile.v5l = compile.v5l / 100
+        delete compile.data_reorder
+        var data = JSON.stringify(compile) //格式化数据
         this.loading = true
         this.$http.post("keyWord/up", {
           data
         }, {
           emulateJSON: true
         }).then((response) => {
+          this.loading = false
+          this.fullpath = response.body.fullpath
           this.objToArr(response.body.data)
         })
       },
       objToArr(obj) {
-           this.Table.tableData_title = []
-          this.Table.tableData=[]
+        var middle_Table_body = [];
+        var middle_Table_title = [];
         if (obj) {
+            for (let i in obj) {
+            for (let j in obj[i]) {
+              if (j == 'total') {
+                this.Table.total = obj[i][j]
+              } else {
+                switch (j) {
+                  case '相关搜索词数':
+                    middle_Table_title.push({
+                      name: j,
+                      width: '80'
+                    });
+                    break;
+                  case '词均搜索增长幅度':
+                    middle_Table_title.push({
+                      name: j,
+                      width: '80'
+                    });
+                    break;
+                  case '直通车参考价':
+                    middle_Table_title.push({
+                      name: j,
+                      width: '80'
+                    });
+                    break;
+                  default:
+                    middle_Table_title.push({
+                      name: j,
+                      width: '50'
+                    });
+                    break;
+                }
+              }
+            }
+            break;
+          }
           for (var i in obj) {
-            this.Table.tableData.push(obj[i])
+            middle_Table_body.push(obj[i])
           }
-          for (var j in obj[0]) {
-            this.Table.tableData_title.push(j)
-           }
-          }
-          this.loading = false
-          this.Table.tableData_prepag = this.Table.tableData.slice(0, 20) //每页默认取出20条数据
+          
+        }
+        this.loading = false
+        this.Table.tableData_title = middle_Table_title
+        this.Table.tableData_prepag = middle_Table_body
       },
       handleSizeChange(val) {
-        // console.log(`每页 ${val} 条`);
-        var start = (this.Table.PageIndex - 1) * val //数据起始位置
-        var end = this.Table.PageIndex * val //数据末端位置
-        this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
         this.Table.prePageCount = val
+        this.data.line_b = (this.Table.PageIndex - 1) * val
+        this.data.line_f = this.Table.PageIndex * val
+        this.inputchange()
       },
       handleCurrentChange(val) {
-        // console.log(`当前页: ${val}`);
-        var start = this.Table.prePageCount * (val - 1) //数据起始位置
-        var end = (this.Table.prePageCount) * val //数据末端位置
-        this.Table.tableData_prepag = this.Table.tableData.slice(start, end) //返回数据
         this.Table.PageIndex = val
+        this.data.line_b = this.Table.prePageCount * (val - 1)
+        this.data.line_f = this.Table.prePageCount * val
+        this.inputchange()
       }
+    }
   }
-}
+
 </script>
 <style scoped>
-.el-table__body, .el-table__header{
-  table-layout:unset;
-}
+  .el-table__body,
+  .el-table__header {
+    table-layout: unset;
+  }
+
 </style>
