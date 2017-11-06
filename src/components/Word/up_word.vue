@@ -351,6 +351,9 @@
             case '词均搜索增长幅度':
               return cellValue = percent;
               break;
+            case '搜索增长幅度':
+              return cellValue = percent;
+              break;
             case '相关搜索词数':
               return cellValue = reg;
               break;
@@ -376,6 +379,9 @@
               return cellValue = percent;
               break;
             case '词均搜索增长幅度':
+              return cellValue = percent;
+              break;
+            case '搜索增长幅度':
               return cellValue = percent;
               break;
             case '相关搜索词数':
@@ -415,6 +421,7 @@
           this.loading = false
           this.fullpath = response.body.fullpath
           this.objToArr(response.body.data)
+                    console.log(response.body.data)
         })
       },
       objToArr(obj) {
@@ -433,7 +440,7 @@
                       width: '80'
                     });
                     break;
-                  case '词均搜索增长幅度':
+                  case '搜索增长幅度':
                     middle_Table_title.push({
                       name: j,
                       width: '80'

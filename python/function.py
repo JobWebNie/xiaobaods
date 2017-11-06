@@ -151,7 +151,7 @@ def xiaobaods_a(SQL_msg="", line_b=0, line_f=20, date="", category="牛仔裤", len
 
 def xiaobaods_c(SQL_msg="", line_b=0, line_f=20, date="", category="牛仔裤", classification="款式", attributes="铅笔裤",
                 length=7, SQL="xiaobaods",
-                table="bc_category_granularity", variable="热销排名", fillna="", debug=0, path="", keyword="日期：",
+                table="bc_attribute_granularity_sales", variable="热销排名", fillna="", debug=0, path="", keyword="日期：",
                 rankl=0, rankm=0, titler="", storer="", v1l=0, v1m=0, v2l=0, v2m=0, v3l=0, v3m=0):
     '''
     # 2017-10-18 All rewrite

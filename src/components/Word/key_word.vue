@@ -382,6 +382,7 @@
               return cellValue = reg;
               break;
             case '直通车参考价':
+
               return cellValue = '￥' + parseFloat(cellValue).toFixed(2);
               break;
             default:
@@ -422,6 +423,12 @@
               } else {
                 switch (j) {
                   case '相关搜索词数':
+                    middle_Table_title.push({
+                      name: j,
+                      width: '80'
+                    });
+                    break;
+                  case '商城点击占比':
                     middle_Table_title.push({
                       name: j,
                       width: '80'

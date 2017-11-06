@@ -2,16 +2,10 @@
   <div>
     <div class="slide_title">
       <div class="user_name">
-        <img src="./assets/BaoTitle.png" alt="">
-        <div style="height:45px;overflow:hidden;margin:20px 54px;">
-        <div style="height:20px; width:20px;margin-left: 10px;border-radius: 50%;border:2px solid #fff;"
-         @click="showDatav"></div>
-        <div style="height:40px;width:40px;border-radius: 50%; border:2px solid #fff;"></div>
-        </div>
-        <div @click="animation" style="text-align:center;">{{user.name}}</div>
+        <img src="./assets/BaoTitle.png" alt="" @click="showDatav">
+        <div @click="animation" style="text-align:center;margin:15px auto;">{{user.name}}</div>
       </div>
     </div>
-    
     <el-menu  :default-active="defaultActive" :router="true" theme="dark" @select="handleSelect">
       <el-submenu  v-show="midlevel" index="product">
         <template slot="title">类目趋势</template>
@@ -57,7 +51,6 @@
   export default {
     data() {
       return {
-        userLevel: 4,
         highlevel: false,
         midlevel: false,
         lowlevel: false
@@ -86,7 +79,7 @@
     methods: {
       ...mapActions([MENUURL_INSERT]),
       animation() {
-        this.userLevel = this.user.level
+       
       },
       showDatav() {
         if(this.user.level==9){
@@ -118,7 +111,7 @@
 
 
   .user_name {
-    height: 200px;
+    height: 150px;
     background: #1F343D;
   }
   .user_name img {

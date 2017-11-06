@@ -312,12 +312,6 @@
           }
           for (var j in this.Table.tableData[0]) {
             switch (j) {
-              case '相关搜索词数':
-                this.Table.tableData_title.push({
-                  name: j,
-                  width: '80'
-                });
-                break;
               case '直通车参考价':
                 this.Table.tableData_title.push({
                   name: j,

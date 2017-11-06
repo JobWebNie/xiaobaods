@@ -39,7 +39,7 @@ def console(argv, debug=0):
         df = function.xiaobaods_c(SQL_msg=SQL_msg, line_b=argv.get("line_b", 0), line_f=argv.get("line_f", 20),
         date=argv.get("date", ""), category=argv.get("category", "牛仔裤"),
         classification=argv.get("classification", "款式"), attributes=argv.get("attributes", "铅笔裤"),
-        length=argv.get("length", 7),  SQL=argv.get("SQL", "xiaobaods"), table=argv.get("table", "bc_category_granularity"),
+        length=argv.get("length", 7),  SQL=argv.get("SQL", "xiaobaods"), table=argv.get("table", "bc_attribute_granularity_sales"),
         variable=argv.get("variable", "热销排名"), debug=argv.get("debug", 0), fillna=argv.get("fillna", ""),
         path=argv.get("path", ""), keyword=argv.get("keyword", "日期："), rankl=argv.get("rankl", 0), rankm=argv.get("rankm", 0),
         titler=argv.get("titler", ""), storer=argv.get("storer", ""), v1l=argv.get("v1l", 0), v1m=argv.get("v1m", 0),
@@ -52,7 +52,7 @@ def console(argv, debug=0):
         path=argv.get("path", ""), keyword=argv.get("keyword", "日期："), rankl=argv.get("rankl", 0), rankm=argv.get("rankm", 0),
         titler=argv.get ("titler", ""), v1l=argv.get("v1l", 0), v1m=argv.get("v1m", 0), v2l=argv.get("v2l", 0),
         v2m=argv.get("v2m", 0), v3l=argv.get("v3l", 0), v3m=argv.get("v3m", 0), v4l=argv.get("v4l", 0), v4m=argv.get("v4m", 0),
-        v5l = argv.get ("v5l", 0), v5m = argv.get ("v5m", 0), v6l = argv.get ("v6l", 0), v6m = argv.get ("v6m", 0))
+        v5l= argv.get("v5l", 0), v5m=argv.get("v5m", 0), v6l=argv.get("v6l", 0), v6m=argv.get("v6m", 0))
     return df
 
 
