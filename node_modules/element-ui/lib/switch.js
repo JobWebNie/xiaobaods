@@ -220,6 +220,9 @@ module.exports =
 	//
 	//
 	//
+	//
+	//
+	//
 
 	exports.default = {
 	  name: 'ElSwitch',
@@ -271,6 +274,10 @@ module.exports =
 	    name: {
 	      type: String,
 	      default: ''
+	    },
+	    allowFocus: {
+	      type: Boolean,
+	      default: false
 	    }
 	  },
 	  data: function data() {
@@ -320,6 +327,22 @@ module.exports =
 	      var newColor = this.checked ? this.onColor : this.offColor;
 	      this.$refs.core.style.borderColor = newColor;
 	      this.$refs.core.style.backgroundColor = newColor;
+	    },
+	    setFocus: function setFocus() {
+	      // set focus on input
+	      if (this.allowFocus) {
+	        this.$refs.input.focus();
+	      }
+	    },
+	    handleBlur: function handleBlur(event) {
+	      if (this.allowFocus) {
+	        this.$emit('blur', event);
+	      }
+	    },
+	    handleFocus: function handleFocus(event) {
+	      if (this.allowFocus) {
+	        this.$emit('focus', event);
+	      }
 	    }
 	  },
 	  mounted: function mounted() {
@@ -356,6 +379,9 @@ module.exports =
 	  }), _c('input', {
 	    ref: "input",
 	    staticClass: "el-switch__input",
+	    class: {
+	      'allow-focus': _vm.allowFocus
+	    },
 	    attrs: {
 	      "type": "checkbox",
 	      "name": _vm.name,
@@ -364,14 +390,19 @@ module.exports =
 	      "disabled": _vm.disabled
 	    },
 	    on: {
-	      "change": _vm.handleChange
+	      "change": _vm.handleChange,
+	      "focus": _vm.handleFocus,
+	      "blur": _vm.handleBlur
 	    }
 	  }), _c('span', {
 	    ref: "core",
 	    staticClass: "el-switch__core",
 	    style: ({
 	      'width': _vm.coreWidth + 'px'
-	    })
+	    }),
+	    on: {
+	      "click": _vm.setFocus
+	    }
 	  }, [_c('span', {
 	    staticClass: "el-switch__button",
 	    style: ({

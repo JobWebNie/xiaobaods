@@ -33,6 +33,7 @@
 </template>
 <script>
   import IEcharts from 'vue-echarts-v3/src/full.vue';
+  import 'echarts/lib/chart/line';
   export default {
     components: {
       IEcharts
