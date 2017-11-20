@@ -66,213 +66,205 @@
 </script>
 -->
 
+<style>
+  .chart {
+    height: 500px;
+    width: 1500px;
+  }
 
-<!--<template>
+  .mylove {
+    height: 70px;
+    width: 100%;
+    box-shadow: 0 0 3px #222;
+  }
+
+  .mylove .myloin {
+    margin-top:5px;
+    width: 100px;
+  }
+
+  .bg-purple {
+    color: #324057;
+    box-shadow: 0 2px 0 0 #34C0E3;
+    text-align: center;
+    border-radius: 2px;
+  }
+
+</style>
+<template>
   <div>
     <div>
-      <el-select v-model="value5" placeholder="请选择">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-        </el-option>
-      </el-select>
+      <!--<div>
+        <el-row class="title" type="flex" justify="space-between" align="middle">
+          <el-col class="title-left">
+            <h3>热销产品趋势分析</h3>
+          </el-col>
+          <el-col class="title-right">
+            <p>针对特定节点和分类，对一定时间周期内排名，订单数进行追踪</p>
+          </el-col>
+        </el-row>
+        <el-input class="myinput" v-model="input" placeholder="搜索商品" icon="search"></el-input>
+      </div>-->
+      <div class="mylove">
+        <el-row :gutter="20">
+          <el-col :span="1">
+            <div class="bg-purple">排名</div>
+          </el-col>
+          <el-col :span="2">
+            <div class="bg-purple"> 商品信息</div>
+          </el-col>
+          <el-col :span="2">
+            <div class="bg-purple"> 流量指数 </div>
+          </el-col>
+          <el-col >
+            <el-input size="small" v-model="input" class="myloin"></el-input>
+            
+          </el-col>
+        </el-row>
+      </div>
     </div>
-    <div class="echarts">
-      <IEcharts :option="bar" @ready="onReady" @click="onClick"></IEcharts>
-      <button @click="doRandom">Random</button>
+    <div class="chart">
+      <IEcharts :option="option"></IEcharts>
     </div>
   </div>
+
 </template>
 <script>
   import IEcharts from 'vue-echarts-v3/src/full.vue';
-
-var weatherIcons = {
-    'Sunny': 'http://echarts.baidu.com/images/logo.png',
-    'Cloudy': 'http://echarts.baidu.com/images/logo.png',
-    'Showers': 'http://echarts.baidu.com/images/logo.png'
-};
   export default {
-    name: 'view',
     components: {
       IEcharts
     },
-    props: {},
-    data: () => ({
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
-        value5: '',
-        loading: true,
-        bar: {
+    data() {
+      return {
+        input: '',
+        option: {
+          color: ['#F20030', '#FFF200', '#2BD4FF'],
           title: {
-            text: '商品近期表现',
-            subtext: '数据真实'
+            text: '类目属性关系图',
+            subtext: '数据来自生e经',
+            x: 'center'
           },
           tooltip: {
-            trigger: 'axis'
-          },
-          legend: {
-            data: ['交易增长幅度', '支付子订单数', '支付转化率指数']
-          },
-          toolbox: {
-            show: true,
-            feature: {
-              magicType: {
-                show: true,
-                type: ['stack', 'tiled']
-              },
-              saveAsImage: {
-                show: true
-              }
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross'
+            },
+            formatter: function (params) {
+              var res = params[0].name;
+              res += '<br/>' + params[0].seriesName + ':' + params[0].value;
+              res += '<br/>' + params[1].seriesName + ':' + params[1].value;
+              res += '<br/>' + params[2].seriesName + ':' + (params[2].value * 100).toFixed(2);
+              return res
             }
           },
-          xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            axisLabel:{
-            formatter: function (value) {
-                return '{value|' + value + '}\n{' + value + '| }';
-            },
-            rich:{
-                Sunny: {
-                    align: 'center'
-                },
-                Cloudy: {
-                    align: 'right'
-                },
-                Showers: {
-                    align: 'right'
-                
-                }
-              }
-            },
-            data: ['Sunny', 'Cloudy', 'Showers','Sun', 'Clou', 'Shows','valj'],
+          legend: {
+            data: ['第一', '第二', '第三'],
+            right: 50
           },
-          yAxis: [{
-            show:false,
-            type: 'value'
-          },{
-             show:false,
-              type: 'value'
-          },{
-             show:false,
-              type: 'value'
+          axisPointer: {
+            link: {
+              xAxisIndex: 'all'
+            }
+          },
+          grid: [{
+            left: 60,
+            right: 50,
+          }, {
+            left: 60,
+            right: 50,
+          }, {
+            left: 60,
+            right: 50,
+
           }],
+          xAxis: [{
+              gridIndex: 0,
+              type: 'category',
+              boundaryGap: false,
+              axisLine: {
+                onZero: true
+              },
+              data: ["2015-1", "2015-2", "2015-3", "2015-4", "2015-5", "2015-6", "2015-7", "2015-8", "2015-9",
+                "2015-10", "2015-11", "2015-12"
+              ]
+            },
+            {
+              gridIndex: 1,
+              type: 'category',
+              boundaryGap: false,
+              axisLine: {
+                onZero: true
+              },
+              data: ["2015-1", "2015-2", "2015-3", "2015-4", "2015-5", "2015-6", "2015-7", "2015-8", "2015-9",
+                "2015-10", "2015-11", "2015-12"
+              ]
+            },
+            {
+              gridIndex: 2,
+              type: 'category',
+              boundaryGap: false,
+              axisLine: {
+                onZero: true
+              },
+              data: ["2015-1", "2015-2", "2015-3", "2015-4", "2015-5", "2015-6", "2015-7", "2015-8", "2015-9",
+                "2015-10", "2015-11", "2015-12"
+              ]
+            }
+          ],
+          yAxis: [{
+              show: false,
+              type: 'value'
+            },
+            {
+              show: false,
+              gridIndex: 1,
+              type: 'value'
+            },
+            {
+              show: false,
+              gridIndex: 2,
+              type: 'value'
+            }
+          ],
           series: [{
-              name: '支付转化率指数',
-              type: 'line', 
-              symbol:'circle',
+              name: '第一',
+              type: 'line',
               smooth: true,
-              data: [160,166,159,160,156,140,140]
+              symbolSize: 8,
+              hoverAnimation: false,
+              data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
             },
             {
-              name: '支付子订单数',
+              name: '第二',
               type: 'line',
-               symbol:'circle',
+              smooth: true,
+              xAxisIndex: 1,
               yAxisIndex: 1,
-              smooth: true,
-              data: [140,1736,1696,1627,1573,1480,1680,1680]
+              symbolSize: 8,
+              hoverAnimation: false,
+              data: [3.9, 5.9, 11.1, 18.7, 48.3, 69.2, 231.6, 46.6, 55.4, 18.4, 10.3, 0.7]
             },
             {
-              name: '交易增长幅度',
+              name: '第三',
               type: 'line',
-               symbol:'circle',
-              yAxisIndex: 2,
               smooth: true,
-              data: [-0.03,-0.02,-0.05,-0.03,-0.04,0.13,0.13]
+              xAxisIndex: 2,
+              yAxisIndex: 2,
+              symbolSize: 8,
+              hoverAnimation: false,
+              data: [6.9, 7.9, 15.1, 19.7, 51.3, 73.2, 245.6, 50.6, 63.4, 21.4, 11.3, 2]
             }
           ]
         }
-    }),
-  methods: {
-    doRandom() {
-      const that = this;
-      let data = [];
-      for (let i = 0, min = 5, max = 99; i < 6; i++) {
-        data.push(Math.floor(Math.random() * (max + 1 - min) + min));
-      }
-      that.loading = !that.loading;
-      that.bar.series[0].data = data;
-    },
-    onReady(instance) {
-      console.log(instance);
-    },
-    onClick(event, instance, echarts) {
-      console.log(arguments);
-    }
-  }
-  };
-
-</script>
-
-<style scoped>
-  .echarts {
-    width: 900px;
-    height: 300px;
-  }
-
-</style>-->
-<template>
-
-  <CommitChart :data="data" :options="options" style="width:400px;height:400px;"></CommitChart>
-</template>
-<script>
-  import CommitChart from './CommitChart.js'
-
-  export default {
-    components: {
-      CommitChart
-    },
-    data() {
-      return {
-        data: {
-          labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-              'rgba(196, 88, 186, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-              'rgba(196, 88, 186,1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }]
-          }
-        }
       }
     },
-    mounted() {
-      // Overwriting base render method with actual data.
+    created(){
+      this.$http.get('prod/hotid').then((response)=>{
+        console.log(response.body.data)
+      })
+    },
+    methods: {
 
     }
   }

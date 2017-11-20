@@ -6,7 +6,7 @@
         <div @click="animation" style="text-align:center;margin:15px auto;">{{user.name}}</div>
       </div>
     </div>
-    <el-menu  :default-active="defaultActive" :router="true" theme="dark" @select="handleSelect">
+    <el-menu  :default-active="defaultActive" :router="true" theme="dark" @select="handleSelect" :unique-opened="true">
       <el-submenu  v-show="midlevel" index="product">
         <template slot="title">类目趋势</template>
         <el-menu-item index="/product/hot_product" :route="{path:'/product/hot_product'}">热销商品趋势分析</el-menu-item>

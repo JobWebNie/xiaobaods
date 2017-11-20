@@ -150,6 +150,9 @@
     PICTURE_INSERT
   } from '../../store/picture'
   import {
+    PRODUCTID_SEARCH
+  } from '../../store/prodId'
+  import {
     download
   } from '../../assets/js/download'
   export default {
@@ -241,7 +244,7 @@
       })
     },
     methods: {
-      ...mapActions([PICTURE_INSERT]),
+      ...mapActions([PICTURE_INSERT,PRODUCTID_SEARCH]),
       excellCsv() {
         download(this.fullpath)
       },
@@ -295,7 +298,6 @@
       },
       inputchange() { //格式化数据
         this.loading = true
-
         var compile = Object.assign({}, this.data, this.ruleForm)
         compile.titler = compile.titler.replace(/\s+/g, '|') //实现空格匹配多个
         compile.storer = compile.storer.replace(/\s+/g, '|')
@@ -312,7 +314,6 @@
             this.fullpath = response.body.fullpath
             this.objToArr(response.body.data)
           } else {
-
             this.$message({
               message: response.body.msg,
               type: 'warning'
@@ -356,6 +357,12 @@
       showPicture(row, cell) {
         if (cell.label == "主图缩略图") {
           this.Table.bigPicture = row.主图缩略图.slice(0, -10)
+        }else if(cell.label == "商品信息"){
+          var prodID = row['宝贝链接'].split('?id=')[1]
+          this.PRODUCTID_SEARCH(prodID)
+            window.router.push({
+          path: '/testpress'
+        })
         }
       },
       loadPicture() {

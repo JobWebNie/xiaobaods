@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import picture from './picture'
 import user from './user'
 import menu from './menuPath'
+import prodId from './prodId'
 
 Vue.use(Vuex)
 
@@ -11,6 +12,7 @@ export default new Vuex.Store({
   modules: {
     picture,
     user,
-    menu
+    menu,
+    prodId
   }
 })

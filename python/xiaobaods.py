@@ -35,6 +35,10 @@ def console(argv, debug=0):
         path=argv.get("path", ""), keyword=argv.get("keyword", "ÈÕÆÚ£º"), rankl=argv.get("rankl", 0), rankm=argv.get("rankm", 0),
         titler=argv.get("titler", ""), storer=argv.get("storer", ""), v1l=argv.get("v1l", 0), v1m=argv.get("v1m", 0),
         v2l=argv.get("v2l", 0), v2m=argv.get("v2m", 0), v3l=argv.get("v3l", 0), v3m=argv.get("v3m", 0))
+    elif argv.get("fun") == "al":
+        df = function.xiaobaods_al(SQL_msg=SQL_msg, cid=argv.get("cid", ""), category=argv.get("category", "Å£×Ð¿ã"),
+                        SQL=argv.get("SQL", "xiaobaods"), table=argv.get("table", "bc_attribute_granularity_sales"),
+                        fillna=argv.get("fillna", ""), debug=argv.get("debug", 0), path=argv.get("path", ""))
     elif argv.get("fun") == "c":
         df = function.xiaobaods_c(SQL_msg=SQL_msg, line_b=argv.get("line_b", 0), line_f=argv.get("line_f", 20),
         date=argv.get("date", ""), category=argv.get("category", "Å£×Ð¿ã"),

@@ -6,8 +6,10 @@ const moment = require('moment')
 const iconv = require('iconv-lite')
 const router = express.Router()
 const spawnSync = require('child_process').spawnSync
+const tools = require('./tools')
 // 热词处理
 router.get('/keyWord/hot', (Request, Response) => {
+  // tools.sentparams('get','_hw', Response)
   var fullpath = './dist/static/public/hw-' + moment(new Date() - 8.64e7).format('YYYY-MM-DD') + '牛仔裤热搜核心词排名7.csv'
   const spawnSync1 = spawnSync('python', ['xiaobaods.py', "{'fun':'w'}"], {cwd: './python'})
   var data = JSON.parse(spawnSync1.stdout)

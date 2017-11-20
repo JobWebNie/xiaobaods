@@ -6,7 +6,6 @@ export default {
   mutations: {
     MENUURL_INSERT(state, menu) {
      sessionStorage.setItem('menu',menu)
-    
     }
   },
   actions: {
