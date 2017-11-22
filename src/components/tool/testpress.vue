@@ -79,15 +79,8 @@
   }
 
   .mylove .myloin {
-    margin-top:5px;
+    margin-top: 5px;
     width: 100px;
-  }
-
-  .bg-purple {
-    color: #324057;
-    box-shadow: 0 2px 0 0 #34C0E3;
-    text-align: center;
-    border-radius: 2px;
   }
 
 </style>
@@ -107,24 +100,14 @@
       </div>-->
       <div class="mylove">
         <el-row :gutter="20">
-          <el-col :span="1">
-            <div class="bg-purple">排名</div>
-          </el-col>
-          <el-col :span="2">
-            <div class="bg-purple"> 商品信息</div>
-          </el-col>
-          <el-col :span="2">
-            <div class="bg-purple"> 流量指数 </div>
-          </el-col>
-          <el-col >
+          <el-col>
             <el-input size="small" v-model="input" class="myloin"></el-input>
-            
           </el-col>
         </el-row>
       </div>
     </div>
     <div class="chart">
-      <IEcharts :option="option"></IEcharts>
+      <IEcharts :option="option_data"></IEcharts>
     </div>
   </div>
 
@@ -138,7 +121,7 @@
     data() {
       return {
         input: '',
-        option: {
+        option_data: {
           color: ['#F20030', '#FFF200', '#2BD4FF'],
           title: {
             text: '类目属性关系图',
@@ -153,19 +136,14 @@
             formatter: function (params) {
               var res = params[0].name;
               res += '<br/>' + params[0].seriesName + ':' + params[0].value;
-              res += '<br/>' + params[1].seriesName + ':' + params[1].value;
-              res += '<br/>' + params[2].seriesName + ':' + (params[2].value * 100).toFixed(2);
+              res += '<br/>' + params[1].seriesName + ':' + (params[1].value * 100).toFixed(2);
+              res += '%<br/>' + params[2].seriesName + ':' + params[2].value;
               return res
             }
           },
           legend: {
-            data: ['第一', '第二', '第三'],
+            data: ['支付子订单数', '交易增长幅度', '支付转化率指数'],
             right: 50
-          },
-          axisPointer: {
-            link: {
-              xAxisIndex: 'all'
-            }
           },
           grid: [{
             left: 60,
@@ -183,33 +161,29 @@
               type: 'category',
               boundaryGap: false,
               axisLine: {
-                onZero: true
+                onZero: false
               },
-              data: ["2015-1", "2015-2", "2015-3", "2015-4", "2015-5", "2015-6", "2015-7", "2015-8", "2015-9",
-                "2015-10", "2015-11", "2015-12"
-              ]
+              data: []
             },
             {
+              show: false,
               gridIndex: 1,
               type: 'category',
               boundaryGap: false,
               axisLine: {
-                onZero: true
+                onZero: false
               },
-              data: ["2015-1", "2015-2", "2015-3", "2015-4", "2015-5", "2015-6", "2015-7", "2015-8", "2015-9",
-                "2015-10", "2015-11", "2015-12"
-              ]
+              data: []
             },
             {
+              show: false,
               gridIndex: 2,
               type: 'category',
               boundaryGap: false,
               axisLine: {
-                onZero: true
+                onZero: false
               },
-              data: ["2015-1", "2015-2", "2015-3", "2015-4", "2015-5", "2015-6", "2015-7", "2015-8", "2015-9",
-                "2015-10", "2015-11", "2015-12"
-              ]
+              data: []
             }
           ],
           yAxis: [{
@@ -217,55 +191,107 @@
               type: 'value'
             },
             {
+              offset: -50,
               show: false,
               gridIndex: 1,
               type: 'value'
             },
             {
               show: false,
+              offset: -100,
               gridIndex: 2,
               type: 'value'
             }
           ],
           series: [{
-              name: '第一',
+              name: '支付子订单数',
               type: 'line',
               smooth: true,
               symbolSize: 8,
               hoverAnimation: false,
-              data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
+              data: []
             },
             {
-              name: '第二',
+              name: '交易增长幅度',
               type: 'line',
               smooth: true,
               xAxisIndex: 1,
               yAxisIndex: 1,
               symbolSize: 8,
               hoverAnimation: false,
-              data: [3.9, 5.9, 11.1, 18.7, 48.3, 69.2, 231.6, 46.6, 55.4, 18.4, 10.3, 0.7]
+              data: []
             },
             {
-              name: '第三',
+              name: '支付转化率指数',
               type: 'line',
               smooth: true,
               xAxisIndex: 2,
               yAxisIndex: 2,
               symbolSize: 8,
               hoverAnimation: false,
-              data: [6.9, 7.9, 15.1, 19.7, 51.3, 73.2, 245.6, 50.6, 63.4, 21.4, 11.3, 2]
+              data: []
             }
           ]
-        }
+        },
+        picture_change_date: []
       }
     },
-    created(){
-      this.$http.get('prod/hotid').then((response)=>{
-        console.log(response.body.data)
+    created() {
+      this.$http.get('prod/hotid').then((response) => {
+        var data_reciver = response.body.data
+        Object.keys(data_reciver).map((index) => {
+          let datecategray = this.date_format_from_millisecond(data_reciver[index]['日期'], 'YYYY-MM-dd')
+          this.option_data.xAxis[0].data.push(datecategray)
+          this.option_data.xAxis[1].data.push(datecategray)
+          this.option_data.xAxis[2].data.push(datecategray)
+          this.option_data.series[0].data.push(data_reciver[index]['支付子订单数'])
+          this.option_data.series[1].data.push(data_reciver[index]['交易增长幅度'])
+          this.option_data.series[2].data.push(data_reciver[index]['支付转化率指数'])
+        })
+        this.picture_change_date = this.find_change_picture_or_information(data_reciver)
+        console.log(this.picture_change_date)
       })
     },
     methods: {
-
+      date_format_from_millisecond(millisecond, formatStr) {
+        if (typeof millisecond == 'number') {
+          var _this = new Date(millisecond)
+          var str = formatStr;
+          var Week = ['日', '一', '二', '三', '四', '五', '六'];
+          str = str.replace(/yyyy|YYYY/, _this.getFullYear());
+          str = str.replace(/yy|YY/, (_this.getYear() % 100) > 9 ? (_this.getYear() % 100).toString() : '0' + (_this.getYear() %
+            100));
+          str = str.replace(/MM/, (_this.getMonth() + 1) > 9 ? (_this.getMonth() + 1).toString() : '0' + (_this.getMonth() +
+            1));
+          str = str.replace(/M/g, (_this.getMonth() + 1));
+          str = str.replace(/w|W/g, Week[_this.getDay()]);
+          str = str.replace(/dd|DD/, _this.getDate() > 9 ? _this.getDate().toString() : '0' + _this.getDate());
+          str = str.replace(/d|D/g, _this.getDate());
+          str = str.replace(/hh|HH/, _this.getHours() > 9 ? _this.getHours().toString() : '0' + _this.getHours());
+          str = str.replace(/h|H/g, _this.getHours());
+          str = str.replace(/mm/, _this.getMinutes() > 9 ? _this.getMinutes().toString() : '0' + _this.getMinutes());
+          str = str.replace(/m/g, _this.getMinutes());
+          str = str.replace(/ss|SS/, _this.getSeconds() > 9 ? _this.getSeconds().toString() : '0' + _this.getSeconds());
+          str = str.replace(/s|S/g, _this.getSeconds());
+          return str;
+        }
+      },
+      find_change_picture_or_information(some_data) {
+        var pictures=[]
+        Object.keys(some_data).map((index)=>{
+          var date = this.date_format_from_millisecond(some_data[index]['日期'],'YYYY-MM-DD')
+          if(some_data[index]['主图缩略图'] !== '-' && some_data[index]['商品信息'] !== '-'){
+            pictures.push({'date':date,'path':some_data[index]['主图缩略图'],'information':some_data[index]['商品信息']})
+          }else if(some_data[index]['主图缩略图'] !=='-' && some_data[index]['商品信息'] == '-'){
+            pictures.push({'date':date,'path':some_data[index]['主图缩略图']})
+          }else if(some_data[index]['主图缩略图'] == '-' && some_data[index]['商品信息'] !== '-'){
+            pictures.push({'date':date,'information':some_data[index]['商品信息']})
+          }else{
+            return
+          }
+        })
+        return pictures
+      }
     }
   }
 

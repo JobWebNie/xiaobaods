@@ -15,8 +15,8 @@ router.post("/prod/hot", (Request, Response) => {
 })
 router.get("/prod/hotid", (Request, Response) => {
   const spawnSync = require('child_process').spawnSync
-  const spawnSync1 = spawnSync('python', ['xiaobaods.py',"{'fun':'al','table':'bc_attribute_granularity_sales'}"],{cwd:'./python'})
+  const spawnSync1 = spawnSync('python', ['xiaobaods.py',"{'fun':'al','cid':'559354909521'}"],{cwd:'./python'})
   var data = JSON.parse(spawnSync1.stdout)
-  console.log(data)
+  Response.send({data:data})
 })
 module.exports = router
