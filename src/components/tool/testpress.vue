@@ -1,4 +1,11 @@
-<!--<template>
+<style scoped>
+  .time-line-horizon {
+    position: relative;
+    top: 100px;
+  }
+
+</style>
+<template>
   <div>
     <el-row class="title" type="flex" justify="space-between" align="middle">
       <el-col class="title-left">
@@ -16,25 +23,39 @@
       <el-input v-model="input" placeholder="请输入内容"></el-input>
       <div>
         <b>结果：</b>{{result}}</div>
-      <el-row>
-   
-      </el-row>
     </el-col>
-
+    <div class="time-line-horizon" v-for="item in picture">
+      <div class="el-steps is-horizontal">
+        <div class="el-step is-horizontal" style="width: 200px; margin-right: 0px;">
+          <div class="el-step__head is-finish is-text">
+            <div class="el-step__line is-horizontal" style="margin-right: 0px;">
+              <i class="el-step__line-inner" style="transition-delay: 0ms; border-width: 1px; width: 50%;"></i>
+            </div>
+            <span class="el-step__icon">
+              <div>1</div>
+            </span>
+          </div>
+          <div class="el-step__main" style="margin-left: 0px;">
+            <div class="el-step__title is-finish">{{item.title}}</div>
+            <div class="el-step__description is-finish">{{item.path}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
   export default {
     data() {
       return {
-        
+        picture:[{'title':'标题一',path:'//image.jpg'},{'title':'标题二',path:'//image.jpg'}],
         slename: '牛仔裤',
         input: 0,
         result: null,
         m: null,
         n: null,
         b: null,
-        
+
       }
     },
     watch: {
@@ -47,7 +68,7 @@
     },
     methods: {
       changename() {
-        
+
         this.$http.post('conversion/parms', {
           name: this.slename
         }, {
@@ -64,8 +85,8 @@
   }
 
 </script>
--->
 
+<!--
 <style>
   .chart {
     height: 500px;
@@ -79,38 +100,39 @@
   }
 
   .mylove .myloin {
-    margin-top: 5px;
-    width: 100px;
+    margin: 5px;
+    width: 120px;
+  }
+
+  .step {
+    height: 150px;
   }
 
 </style>
 <template>
   <div>
-    <div>
-      <!--<div>
-        <el-row class="title" type="flex" justify="space-between" align="middle">
-          <el-col class="title-left">
-            <h3>热销产品趋势分析</h3>
-          </el-col>
-          <el-col class="title-right">
-            <p>针对特定节点和分类，对一定时间周期内排名，订单数进行追踪</p>
-          </el-col>
-        </el-row>
-        <el-input class="myinput" v-model="input" placeholder="搜索商品" icon="search"></el-input>
-      </div>-->
-      <div class="mylove">
-        <el-row :gutter="20">
-          <el-col>
-            <el-input size="small" v-model="input" class="myloin"></el-input>
-          </el-col>
-        </el-row>
-      </div>
+    <div class="mylove">
+      <el-row :gutter="20">
+        <el-col>
+          <el-input size="small" v-model="input" class="myloin" placeholder="搜索商品" icon="search"></el-input>
+        </el-col>
+      </el-row>
     </div>
     <div class="chart">
       <IEcharts :option="option_data"></IEcharts>
     </div>
-  </div>
+    <div class="step">
+      <el-popover ref="popover" placement="right" width="400" trigger="hover">
+        <div v-for="item in picture_change_date">
+            <h3>{{item.date}}<br/>{{item.description}}</h3>
+            <img v-if="item.path" :src="item.path" alt="">
+            <p>{{item.keyworlds}}</p>
+        </div>
+      </el-popover>
+      <el-button v-popover:popover style="position:relative;">1</el-button>
+    </div>
 
+  </div>
 </template>
 <script>
   import IEcharts from 'vue-echarts-v3/src/full.vue';
@@ -249,7 +271,6 @@
           this.option_data.series[2].data.push(data_reciver[index]['支付转化率指数'])
         })
         this.picture_change_date = this.find_change_picture_or_information(data_reciver)
-        console.log(this.picture_change_date)
       })
     },
     methods: {
@@ -277,22 +298,39 @@
         }
       },
       find_change_picture_or_information(some_data) {
-        var pictures=[]
-        Object.keys(some_data).map((index)=>{
-          var date = this.date_format_from_millisecond(some_data[index]['日期'],'YYYY-MM-DD')
-          if(some_data[index]['主图缩略图'] !== '-' && some_data[index]['商品信息'] !== '-'){
-            pictures.push({'date':date,'path':some_data[index]['主图缩略图'],'information':some_data[index]['商品信息']})
-          }else if(some_data[index]['主图缩略图'] !=='-' && some_data[index]['商品信息'] == '-'){
-            pictures.push({'date':date,'path':some_data[index]['主图缩略图']})
-          }else if(some_data[index]['主图缩略图'] == '-' && some_data[index]['商品信息'] !== '-'){
-            pictures.push({'date':date,'information':some_data[index]['商品信息']})
-          }else{
+        var pictures = []
+        Object.keys(some_data).map((index) => {
+          var date = this.date_format_from_millisecond(some_data[index]['日期'], 'YYYY-MM-DD')
+          if (some_data[index]['主图缩略图'] !== '-' && some_data[index]['商品信息'] !== '-') {
+            pictures.push({
+              'date': date,
+              'description': '关键词、主图都改变',
+              'path': some_data[index]['主图缩略图'],
+              'keyworlds': some_data[index]['商品信息']
+            })
+          } else if (some_data[index]['主图缩略图'] !== '-' && some_data[index]['商品信息'] == '-') {
+            pictures.push({
+              'date': date,
+              'description': '主图变更',
+              'path': some_data[index]['主图缩略图']
+            })
+          } else if (some_data[index]['主图缩略图'] == '-' && some_data[index]['商品信息'] !== '-') {
+            pictures.push({
+              'date': date,
+              'description': '关键词变更',
+              'keyworlds': some_data[index]['商品信息']
+            })
+          } else {
             return
           }
         })
         return pictures
+      },
+      doclick() {
+        console.log('click')
       }
     }
   }
 
 </script>
+-->
