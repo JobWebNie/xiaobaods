@@ -3,20 +3,20 @@
     <div class="slide_title">
       <div class="user_name">
         <img src="./assets/BaoTitle.png" alt="" @click="showDatav">
-        <div @click="animation" style="text-align:center;margin:15px auto;">{{user.name}}</div>
+        <div style="text-align:center;margin:15px auto;">{{user.name}}</div>
       </div>
     </div>
-    <el-menu  :default-active="defaultActive" :router="true" theme="dark" @select="handleSelect" :unique-opened="true">
-      <el-submenu  v-show="midlevel" index="product">
+    <el-menu :default-active="defaultActive" :router="true" theme="dark" @select="handleSelect" :unique-opened="true">
+      <el-submenu v-show="midlevel" index="product">
         <template slot="title">类目趋势</template>
         <el-menu-item index="/product/hot_product" :route="{path:'/product/hot_product'}">热销商品趋势分析</el-menu-item>
         <el-menu-item index="/product/search_prod" :route="{path:'/product/search_prod'}">流量商品趋势分析</el-menu-item>
       </el-submenu>
       <el-submenu v-show="midlevel" index="word">
         <template slot="title">行业热词榜</template>
-        <el-menu-item  index="/word/key_word" :route="{path:'/word/key_word'}">热搜核心词</el-menu-item>
+        <el-menu-item index="/word/key_word" :route="{path:'/word/key_word'}">热搜核心词</el-menu-item>
         <el-menu-item index="/word/up_word" :route="{path:'/word/up_word'}">飙升核心词</el-menu-item>
-        <el-menu-item  index="/word/soare_word" :route="{path:'/word/soare_word'}" class="topkeys">急速飙升词</el-menu-item>
+        <el-menu-item index="/word/soare_word" :route="{path:'/word/soare_word'}" class="topkeys">急速飙升词</el-menu-item>
       </el-submenu>
       <el-submenu v-show="midlevel" index="proper">
         <template slot="title">属性洞察</template>
@@ -29,25 +29,23 @@
       </el-submenu>
       <el-submenu v-show="midlevel" index="document">
         <template slot="title">文件夹</template>
-        <el-menu-item  index="/weekReport" :route="{path:'/weekReport'}">周报</el-menu-item>
+        <el-menu-item index="/weekReport" :route="{path:'/weekReport'}">周报</el-menu-item>
       </el-submenu>
       <el-submenu index="tool">
         <template slot="title">工具箱</template>
-         <el-menu-item  index="/illegalword" :route="{path:'/illegalword'}">标记词</el-menu-item>
-        <el-menu-item  index="/testpress" :route="{path:'/testpress'}">测试公式</el-menu-item>
+        <el-menu-item index="/illegalword" :route="{path:'/illegalword'}">标记词</el-menu-item>
+        <el-menu-item index="/testpress" :route="{path:'/testpress'}">测试公式</el-menu-item>
+        <el-menu-item index="/prodchart" :route="{path:'/prodchart'}">商品信息图</el-menu-item>
       </el-submenu>
-     
+
     </el-menu>
   </div>
 </template>
 <script>
   import {
-    mapActions,
-    mapState
+    mapState,
+    mapActions
   } from 'vuex'
-  import {
-    MENUURL_INSERT
-  } from './store/menuPath'
   export default {
     data() {
       return {
@@ -77,25 +75,22 @@
       }
     },
     methods: {
-      ...mapActions([MENUURL_INSERT]),
-      animation() {
-       
-      },
+      ...mapActions(['MENUURL_INSERT']),
       showDatav() {
-        if(this.user.level==9){
+        if (this.user.level == 9) {
           window.router.push({
-          path: '/datav/'
+            path: '/datav/'
           })
-        if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-        } else if (document.documentElement.msRequestFullscreen) {
-          document.documentElement.msRequestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) {
-          document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-          document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-        }
-        }else{
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+          } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen();
+          } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+          } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+          }
+        } else {
           this.$message('你看不到我')
         }
       },
@@ -108,12 +103,11 @@
 
 </script>
 <style>
-
-
   .user_name {
     height: 150px;
     background: #1F343D;
   }
+
   .user_name img {
     width: 100%;
   }

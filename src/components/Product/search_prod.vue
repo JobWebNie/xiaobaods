@@ -142,9 +142,6 @@
     mapActions
   } from 'vuex'
   import {
-    PICTURE_INSERT
-  } from '../../store/picture'
-  import {
     download
   } from '../../assets/js/download'
   export default {
@@ -209,7 +206,7 @@
           tableData_prepag: [],
           prePageCount: 20,
           PageIndex: 1,
-          height: 830,
+          height: 820,
           bigPicture: null,
           total: null
         },
@@ -236,7 +233,7 @@
       })
     },
     methods: {
-      ...mapActions([PICTURE_INSERT]),
+      ...mapActions(['PICTURE_INSERT']),
       excellCsv() {
         download(this.fullpath)
       },

@@ -41,7 +41,6 @@
     <el-row>
       <el-col style="height:90vh;overflow:auto;">
         <el-table class="tablelist" v-loading="loading" :data="Table.tableData_prepag" :max-height="Table.height" @cell-click="showPicture">
-          <!--:max-height="Table.height"-->
           <el-table-column prop="热销排名" label="排名" width="50" header-align="center" align="center"></el-table-column>
           <el-table-column :label="Table.tableData_title[0]" header-align="center" align="center" width="80">
             <template scope="scope">
@@ -144,14 +143,8 @@
 </template>
 <script>
   import {
-    mapActions
+    mapActions, mapGetters
   } from 'vuex'
-  import {
-    PICTURE_INSERT
-  } from '../../store/picture'
-  import {
-    PRODUCTID_SEARCH
-  } from '../../store/prodId'
   import {
     download
   } from '../../assets/js/download'
@@ -217,7 +210,7 @@
           tableData_prepag: [],
           prePageCount: 20,
           PageIndex: 1,
-          height: 830,
+          height: 820,
           bigPicture: null,
           total: null
         },
@@ -244,7 +237,7 @@
       })
     },
     methods: {
-      ...mapActions([PICTURE_INSERT,PRODUCTID_SEARCH]),
+      ...mapActions(['PICTURE_INSERT','PRODUCT_SEARCH']),
       excellCsv() {
         download(this.fullpath)
       },
@@ -357,11 +350,11 @@
       showPicture(row, cell) {
         if (cell.label == "主图缩略图") {
           this.Table.bigPicture = row.主图缩略图.slice(0, -10)
-        }else if(cell.label == "商品信息"){
+        }else if(cell.label == "排名"){
           var prodID = row['宝贝链接'].split('?id=')[1]
-          this.PRODUCTID_SEARCH(prodID)
+          this.PRODUCT_SEARCH(prodID)
             window.router.push({
-          path: '/testpress'
+          path: '/prodchart'
         })
         }
       },

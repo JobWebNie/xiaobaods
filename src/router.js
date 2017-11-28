@@ -33,6 +33,12 @@ const routes = [{
     }
   },
   {
+    path: '/prodchart',
+    component: function (resolve) {
+      require(['./components/tool/prodchart.vue'], resolve)
+    }
+  },
+  {
     path: '/word/key_word/',
     component: function (resolve) {
       require(['./components/Word/key_word.vue'], resolve)

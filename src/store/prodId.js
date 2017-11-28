@@ -1,18 +1,25 @@
 import Vue from 'vue'
-export const PRODUCTID_SEARCH = 'PRODUCTID_SEARCH' //添加路径
+export const PRODUCT_SEARCH = 'PRODUCT_SEARCH' //添加路径
 
 export default {
-  state: sessionStorage.prodId || '', 
+  state:{
+    Id:''
+  },
+  getters:{
+    Id:state => state.Id,
+  }, 
   mutations: {
-    PRODUCTID_SEARCH(state,prodId) {
-     sessionStorage.setItem('prodId',prodId)
+    PRODUCT_SEARCH(state,Id) {
+      if(typeof Id == 'string'){
+       return state.Id = Id
+      }else{
+        console.log('不是数字')
+      }
     }
   },
   actions: {
-    PRODUCTID_SEARCH({
-      commit
-    }, prodId) {
-      commit(PRODUCTID_SEARCH, prodId)
+    PRODUCT_SEARCH({commit}, Id) {
+      commit(PRODUCT_SEARCH, Id)
     }
   }
 }
