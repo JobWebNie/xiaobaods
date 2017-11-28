@@ -59,7 +59,6 @@ const Table = function (table) {
         "支付转化率指数": 157
       }
     }
-    console.log(arguments)
     var timeline = [],
       dealwith = [],
       order = [],

@@ -89,7 +89,7 @@
             }
           },
           legend: {
-            data: ['支付子订单数', '交易增长幅度', '支付转化率指数'],
+            data: [],
             right: 50
           },
           grid: [{
@@ -151,7 +151,7 @@
             }
           ],
           series: [{
-              name: '支付子订单数',
+              name: '',
               type: 'line',
               smooth: true,
               symbolSize: 8,
@@ -159,7 +159,7 @@
               data: []
             },
             {
-              name: '交易增长幅度',
+              name: '',
               type: 'line',
               smooth: true,
               xAxisIndex: 1,
@@ -169,7 +169,7 @@
               data: []
             },
             {
-              name: '支付转化率指数',
+              name: '',
               type: 'line',
               smooth: true,
               xAxisIndex: 2,
@@ -184,11 +184,11 @@
       }
     },
     created() {
-        this.input = this.$store.state.prodId.Id ? this.$store.state.prodId.Id : sessionStorage.getItem('prodId')
-        this.search_product_from_id()
+      var options = this.$store.state.prodId
+      this.search_product_from_id(options)
     },
     beforeDestroy(){
-     sessionStorage.setItem('prodId',this.$store.state.prodId.Id)
+     sessionStorage.setItem('prodId',this.$store.state.prodId)
     },
     methods: {
        ...mapActions(['PRODUCT_SEARCH']),
@@ -243,23 +243,57 @@
         })
         return pictures
       },
-      search_product_from_id() {
+      search_product_from_id(options) {
         this.$http.get('prod/hotid', {
-          params: {
-            id: this.input
-          }
+          params: options
         }).then((response) => {
           var data_reciver = response.body
+          
           if (data_reciver.code == 200) {
-            Object.keys(data_reciver.data).map((index) => {
+            if(this.$store.state.prodId.table == 'bc_attribute_granularity_sales'){
+              Object.keys(data_reciver.data).map((index) => {
               let datecategray = this.date_format_from_millisecond(data_reciver.data[index]['日期'], 'YYYY-MM-dd')
               this.option_data.xAxis[0].data.push(datecategray)
               this.option_data.xAxis[1].data.push(datecategray)
               this.option_data.xAxis[2].data.push(datecategray)
+              this.option_data.legend.data=['支付子订单数','交易增长幅度','支付转化率指数']
+              this.option_data.series[0].name= this.option_data.legend.data[0]
+              this.option_data.series[1].name= this.option_data.legend.data[1]
+              this.option_data.series[2].name= this.option_data.legend.data[2]
               this.option_data.series[0].data.push(data_reciver.data[index]['支付子订单数'])
               this.option_data.series[1].data.push(data_reciver.data[index]['交易增长幅度'])
               this.option_data.series[2].data.push(data_reciver.data[index]['支付转化率指数'])
             })
+            }else if(this.$store.state.prodId.table == 'bc_attribute_granularity_visitor'){
+              Object.keys(data_reciver.data).map((index) => {
+              let datecategray = this.date_format_from_millisecond(data_reciver.data[index]['日期'], 'YYYY-MM-dd')
+              this.option_data.xAxis[0].data.push(datecategray)
+              this.option_data.xAxis[1].data.push(datecategray)
+              this.option_data.xAxis[2].data.push(datecategray)
+              this.option_data.legend.data=['流量指数','搜索人气','支付子订单数']
+              this.option_data.series[0].name= this.option_data.legend.data[0]
+              this.option_data.series[1].name= this.option_data.legend.data[1]
+              this.option_data.series[2].name= this.option_data.legend.data[2]
+              this.option_data.series[0].data.push(data_reciver.data[index]['流量指数'])			
+              this.option_data.series[1].data.push(data_reciver.data[index]['搜索人气'])
+              this.option_data.series[2].data.push(data_reciver.data[index]['支付子订单数'])
+            })
+            }else{
+              Object.keys(data_reciver.data).map((index) => {
+              let datecategray = this.date_format_from_millisecond(data_reciver.data[index]['日期'], 'YYYY-MM-dd')
+              this.option_data.xAxis[0].data.push(datecategray)
+              this.option_data.xAxis[1].data.push(datecategray)
+              this.option_data.xAxis[2].data.push(datecategray)
+              this.option_data.legend.data=['支付转化率指数','支付件数','支付子订单数']
+              this.option_data.series[0].name= this.option_data.legend.data[0]
+              this.option_data.series[1].name= this.option_data.legend.data[1]
+              this.option_data.series[2].name= this.option_data.legend.data[2]
+              this.option_data.series[0].data.push(data_reciver.data[index]['支付转化率指数'])					
+              this.option_data.series[1].data.push(data_reciver.data[index]['支付件数'])
+              this.option_data.series[2].data.push(data_reciver.data[index]['支付子订单数'])
+            })
+            }
+       
             this.picture_change_date = this.find_change_picture_or_information(data_reciver.data)
      
           }

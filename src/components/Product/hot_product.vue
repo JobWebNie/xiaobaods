@@ -351,8 +351,12 @@
         if (cell.label == "主图缩略图") {
           this.Table.bigPicture = row.主图缩略图.slice(0, -10)
         }else if(cell.label == "排名"){
-          var prodID = row['宝贝链接'].split('?id=')[1]
-          this.PRODUCT_SEARCH(prodID)
+          var prodOptions = {
+            Id:row['宝贝链接'].split('?id=')[1],
+            category:this.data.category,
+            table:this.data.table
+          }
+          this.PRODUCT_SEARCH(prodOptions)
             window.router.push({
           path: '/prodchart'
         })

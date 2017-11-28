@@ -5,8 +5,9 @@
     </div>
     <div v-bind:class="[leftSide?full:toggle]">
       <keep-alive>
-        <router-view></router-view>
+        <router-view v-if="$route.meta.keepAlive"></router-view>
       </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
     </div>
     <div id="footer" v-if="leftSide">
       <MyFooter v-show="!showbig"></MyFooter>

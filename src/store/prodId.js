@@ -3,23 +3,20 @@ export const PRODUCT_SEARCH = 'PRODUCT_SEARCH' //添加路径
 
 export default {
   state:{
-    Id:''
+    Id:'',
+    category:'',
+    table:''
   },
-  getters:{
-    Id:state => state.Id,
-  }, 
   mutations: {
-    PRODUCT_SEARCH(state,Id) {
-      if(typeof Id == 'string'){
-       return state.Id = Id
-      }else{
-        console.log('不是数字')
-      }
+    PRODUCT_SEARCH(state,prod) {
+     Vue.set(state,'Id',prod.Id)
+     Vue.set(state,'category',prod.category)
+     Vue.set(state,'table',prod.table)
     }
   },
   actions: {
-    PRODUCT_SEARCH({commit}, Id) {
-      commit(PRODUCT_SEARCH, Id)
+    PRODUCT_SEARCH({commit}, prod) {
+      commit(PRODUCT_SEARCH, prod)
     }
   }
 }

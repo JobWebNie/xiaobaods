@@ -22,18 +22,11 @@
           <a @click="excellCsv()">下载</a>
         </span>
         <span class="Embellish">
-          <a @click.prevent="loadPicture(Table.tableData)">图片</a>
+          <a @click.prevent="loadPicture(Table.tableData_prepag)">图片</a>
         </span>
       </el-col>
       <el-col class="list-right" style="width:40%;text-align:right;">
         <el-tag v-for="tag in dynamicTags" :key="tag" :closable="true" @close="handleClose(tag)">{{tag}}</el-tag>
-        <!-- <span v-if="false">
-        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.titlechoice" placeholder="商品筛选"></el-input>
-        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.storechoice" placeholder="店铺搜索"></el-input>
-        <el-autocomplete size='small' v-model="data.storegroupchoice" :fetch-suggestions="querySearchAsync" @keyup.enter.native="inputchange" placeholder="热门店铺分类"></el-autocomplete>
-        <el-button @click="inputchange" type="primary" size='small'>筛选</el-button>
-        <el-button size='small' @click="emptyFilter">清空</el-button>
-      </span>-->
         <el-button @click="dialogFormVisible = true" type="primary" size='small'>筛选</el-button>
       </el-col>
     </el-row>
@@ -141,9 +134,6 @@
   import {
     mapActions
   } from 'vuex'
-  import {
-    PICTURE_INSERT
-  } from '../../store/picture'
   import {
     download
   } from '../../assets/js/download'
@@ -362,7 +352,7 @@
       })
     },
     methods: {
-      ...mapActions([PICTURE_INSERT]),
+      ...mapActions(['PICTURE_INSERT']),
       excellCsv() {
         download(this.fullpath)
       },
@@ -444,9 +434,10 @@
         this.inputchange()
 
       },
-      showPicture(row) {
+      showPicture(row, cell) {
+ 
         if (cell.label == "主图缩略图") {
-          this.Table.bigPicture = row.主图缩略图.slice(0, -10)
+            this.Table.bigPicture = row.主图缩略图.slice(0, -10)
         }
       },
       loadPicture(data) {

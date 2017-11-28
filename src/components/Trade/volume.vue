@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div  v-loading="!show">
     <el-row class="title" type="flex" justify="space-between" align="middle">
       <el-col class="title-left">
         <h3>成交分布</h3>
@@ -184,12 +184,13 @@
           "attribute": 'list'
         }
         var data = JSON.stringify(data1) //格式化数据
+        this.show = false
         this.$http.post('pete/shop', {
           data
         }, {
           emulateJSON: true
         }).then((response) => {
-          this.show = false
+          
           this.listgroup = Object.keys(response.body.data).map(function (key) {
             return response.body.data[key];
           })

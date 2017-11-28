@@ -421,7 +421,6 @@
           this.loading = false
           this.fullpath = response.body.fullpath
           this.objToArr(response.body.data)
-                    console.log(response.body.data)
         })
       },
       objToArr(obj) {
