@@ -26,11 +26,19 @@ router.get("/prod/hotid", (Request, Response) => {
     const spawnSync1 = spawnSync('python', ['xiaobaods.py', string], {
       cwd: './python'
     })
+    if(spawnSync1.stdout.length == 0){
+      Response.send({
+      code:404,
+      message: '需要传入商品编号'
+    })
+  }else{
     var data = JSON.parse(spawnSync1.stdout)
-    Response.send({
+     Response.send({
       code:200,
       data: data
     })
+  }
+ 
   }
 
 })

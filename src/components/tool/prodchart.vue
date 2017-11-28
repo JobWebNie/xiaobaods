@@ -295,7 +295,6 @@
             }
        
             this.picture_change_date = this.find_change_picture_or_information(data_reciver.data)
-     
           }
         })
       }
