@@ -24,10 +24,15 @@
 <style scoped>
   .comment-validator {
     position: absolute;
-    background-color: #eee;
-    right: 20px;
+    top:20%;
+    right:20%;
   }
-
+  @media screen and (max-width: 400px) {
+  .comment-validator {
+    top:20%;
+    right:10%;
+  }
+}
   .comment-validator-title {
     padding-bottom: 10px;
     position: relative;

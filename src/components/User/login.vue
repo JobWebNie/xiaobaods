@@ -1,19 +1,19 @@
 <style scoped>
-  .el-header,
-  .el-footer {
-    color: #333;
-    line-height: 60px;
-  }
 
   .el-main {
     position: relative;
+    top:30px;
     padding: 0px;
-    overflow: hidden;
-    height: calc(100vh - 200px);
+    height: calc(100vh - 300px);
+    background:url('../../assets/background-image.jpg') no-repeat center;
   }
 
   .el-footer {
     margin-top: 60px;
+  }
+
+  .bg-purple {
+    height: calc(100vh - 200px);
   }
 
 </style>
@@ -21,16 +21,10 @@
   <div id="User-login">
     <el-container>
       <el-header>
-        <img src="../../assets/logo-title.png" style="height:100%;" alt=""> 小宝后台{{user ? user.name : '请登录!'}}
+        <img src="../../assets/logo-title.png" style="height:80px;" alt="">
       </el-header>
       <el-main>
-        <!-- <img src="../../assets/background-image.jpg" style="height:100%;" alt="显示错误">-->
-        
-        <el-container>
-          
-          <el-main>Main</el-main>
-          <el-aside width="600px"><commonValidator></commonValidator></el-aside>
-        </el-container>
+            <commonValidator></commonValidator>
       </el-main>
       <el-footer>
         <commonFooter></commonFooter>

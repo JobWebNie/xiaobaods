@@ -1,25 +1,30 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import HomePage from '@/components/HomePage'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      name: 'HomePage',
+      component: HomePage
     },
     {
       path: '/login/',
+      name: 'UserLogin',
       component: function (resolve) {
-        require(['../components/User/login.vue'], resolve)
+        require(['../components/user/Login.vue'], resolve)
       }
     },
     {
       path: '*',
-      redirect: '/login/'
+      name: '404Page',
+      component: function (resolve) {
+        require(['../components/404page.vue'], resolve)
+      }
     }
   ]
 })
