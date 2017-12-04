@@ -20,6 +20,13 @@ export default new Router({
       }
     },
     {
+      path: '/select/',
+      name: 'UserTest',
+      component: function (resolve) {
+        require(['../components/common/Select.vue'], resolve)
+      }
+    },
+    {
       path: '*',
       name: '404Page',
       component: function (resolve) {

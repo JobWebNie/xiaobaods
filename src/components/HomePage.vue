@@ -12,49 +12,36 @@
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">类目趋势</el-breadcrumb-item>
       <el-breadcrumb-item>热销产品</el-breadcrumb-item>
+      <el-breadcrumb-item>
+        <el-select v-model="value" placeholder="请选择" size="mini">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+      </el-breadcrumb-item>
     </el-breadcrumb>
-    <el-tabs type="card"  v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="热销产品" name="first">
-      <el-table
-      :data="tableData"
-      style="width: 100%">
-      <el-table-column
-        prop="date"
-        label="日期"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="姓名"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="地址">
-      </el-table-column>
-    </el-table>
-    </el-tab-pane>
-    <el-tab-pane label="热搜产品" name="second">
-       <el-table
-      :data="tableData"
-      style="width: 100%">
-      <el-table-column
-        prop="date"
-        label="日期"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="姓名"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="地址">
-      </el-table-column>
-    </el-table>
-    </el-tab-pane>
-  </el-tabs>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="热销产品" name="first">
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column prop="date" label="日期" width="180">
+          </el-table-column>
+          <el-table-column prop="name" label="姓名" width="180">
+          </el-table-column>
+          <el-table-column prop="address" label="地址">
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+      <el-tab-pane label="热搜产品" name="second">
+
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column prop="date" label="日期" width="180">
+          </el-table-column>
+          <el-table-column prop="name" label="姓名" width="180">
+          </el-table-column>
+          <el-table-column prop="address" label="地址">
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -64,32 +51,40 @@
     data() {
       return {
         activeIndex: '1',
-        activeName:'first',
-         tableData: [{
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄'
-          }, {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          }, {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-          }]
+        activeName: 'first',
+        tableData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }],
+        options:[{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }],
+         value: '选项1'
       }
     },
     methods: {
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
       },
-      handleClick(){
-        
+      handleClick() {
+
       }
     }
   }
