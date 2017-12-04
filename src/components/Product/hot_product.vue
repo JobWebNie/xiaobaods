@@ -28,20 +28,21 @@
 
       <el-col class="list-right">
         <el-tag v-for="tag in dynamicTags" :key="tag" :closable="true" @close="handleClose(tag)">{{tag}}</el-tag>
-
-        <!-- <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.titler" placeholder="商品筛选"></el-input>
-        <el-input size='small' @keyup.enter.native="inputchange" v-model.trim="data.storer" placeholder="店铺搜索"></el-input>
-        
-        <el-button @click="inputchange" type="primary" size='small'>筛选</el-button>
-        <el-button size='small' @click="emptyFilter">清空</el-button>-->
         <el-button @click="dialogFormVisible = true" type="primary" size='small'>筛选</el-button>
       </el-col>
-
     </el-row>
     <el-row>
       <el-col style="height:90vh;overflow:auto;">
         <el-table class="tablelist" v-loading="loading" :data="Table.tableData_prepag" :max-height="Table.height" @cell-click="showPicture">
-          <el-table-column prop="热销排名" label="排名" width="50" header-align="center" align="center"></el-table-column>
+          <el-table-column label="排名" width="50" header-align="center" align="center">
+            <template scope="scope">
+              <el-tooltip placement="left" effect="light">
+                <div slot="content">点击显示商品
+                  <br>发展周期</div>
+                <span style="cursor:pointer;">{{scope.row.热销排名}}</span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column :label="Table.tableData_title[0]" header-align="center" align="center" width="80">
             <template scope="scope">
               <a target="_blank" :href="Table.bigPicture" alt="">
@@ -143,7 +144,8 @@
 </template>
 <script>
   import {
-    mapActions, mapGetters
+    mapActions,
+    mapGetters
   } from 'vuex'
   import {
     download
@@ -163,7 +165,6 @@
           v3m: 0,
           v3l: 0
         },
-        // Tvalue: Date.now()- 8.64e7,
         pickerOption: {
           disabledDate(time) {
             var min = Date.parse('2016-11-24')
@@ -237,7 +238,7 @@
       })
     },
     methods: {
-      ...mapActions(['PICTURE_INSERT','PRODUCT_SEARCH']),
+      ...mapActions(['PICTURE_INSERT', 'PRODUCT_SEARCH']),
       excellCsv() {
         download(this.fullpath)
       },
@@ -252,26 +253,26 @@
         let reg = String(cellValue).replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
         let percent = Math.round(cellValue * 100) + '%'
         if (column.property.slice(0, 2) == "日期") {
-          if(cellValue==null){
+          if (cellValue == null) {
             return ''
-          }else{
-             const fm = this.data.variable
-          switch (fm) {
-            case '支付子订单数':
-              return cellValue = reg;
-              break;
-            case '交易增长幅度':
-              return cellValue = percent;
-              break;
-            case '支付转化率指数':
-              return cellValue = reg;
-              break;
-            default:
-              return cellValue = cellValue;
-              break;
+          } else {
+            const fm = this.data.variable
+            switch (fm) {
+              case '支付子订单数':
+                return cellValue = reg;
+                break;
+              case '交易增长幅度':
+                return cellValue = percent;
+                break;
+              case '支付转化率指数':
+                return cellValue = reg;
+                break;
+              default:
+                return cellValue = cellValue;
+                break;
+            }
           }
-          }
-         
+
         } else {
           switch (column.property) {
             case '支付子订单数':
@@ -350,16 +351,16 @@
       showPicture(row, cell) {
         if (cell.label == "主图缩略图") {
           this.Table.bigPicture = row.主图缩略图.slice(0, -10)
-        }else if(cell.label == "排名"){
+        } else if (cell.label == "排名") {
           var prodOptions = {
-            Id:row['宝贝链接'].split('?id=')[1],
-            category:this.data.category,
-            table:this.data.table
+            Id: row['宝贝链接'].split('?id=')[1],
+            category: this.data.category,
+            table: this.data.table
           }
           this.PRODUCT_SEARCH(prodOptions)
-            window.router.push({
-          path: '/prodchart'
-        })
+          window.router.push({
+            path: '/prodchart'
+          })
         }
       },
       loadPicture() {
@@ -415,7 +416,6 @@
       handleClose(tag) {
         this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
       }
-
     }
   }
 

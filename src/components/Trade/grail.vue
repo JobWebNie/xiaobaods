@@ -91,7 +91,7 @@
           title: {
             text: '类目属性关系图',
             subtext: '数据来自生e经',
-            x: 'center'
+            left: 'center'
           },
           tooltip: {
             trigger: 'axis',
@@ -116,19 +116,14 @@
             }
           },
           dataZoom: [{
-             type: 'slider',
-              show: true,
-              realtime: true,
+             type: 'slider',     
               start: 50,
-              end: 100,
               labelPrecision: 2,
               xAxisIndex: [0, 1,2]
             },
             {
               type: 'inside',
-              realtime: true,
               start: 50,
-              end: 100,
               xAxisIndex: [0, 1,2]
             }
           ],

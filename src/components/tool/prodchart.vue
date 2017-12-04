@@ -1,66 +1,80 @@
-<style>
-  .chart {
+<style scoped>
+.my-prod-chart{
+  overflow:hidden;
+}
+  .prod-chart-full-life {
     height: 500px;
-    width: 1500px;
+    margin:20px auto;
+    width: calc(92vw - 40px);
+    background-color:#8492A6;
   }
 
-  .mylove {
-    height: 70px;
-    width: 100%;
-    box-shadow: 0 0 3px #222;
-  }
+.wrapper {
+        display: flex;  /* 新版本语法: Opera 12.1, Firefox 22+ */
+        flex-wrap:nowrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        overflow-x: scroll;
+        margin:20px;
+    }
 
-  .mylove .myloin {
-    margin: 5px;
-    width: 120px;
-  }
+    .carts {
+         margin:20px;
+        -webkit-box-flex: 0 0 200px;   /* OLD - iOS 6-, Safari 3.1-6 */  
+        -moz-box-flex: 0 0 200px;     /* OLD - Firefox 19- */              
+        -webkit-flex: 0 0 200px;     /* Chrome */  
+        -ms-flex: 0 0 200px;    /* IE 10 */  
+        flex: 0 0 200px;
+    }
 
-  .mystep {
-    margin-left:20px;
-    height:calc(100vh - 570px);
-    overflow:auto;
-  }
+    .carts-title {
+        display: block;
+        font-size: 1.17em;
+        font-weight: bold;
+    }
 
+    .carts-image {
+        height: 200px;
+        width: 200px;
+    }
+
+    .carts-image img {
+        height: 100%;
+        width: 100%;
+    }
+
+    .carts-depict {
+        height: 40px;
+        font-size: xx-small;
+    }
 </style>
 <template>
-  <div>
-    <div class="mylove">
-      <el-row :gutter="20">
-        <el-col>
-          <el-input size="small" v-model="input" class="myloin" placeholder="搜索商品" icon="search" :on-icon-click="search_product_from_id"></el-input>
-        </el-col>
+  <div class="my-prod-chart">
+      <el-row :gutter="20" class="title">
+          <h3> 商品生命周期展示图表</h3>
       </el-row>
-    </div>
-    <div class="chart">
+    <div class="prod-chart-full-life">
       <IEcharts :option="option_data"></IEcharts>
     </div>
-    <div class="el-steps is-horizontal mystep">
-      <div class="el-step is-horizontal" v-for="(item,key) in picture_change_date" style="width: 300px; margin-right: 0px;">
-        <div class="el-step__head is-wait is-text">
-          <div class="el-step__line is-horizontal" style="margin-right: 0px;">
-            <i class="el-step__line-inner" style="transition-delay: 0ms; border-width: 1px; width: 50%;"></i>
-          </div>
-          <span class="el-step__icon">
-            <div>{{key}}</div>
-          </span>
-        </div>
-        <div class="el-step__main" style="margin-left:10px;position:relative;">
-          
-          <div class="el-step__title" style="position:absolute;">
-          <h3 style="margin-bottom:0px;">{{item.date}}</h3><div>{{key==0 ?'':item.description}}</div>
-          <span style="pddding:4px;">
-            <img v-if="item.path" :src="item.path.slice(0,-10)" alt="" style="width:60%;">
-          </span>
-            <p class="el-step__description">{{item.keyworlds}}</p>
-          </div>
+    <div class="wrapper">
+        <div class="carts" v-for="(item,key) in picture_change_date">
+            <div class="carts-title">{{item.date}}</div>
+            <div class="carts-image">
+                <img v-if="item.path":src="item.path.slice(0,-10)" alt="没有图片">
+            </div>
+            <div class="carts-depict">
+               {{item.keyworlds}}
+            </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 <script>
   import IEcharts from 'vue-echarts-v3/src/full.vue';
-  import { mapState ,mapActions} from 'vuex'
+  import {
+    mapState,
+    mapActions
+  } from 'vuex'
   export default {
     components: {
       IEcharts
@@ -92,6 +106,13 @@
             data: [],
             right: 50
           },
+          dataZoom:[{
+            type:'slider',
+            xAxisIndex: [0, 1,2]
+          },{
+            type:'inside',
+            xAxisIndex: [0, 1,2]
+          }],
           grid: [{
             left: 60,
             right: 50,
@@ -134,19 +155,23 @@
             }
           ],
           yAxis: [{
-              show: false,
-              type: 'value'
+              type: 'value',
+              splitLine: {
+                show: false
+              }
             },
             {
-              offset: -50,
               show: false,
               gridIndex: 1,
+              offset: -60,
               type: 'value'
             },
             {
-              show: false,
-              offset: -100,
+              position: 'right',
               gridIndex: 2,
+              splitLine: {
+                show: false
+              },
               type: 'value'
             }
           ],
@@ -187,11 +212,11 @@
       var options = this.$store.state.prodId
       this.search_product_from_id(options)
     },
-    beforeDestroy(){
-     sessionStorage.setItem('prodId',this.$store.state.prodId)
+    beforeDestroy() {
+      sessionStorage.setItem('prodId', this.$store.state.prodId)
     },
     methods: {
-       ...mapActions(['PRODUCT_SEARCH']),
+      ...mapActions(['PRODUCT_SEARCH']),
       date_format_from_millisecond(millisecond, formatStr) {
         if (typeof millisecond == 'number') {
           var _this = new Date(millisecond)
@@ -248,52 +273,55 @@
           params: options
         }).then((response) => {
           var data_reciver = response.body
-          
+
           if (data_reciver.code == 200) {
-            if(this.$store.state.prodId.table == 'bc_attribute_granularity_sales'){
+            if (this.$store.state.prodId.table == 'bc_attribute_granularity_sales') {
               Object.keys(data_reciver.data).map((index) => {
-              let datecategray = this.date_format_from_millisecond(data_reciver.data[index]['日期'], 'YYYY-MM-dd')
-              this.option_data.xAxis[0].data.push(datecategray)
-              this.option_data.xAxis[1].data.push(datecategray)
-              this.option_data.xAxis[2].data.push(datecategray)
-              this.option_data.legend.data=['支付子订单数','交易增长幅度','支付转化率指数']
-              this.option_data.series[0].name= this.option_data.legend.data[0]
-              this.option_data.series[1].name= this.option_data.legend.data[1]
-              this.option_data.series[2].name= this.option_data.legend.data[2]
-              this.option_data.series[0].data.push(data_reciver.data[index]['支付子订单数'])
-              this.option_data.series[1].data.push(data_reciver.data[index]['交易增长幅度'])
-              this.option_data.series[2].data.push(data_reciver.data[index]['支付转化率指数'])
-            })
-            }else if(this.$store.state.prodId.table == 'bc_attribute_granularity_visitor'){
+                let datecategray = this.date_format_from_millisecond(data_reciver.data[index]['日期'],
+                  'YYYY-MM-dd')
+                this.option_data.xAxis[0].data.push(datecategray)
+                this.option_data.xAxis[1].data.push(datecategray)
+                this.option_data.xAxis[2].data.push(datecategray)
+                this.option_data.legend.data = ['支付子订单数', '交易增长幅度', '支付转化率指数']
+                this.option_data.series[0].name = this.option_data.legend.data[0]
+                this.option_data.series[1].name = this.option_data.legend.data[1]
+                this.option_data.series[2].name = this.option_data.legend.data[2]
+                this.option_data.series[0].data.push(data_reciver.data[index]['支付子订单数'])
+                this.option_data.series[1].data.push(data_reciver.data[index]['交易增长幅度'])
+                this.option_data.series[2].data.push(data_reciver.data[index]['支付转化率指数'])
+              })
+            } else if (this.$store.state.prodId.table == 'bc_attribute_granularity_visitor') {
               Object.keys(data_reciver.data).map((index) => {
-              let datecategray = this.date_format_from_millisecond(data_reciver.data[index]['日期'], 'YYYY-MM-dd')
-              this.option_data.xAxis[0].data.push(datecategray)
-              this.option_data.xAxis[1].data.push(datecategray)
-              this.option_data.xAxis[2].data.push(datecategray)
-              this.option_data.legend.data=['流量指数','搜索人气','支付子订单数']
-              this.option_data.series[0].name= this.option_data.legend.data[0]
-              this.option_data.series[1].name= this.option_data.legend.data[1]
-              this.option_data.series[2].name= this.option_data.legend.data[2]
-              this.option_data.series[0].data.push(data_reciver.data[index]['流量指数'])			
-              this.option_data.series[1].data.push(data_reciver.data[index]['搜索人气'])
-              this.option_data.series[2].data.push(data_reciver.data[index]['支付子订单数'])
-            })
-            }else{
+                let datecategray = this.date_format_from_millisecond(data_reciver.data[index]['日期'],
+                  'YYYY-MM-dd')
+                this.option_data.xAxis[0].data.push(datecategray)
+                this.option_data.xAxis[1].data.push(datecategray)
+                this.option_data.xAxis[2].data.push(datecategray)
+                this.option_data.legend.data = ['支付子订单数', '流量指数', '搜索人气']
+                this.option_data.series[0].name = this.option_data.legend.data[0]
+                this.option_data.series[1].name = this.option_data.legend.data[1]
+                this.option_data.series[2].name = this.option_data.legend.data[2]
+                this.option_data.series[0].data.push(data_reciver.data[index]['支付子订单数'])
+                this.option_data.series[1].data.push(data_reciver.data[index]['搜索人气'])
+                this.option_data.series[2].data.push(data_reciver.data[index]['流量指数'])
+              })
+            } else {
               Object.keys(data_reciver.data).map((index) => {
-              let datecategray = this.date_format_from_millisecond(data_reciver.data[index]['日期'], 'YYYY-MM-dd')
-              this.option_data.xAxis[0].data.push(datecategray)
-              this.option_data.xAxis[1].data.push(datecategray)
-              this.option_data.xAxis[2].data.push(datecategray)
-              this.option_data.legend.data=['支付转化率指数','支付件数','支付子订单数']
-              this.option_data.series[0].name= this.option_data.legend.data[0]
-              this.option_data.series[1].name= this.option_data.legend.data[1]
-              this.option_data.series[2].name= this.option_data.legend.data[2]
-              this.option_data.series[0].data.push(data_reciver.data[index]['支付转化率指数'])					
-              this.option_data.series[1].data.push(data_reciver.data[index]['支付件数'])
-              this.option_data.series[2].data.push(data_reciver.data[index]['支付子订单数'])
-            })
+                let datecategray = this.date_format_from_millisecond(data_reciver.data[index]['日期'],
+                  'YYYY-MM-dd')
+                this.option_data.xAxis[0].data.push(datecategray)
+                this.option_data.xAxis[1].data.push(datecategray)
+                this.option_data.xAxis[2].data.push(datecategray)
+                this.option_data.legend.data = ['支付子订单数', '支付件数', '支付转化率指数']
+                this.option_data.series[0].name = this.option_data.legend.data[0]
+                this.option_data.series[1].name = this.option_data.legend.data[1]
+                this.option_data.series[2].name = this.option_data.legend.data[2]
+                this.option_data.series[0].data.push(data_reciver.data[index]['支付子订单数'])
+                this.option_data.series[1].data.push(data_reciver.data[index]['支付件数'])
+                this.option_data.series[2].data.push(data_reciver.data[index]['支付转化率指数'])
+              })
             }
-       
+
             this.picture_change_date = this.find_change_picture_or_information(data_reciver.data)
           }
         })
