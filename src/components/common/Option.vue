@@ -1,13 +1,14 @@
 <style scoped>
 .comment-select{
     position: absolute;
-    top: 30px;
+    z-index:999;
+    top: 20px;
     left: 0;
     margin-top: -1px;
     padding-top: 14px;
     padding-bottom: 5px;
     overflow: hidden;
-    background-color: rgba(0,0,0,.8);
+    background-color: rgba(0,0,0,0.8);
     border: 1px solid #dbdbdb;
     border-radius: 3px;
 
