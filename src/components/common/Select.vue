@@ -1,44 +1,59 @@
+<style scoped>
+  .comment-select {
+    float: left;
+    border: 1px dotted #999;
+    position: relative;
+  }
+  .comment-select a{
+    display:inline-block;
+    margin-bottom:3px;
+  }
+</style>
 <template>
-  <div style="float:left;border:1px dotted #999;" @mouseenter="interToMakeSelectDown" @mouseleave.self="leaveToMakeSelectUp">
+  <div class="comment-select" @mouseenter="interToMakeSelectDown" @mouseleave.self="leaveToMakeSelectUp">
     <a href="">{{label}}</a>
-    <i class="el-icon-arrow-down"></i>
-    <commonOption v-show="show" :productLists="productLists"  v-on:selectOption="selctTitleReceive"></commonOption>
+    <i :class="iconName"></i>
+    <commonOption v-show="show" :productLists="productLists" v-on:selectOption="selctTitleReceive"></commonOption>
   </div>
 </template>
 <script>
-import commonOption from './Option.vue';
-export default {
+  import commonOption from './Option.vue';
+  export default {
     components: {
-        commonOption
+      commonOption
     },
-    props:{
-        splitNumber:{
-        type:Number,
-        default:6
-        }
+    props: {
+      splitNumber: {
+        type: Number,
+        default: 6
+      },
+      productLists:{
+        type: Array,
+        required: true
+      }
     },
     data() {
-        return {
-           show:false,
-           label:'',
-           productLists:[['第一','第二','第三','第四','第五','第六'],['第七','第八','第九','第十','第十一','第十二']]
-        }
+      return {
+        iconName: 'el-icon-arrow-down',
+        show: false,
+        label: ''
+      }
     },
-    mounted(){
-        this.selctTitleReceive()
+    mounted() {
+      this.selctTitleReceive()
     },
-    methods:{
-        selctTitleReceive(v) {
-           this.label = v ? v : this.productLists[0][0]
-        },
-        interToMakeSelectDown(){
-            console.log('hover')
-            this.show = true
-        },
-        leaveToMakeSelectUp(){
-            console.log('leaver')
-            this.show = false
-        }
+    methods: {
+      selctTitleReceive(v) {
+        this.label = v ? v : this.productLists[0][0]
+      },
+      interToMakeSelectDown() {
+        this.iconName = "el-icon-arrow-up"
+        this.show = true
+      },
+      leaveToMakeSelectUp() {
+        this.iconName = "el-icon-arrow-down"
+        this.show = false
+      }
     }
-}
+  }
 </script>
