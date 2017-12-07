@@ -3,10 +3,13 @@ const utils = require('./utils')
 const webpack = require('webpack')
 const config = require('../config')
 const merge = require('webpack-merge')
+const express = require('express')
+const history = require('connect-history-api-fallback')
 const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
+const app = express()
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -33,6 +36,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
+    },
+    before(app) {
+     app.use(history())
+     app.use(require('../server/index'))
     }
   },
   plugins: [
