@@ -26,7 +26,7 @@
     </el-row>
     <el-row  v-show="show" style="backgroundColor:#F9FAFC;height:100%;">
       <el-col v-loading="loading" style="width:98%;height:780px;margin:1%;backgroundColor:#FFF;">
-        <IEcharts style="width:100%;height:100%;" :option="option" :resizable="true" @click="onclick"></IEcharts>
+        <IEcharts style="width:100%;height:100%;" :option="option" :resizable="true"></IEcharts>
       </el-col>
     </el-row>
   </div>
@@ -91,7 +91,7 @@
           title: {
             text: '类目属性关系图',
             subtext: '数据来自生e经',
-            x: 'center'
+            left: 'center'
           },
           tooltip: {
             trigger: 'axis',
@@ -116,19 +116,14 @@
             }
           },
           dataZoom: [{
-             type: 'slider',
-              show: true,
-              realtime: true,
+             type: 'slider',     
               start: 50,
-              end: 100,
               labelPrecision: 2,
               xAxisIndex: [0, 1,2]
             },
             {
               type: 'inside',
-              realtime: true,
               start: 50,
-              end: 100,
               xAxisIndex: [0, 1,2]
             }
           ],
@@ -333,11 +328,9 @@
              this.show=true
              this.loading=false     
         })
-      },
-      onclick(event){
-         console.log(event.type=="click")
-          console.log(event.name)
-      }}}
+      }
+    }
+}
 </script>
 <style>
   .navlist .small {

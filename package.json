@@ -1,8 +1,8 @@
 {
-  "name": "myproject",
+  "name": "xiaobaods",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "sunhuayu <452516188@qq.com>",
+  "author": "niesaisai <1979510089@qq.com>",
   "main": "server.js",
   "private": true,
   "scripts": {

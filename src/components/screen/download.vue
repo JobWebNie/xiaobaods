@@ -1,13 +1,13 @@
 <template>
-  <div>
-   <div type="text" @click="goBack" style="color:#FFF;"><big>&lt;&nbsp;</big>返回</div>
-    <el-row  style="margin-right:15px;">
+  <div style="margin:20px;">
+   <h3 @click="goBack"><big>&lt;&nbsp;</big>返回</h3>
+    <el-row :gutter="20">
       <el-col :span="4" v-for="(item,key) in pictures">
         <el-card :body-style="{ padding: '0px' }">
          <a :href="item.detail">
           <img :src="item.url" class="image">
          </a>
-          <div style="padding: 14px;">
+          <div style="padding: 10px 5px;">
             <div class="clearfix">
               <span style="white-space:nowrap;">{{item.name}}</span>
               <time class="time">订单数 {{item.count}}</time>
@@ -25,11 +25,7 @@
 
 <script>
  import {download} from '../../assets/js/download'
-  import {
-    mapGetters,
-    mapActions,
-    mapState
-  } from 'vuex'
+  import {mapActions} from 'vuex'
   export default {
     data(){
       return{
@@ -37,7 +33,7 @@
       }
     },
     methods: {
-      // ...mapActions(['PICTURE_PUT']),
+      ...mapActions(['PICTURE_PUT']),
       toHref(href) {//下载某一张图片
        download(href)
       },

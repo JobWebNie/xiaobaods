@@ -8,6 +8,7 @@ __mtime__ = '2017-10-09'
 """
 import time
 import datetime
+import numpy as np
 import pandas as pd
 import pymysql
 from dateutil.parser import parse
@@ -142,6 +143,87 @@ def xiaobaods_a(SQL_msg="", line_b=0, line_f=20, date="", category="牛仔裤", len
         csv_filename = "【数据组】[" + table.split("_")[
             -1] + "_" + category + "_Top500" + "]" + variable + "_" + datetime.datetime.strftime(date, "%m%d") + "-" \
                        + str(length) + "_" + SQL + ".csv"
+        try:
+            df.to_csv(path + "\\" + csv_filename)
+            print("> 输出CSV文件：", path, ",", csv_filename)
+        except Exception as e:
+            print("> 输出CSV文件失败，错误原因：", e)
+
+
+def xiaobaods_al(SQL_msg="", cid="", category="牛仔裤", SQL="xiaobaods", table="bc_attribute_granularity_sales",
+                fillna="", debug=0, path=""):
+    '''
+    # 2017-11-06 For Spring.2018
+    '''
+    cid = str(cid)
+    if not cid:
+        return None
+    if not SQL_msg:
+        return None
+    time_s = time.time()
+    latest_date = datetime.datetime.today().date() - datetime.timedelta(1)
+    if category not in ["牛仔裤", "打底裤", "休闲裤"]:
+        category = "牛仔裤"
+    if SQL not in SQL_msg:
+        SQL = SQL_msg[0]
+    if table not in ["bc_attribute_granularity_sales", "bc_attribute_granularity_visitor"]:
+        table = "bc_attribute_granularity_sales"
+    if table == "bc_attribute_granularity_sales":
+        sql_select = "SELECT `日期`,`热销排名`,`商品信息`,`支付子订单数`,`交易增长幅度`,`支付转化率指数`,`主图缩略图` FROM " + table + \
+                       " where `类目`='" + category + "' AND `宝贝链接` like '%id=" + cid + "';"
+    elif table == "bc_attribute_granularity_visitor":
+        sql_select = "SELECT `日期`,`热销排名`,`商品信息`,`流量指数`,`搜索人气`,`支付子订单数`,`主图缩略图` FROM " + table + \
+                       " where `类目`='" + category + "' AND `宝贝链接` like '%id=" + cid + "';"
+    # read msg from Mysql
+    conn = pymysql.connect(host=SQL_msg[SQL]["host"], port=int(SQL_msg[SQL]["port"]), user=SQL_msg[SQL]["user"],
+                            passwd=SQL_msg[SQL]["passwd"], charset=SQL_msg[SQL]["charset"], db=SQL_msg[SQL]["db"])
+    df = pd.read_sql_query(sql_select, conn)
+    conn.close()
+    # def-timeline
+
+    def creation_date_list(min, max):
+        date_list = []
+        date = min
+        while date != max + datetime.timedelta(1):
+            date_list.append(date)
+            date += datetime.timedelta(1)
+        return date_list
+    # sort
+    df.sort_values(by=["日期"], inplace=True)
+    # 重复项处理
+    df["商品信息"] = df["商品信息"].apply(lambda s: s.split(" 价格")[0])
+    df.loc[df["主图缩略图"].duplicated(keep="first")==True, "主图缩略图"] = np.nan
+    df.loc[df["商品信息"].duplicated(keep="first")==True, "商品信息"] = np.nan
+    # 时间序列拓展
+    date_list = creation_date_list(min(df["日期"]), max(df["日期"]))
+    df1 = pd.DataFrame(date_list, columns=["日期"])
+    df = pd.merge(df1, df, how="outer", left_on="日期", right_on="日期")
+    # 时间序列控制处理
+    df.loc[:, "热销排名"].fillna(501, inplace=True)
+    if fillna == "":
+        df.loc[:, "商品信息"].fillna("-", inplace=True)
+        df.loc[:, "主图缩略图"].fillna("-", inplace=True)
+    else:
+        df.loc[:, "商品信息"].fillna(fillna, inplace=True)
+        df.loc[:, "主图缩略图"].fillna(fillna, inplace=True)
+    df.fillna(0, inplace=True)
+    if debug not in [1, 2, 8, 9]:
+        print(df.to_json(orient="index"))
+    elif debug == 8:
+        return df
+    elif debug == 1 or debug == 2:
+        print("- Running time：%.4f s" % (time.time() - time_s))
+        print("- cid：%r \n- category：%r \n- SQL：%r \n- table: %r \n- variable：%r"
+              " \n- debug：%r \n- path: %r" % (cid, category, SQL, table, debug, path))
+    elif debug == 9:
+        import os
+        print("- Running time：%.4f s" % (time.time() - time_s))
+        path_default = os.path.join(os.path.expanduser("~"), 'Desktop')
+        if not os.path.isdir(path):
+            path = path_default
+        csv_filename = "【数据组】[" + table.split("_")[
+            -1] + "_ID:" + cid + "_Top500_Data" + "]" + datetime.datetime.strftime(datetime.date.today(),"%Y-%m-%d") + \
+                       "_" + SQL + ".csv"
         try:
             df.to_csv(path + "\\" + csv_filename)
             print("> 输出CSV文件：", path, ",", csv_filename)

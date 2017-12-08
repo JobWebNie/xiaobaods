@@ -308,7 +308,7 @@
           tableData_prepag: [],
           prePageCount: 20,
           PageIndex: 1,
-          height: 840
+          height: 820
         },
         fullpath: '',
         loading: false
@@ -421,7 +421,6 @@
           this.loading = false
           this.fullpath = response.body.fullpath
           this.objToArr(response.body.data)
-                    console.log(response.body.data)
         })
       },
       objToArr(obj) {
