@@ -1,7 +1,6 @@
 import Vue from 'vue'
 export const PICTURE_INSERT = 'PICTURE_INSERT' //插入图片
 export const PICTURE_PUT = 'PICTURE_PUT' //修改数据
-export const PICTURE_DELETE = 'PICTURE_DELETE' //删除数据
 
 export default {
   state: JSON.parse(sessionStorage.getItem('pictures')) || [],
@@ -29,11 +28,6 @@ export default {
     },
     PICTURE_PUT(state, key) {
       Vue.delete(state, key)
-    },
-    PICTURE_DELETE(state, picture) {
-      sessionStorage.removeItem(picture)
-      Object.keys(state).forEach(k => Vue.delete(state, k))
-      Object.assign(state,[])
     }
   },
   actions: {
@@ -46,11 +40,6 @@ export default {
       commit
     }, key) {
       commit(PICTURE_PUT, key)
-    },
-    PICTURE_DELETE({
-      commit
-    }) {
-      commit(PICTURE_DELETE)
     }
   }
 }

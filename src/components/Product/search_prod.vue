@@ -142,9 +142,6 @@
     mapActions
   } from 'vuex'
   import {
-    PICTURE_INSERT
-  } from '../../store/picture'
-  import {
     download
   } from '../../assets/js/download'
   export default {
@@ -209,7 +206,7 @@
           tableData_prepag: [],
           prePageCount: 20,
           PageIndex: 1,
-          height: 830,
+          height: 820,
           bigPicture: null,
           total: null
         },
@@ -236,7 +233,7 @@
       })
     },
     methods: {
-      ...mapActions([PICTURE_INSERT]),
+      ...mapActions(['PICTURE_INSERT','PRODUCT_SEARCH']),
       excellCsv() {
         download(this.fullpath)
       },
@@ -336,14 +333,12 @@
         }
       },
       handleSizeChange(val) {
-        // console.log(`每页 ${val} 条`);
         this.Table.prePageCount = val
         this.data.line_b = (this.Table.PageIndex - 1) * val
         this.data.line_f = this.Table.PageIndex * val
         this.inputchange()
       },
       handleCurrentChange(val) {
-        // console.log(`当前页: ${val}`);
         this.Table.PageIndex = val
         this.data.line_b = this.Table.prePageCount * (val - 1)
         this.data.line_f = this.Table.prePageCount * val
@@ -353,13 +348,18 @@
       showPicture(row, cell) {
         if (cell.label == "主图缩略图") {
           this.Table.bigPicture = row.主图缩略图.slice(0, -10)
+        }else if(cell.label == "排名"){
+          var prodOptions = {
+            Id:row['宝贝链接'].split('?id=')[1],
+            category:this.data.category,
+            table:this.data.table
+          }
+          this.PRODUCT_SEARCH(prodOptions)
+            window.router.push({
+          path: '/prodchart'
+        })
         }
       },
-      // emptyFilter() {
-      //   this.data.storer =''
-      //   this.data.titler = ''
-      //   this.inputchange()
-      // },
       loadPicture() {
         this.PICTURE_INSERT(this.Table.tableData_prepag) //数据存入store,详情请见
         window.router.push({

@@ -209,7 +209,7 @@
           tableData_prepag: [],
           prePageCount: 20,
           PageIndex: 1,
-          height: 840
+          height: 820
         },
         loading: null
       }

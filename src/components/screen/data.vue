@@ -2,10 +2,9 @@
   <div class="carousel-wrap" id="carousel">
     <transition-group tag="ul" class='slide-ul' name="list">
       <li v-for="(list,index) in slideList" :key="index" v-show="index===currentIndex">
-          <iframe  width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-        :src="list.url">
-      </iframe>
-    </a>
+        <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" :src="list.url">
+        </iframe>
+        </a>
       </li>
     </transition-group>
   </div>
@@ -21,22 +20,22 @@
     },
     created() {
       this.$nextTick(() => {
-          this.$http.get('datav/url').then((response) => {
-        this.slideList=response.data
-      })
+        this.$http.get('datav/url').then((response) => {
+          this.slideList = response.data
+        })
         this.timer = setInterval(() => {
           this.autoPlay()
         }, 60000)
 
-          if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-          } else if (document.documentElement.msRequestFullscreen) {
-            document.documentElement.msRequestFullscreen();
-          } else if (document.documentElement.mozRequestFullScreen) {
-            document.documentElement.mozRequestFullScreen();
-          } else if (document.documentElement.webkitRequestFullscreen) {
-            document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-          }
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+          document.documentElement.msRequestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+          document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+          document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
       })
 
     },
@@ -49,6 +48,7 @@
       }
     }
   }
+
 </script>
 <style>
   .list-enter-active {
@@ -78,8 +78,8 @@
   }
 
   .slide-ul {
-    margin:0px;
-    padding:0px;
+    margin: 0px;
+    padding: 0px;
     width: 100%;
     height: 100%;
   }
@@ -89,4 +89,5 @@
     width: 100%;
     height: 100%;
   }
+
 </style>
