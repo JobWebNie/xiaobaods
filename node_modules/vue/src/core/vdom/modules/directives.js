@@ -54,14 +54,14 @@ function _update (oldVnode, vnode) {
       }
     }
     if (isCreate) {
-      mergeVNodeHook(vnode, 'insert', callInsert)
+      mergeVNodeHook(vnode.data.hook || (vnode.data.hook = {}), 'insert', callInsert)
     } else {
       callInsert()
     }
   }
 
   if (dirsWithPostpatch.length) {
-    mergeVNodeHook(vnode, 'postpatch', () => {
+    mergeVNodeHook(vnode.data.hook || (vnode.data.hook = {}), 'postpatch', () => {
       for (let i = 0; i < dirsWithPostpatch.length; i++) {
         callHook(dirsWithPostpatch[i], 'componentUpdated', vnode, oldVnode)
       }

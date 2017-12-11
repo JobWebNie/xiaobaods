@@ -1,23 +1,6 @@
 /* @flow */
 
 const MAX_STACK_DEPTH = 1000
-const noop = _ => _
-
-const defer = typeof process !== 'undefined' && process.nextTick
-  ? process.nextTick
-  : typeof Promise !== 'undefined'
-    ? fn => Promise.resolve().then(fn)
-    : typeof setTimeout !== 'undefined'
-      ? setTimeout
-      : noop
-
-if (defer === noop) {
-  throw new Error(
-    'Your JavaScript runtime does not support any asynchronous primitives ' +
-    'that are required by vue-server-renderer. Please use a polyfill for ' +
-    'either Promise or setTimeout.'
-  )
-}
 
 export function createWriteFunction (
   write: (text: string, next: Function) => boolean,
@@ -31,7 +14,7 @@ export function createWriteFunction (
     const waitForNext = write(text, next)
     if (waitForNext !== true) {
       if (stackDepth >= MAX_STACK_DEPTH) {
-        defer(() => {
+        process.nextTick(() => {
           try { next() } catch (e) {
             onError(e)
           }

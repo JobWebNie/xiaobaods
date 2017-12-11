@@ -46,7 +46,6 @@ function updateDOMListeners (oldVnode: VNodeWithData, vnode: VNodeWithData) {
   const oldOn = oldVnode.data.on || {}
   target = vnode.elm
   updateListeners(on, oldOn, add, remove, vnode.context)
-  target = undefined
 }
 
 export default {

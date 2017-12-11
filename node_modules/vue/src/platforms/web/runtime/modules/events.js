@@ -2,7 +2,7 @@
 
 import { isDef, isUndef } from 'shared/util'
 import { updateListeners } from 'core/vdom/helpers/index'
-import { withMacroTask, isIE, supportsPassive } from 'core/util/index'
+import { isChrome, isIE, supportsPassive } from 'core/util/env'
 import { RANGE_TOKEN, CHECKBOX_RADIO_TOKEN } from 'web/compiler/directives/model'
 
 // normalize v-model event tokens that can only be determined at runtime.
@@ -10,33 +10,23 @@ import { RANGE_TOKEN, CHECKBOX_RADIO_TOKEN } from 'web/compiler/directives/model
 // the whole point is ensuring the v-model callback gets called before
 // user-attached handlers.
 function normalizeEvents (on) {
+  let event
   /* istanbul ignore if */
   if (isDef(on[RANGE_TOKEN])) {
     // IE input[type=range] only supports `change` event
-    const event = isIE ? 'change' : 'input'
+    event = isIE ? 'change' : 'input'
     on[event] = [].concat(on[RANGE_TOKEN], on[event] || [])
     delete on[RANGE_TOKEN]
   }
-  // This was originally intended to fix #4521 but no longer necessary
-  // after 2.5. Keeping it for backwards compat with generated code from < 2.4
-  /* istanbul ignore if */
   if (isDef(on[CHECKBOX_RADIO_TOKEN])) {
-    on.change = [].concat(on[CHECKBOX_RADIO_TOKEN], on.change || [])
+    // Chrome fires microtasks in between click/change, leads to #4521
+    event = isChrome ? 'click' : 'change'
+    on[event] = [].concat(on[CHECKBOX_RADIO_TOKEN], on[event] || [])
     delete on[CHECKBOX_RADIO_TOKEN]
   }
 }
 
-let target: any
-
-function createOnceHandler (handler, event, capture) {
-  const _target = target // save current target element in closure
-  return function onceHandler () {
-    const res = handler.apply(null, arguments)
-    if (res !== null) {
-      remove(event, onceHandler, capture, _target)
-    }
-  }
-}
+let target: HTMLElement
 
 function add (
   event: string,
@@ -45,8 +35,18 @@ function add (
   capture: boolean,
   passive: boolean
 ) {
-  handler = withMacroTask(handler)
-  if (once) handler = createOnceHandler(handler, event, capture)
+  if (once) {
+    const oldHandler = handler
+    const _target = target // save current target element in closure
+    handler = function (ev) {
+      const res = arguments.length === 1
+        ? oldHandler(ev)
+        : oldHandler.apply(null, arguments)
+      if (res !== null) {
+        remove(event, handler, capture, _target)
+      }
+    }
+  }
   target.addEventListener(
     event,
     handler,
@@ -62,11 +62,7 @@ function remove (
   capture: boolean,
   _target?: HTMLElement
 ) {
-  (_target || target).removeEventListener(
-    event,
-    handler._withTask || handler,
-    capture
-  )
+  (_target || target).removeEventListener(event, handler, capture)
 }
 
 function updateDOMListeners (oldVnode: VNodeWithData, vnode: VNodeWithData) {
@@ -78,7 +74,6 @@ function updateDOMListeners (oldVnode: VNodeWithData, vnode: VNodeWithData) {
   target = vnode.elm
   normalizeEvents(on)
   updateListeners(on, oldOn, add, remove, vnode.context)
-  target = undefined
 }
 
 export default {
