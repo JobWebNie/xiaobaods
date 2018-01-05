@@ -382,7 +382,6 @@
               return cellValue = reg;
               break;
             case '直通车参考价':
-
               return cellValue = '￥' + parseFloat(cellValue).toFixed(2);
               break;
             default:

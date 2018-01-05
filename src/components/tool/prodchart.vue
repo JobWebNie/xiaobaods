@@ -1,72 +1,79 @@
 <style scoped>
-.my-prod-chart{
-  overflow:hidden;
-}
-  .prod-chart-full-life {
-    height: 500px;
-    margin:20px auto;
-    width: calc(92vw - 40px);
-    background-color:#8492A6;
+  .my-prod-chart {
+    overflow: hidden;
   }
 
-.wrapper {
-        display: flex;  /* 新版本语法: Opera 12.1, Firefox 22+ */
-        flex-wrap:nowrap;
-        align-items: flex-start;
-        justify-content: space-between;
-        overflow-x: scroll;
-        margin:20px;
-    }
+  .prod-chart-full-life {
+    height: 500px;
+    margin: 20px auto;
+    background-color: #8492A6;
+    width: calc(92vw - 40px);
+  }
 
-    .carts {
-         margin:20px;
-        -webkit-box-flex: 0 0 200px;   /* OLD - iOS 6-, Safari 3.1-6 */  
-        -moz-box-flex: 0 0 200px;     /* OLD - Firefox 19- */              
-        -webkit-flex: 0 0 200px;     /* Chrome */  
-        -ms-flex: 0 0 200px;    /* IE 10 */  
-        flex: 0 0 200px;
-    }
+  .wrapper {
+    display: flex;
+    /* 新版本语法: Opera 12.1, Firefox 22+ */
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    overflow-x: scroll;
+    margin: 20px;
+  }
 
-    .carts-title {
-        display: block;
-        font-size: 1.17em;
-        font-weight: bold;
-    }
+  .carts {
+    margin: 20px;
+    -webkit-box-flex: 0 0 200px;
+    /* OLD - iOS 6-, Safari 3.1-6 */
+    -moz-box-flex: 0 0 200px;
+    /* OLD - Firefox 19- */
+    -webkit-flex: 0 0 200px;
+    /* Chrome */
+    -ms-flex: 0 0 200px;
+    /* IE 10 */
+    flex: 0 0 200px;
+  }
 
-    .carts-image {
-        height: 200px;
-        width: 200px;
-    }
+  .carts-title {
+    display: block;
+    font-size: 1.17em;
+    font-weight: bold;
+  }
 
-    .carts-image img {
-        height: 100%;
-        width: 100%;
-    }
+  .carts-image {
+    height: 200px;
+    width: 200px;
+  }
 
-    .carts-depict {
-        height: 40px;
-        font-size: xx-small;
-    }
+  .carts-image img {
+    height: 100%;
+    width: 100%;
+  }
+
+  .carts-depict {
+    height: 40px;
+    font-size: xx-small;
+  }
+
 </style>
 <template>
   <div class="my-prod-chart">
-      <el-row :gutter="20" class="title">
-          <h3> 商品生命周期展示图表</h3>
-      </el-row>
+    <el-row :gutter="20" class="title">
+      <h3> 商品生命周期展示图表</h3>
+    </el-row>
     <div class="prod-chart-full-life">
       <IEcharts :option="option_data"></IEcharts>
     </div>
     <div class="wrapper">
-        <div class="carts" v-for="(item,key) in picture_change_date">
-            <div class="carts-title">{{item.date}}</div>
-            <div class="carts-image">
-                <img v-if="item.path":src="item.path.slice(0,-10)" alt="没有图片">
-            </div>
-            <div class="carts-depict">
-               {{item.keyworlds}}
-            </div>
+      <div class="carts" v-for="(item,key) in picture_change_date">
+        <div class="carts-title">{{item.date}}</div>
+        <div class="carts-image">
+          <img v-if="item.path" :src="item.path.slice(0,-10)" alt="没有图片">
+        </div>
+        <div class="carts-depict">
+          {{item.keyworlds}}
         </div>
       </div>
+    </div>
   </div>
 </template>
 <script>
@@ -106,12 +113,12 @@
             data: [],
             right: 50
           },
-          dataZoom:[{
-            type:'slider',
-            xAxisIndex: [0, 1,2]
-          },{
-            type:'inside',
-            xAxisIndex: [0, 1,2]
+          dataZoom: [{
+            type: 'slider',
+            xAxisIndex: [0, 1, 2]
+          }, {
+            type: 'inside',
+            xAxisIndex: [0, 1, 2]
           }],
           grid: [{
             left: 60,
