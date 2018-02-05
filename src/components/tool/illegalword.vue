@@ -14,7 +14,7 @@
         <el-input class="compare-along" type="textarea" placeholder="请输入内容" v-on:change="dispathBlur()" v-model.trim="value" resize="none"></el-input>
       </el-col>
       <el-col :span="9" class="compare-beyond">
-        <span v-for="item in myData" v-bind:style="{color:item.style}">{{item.value}}</span>
+        <span v-for="(item,key) in myData" v-bind:style="{color:item.style}" :key="key">{{item.value}}</span>
       </el-col>
     </el-row>
   </div>
